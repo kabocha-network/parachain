@@ -20,6 +20,9 @@ use sp_runtime::{
 	ApplyExtrinsicResult, MultiSignature,
 };
 
+
+use parachain_runtime_constants::{currency::*};
+
 use sp_std::prelude::*;
 #[cfg(feature = "std")]
 use sp_version::NativeVersion;
@@ -597,28 +600,12 @@ impl pallet_collator_selection::Config for Runtime {
 impl pallet_template::Config for Runtime {
 	type Event = Event;
 }
-// Money matters.
-pub mod currency {
-	use crate::Balance;
-
-	/// The existential deposit.
-	pub const EXISTENTIAL_DEPOSIT: Balance = 100 * CENTS;
-
-	pub const UNITS: Balance = 10_000_000_000;
-	pub const DOLLARS: Balance = UNITS; // 10_000_000_000
-	pub const CENTS: Balance = DOLLARS / 100; // 100_000_000
-	pub const MILLICENTS: Balance = CENTS / 1_000; // 100_000
-
-	pub const fn deposit(items: u32, bytes: u32) -> Balance {
-		items as Balance * 20 * DOLLARS + (bytes as Balance) * 100 * MILLICENTS
-	}
-}
 
 parameter_types! {
     // One storage item; key size is 32; value is size 4+4+16+32 bytes = 56 bytes.
-    pub const DepositBase: Balance = currency::deposit(1, 88);
+    pub const DepositBase: Balance = deposit(1, 88);
     // Additional storage item size of 32 bytes.
-    pub const DepositFactor: Balance = currency::deposit(0, 32);
+    pub const DepositFactor: Balance = deposit(0, 32);
     pub const MaxSignatories: u16 = 100;
 }
 

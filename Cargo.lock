@@ -5378,14 +5378,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "parachain-runtime-constants"
-version = "0.9.16"
-dependencies = [
- "polkadot-primitives",
- "smallvec",
-]
-
-[[package]]
 name = "parachain-template-node"
 version = "0.1.0"
 dependencies = [
@@ -5485,7 +5477,6 @@ dependencies = [
  "pallet-transaction-payment-rpc-runtime-api",
  "pallet-xcm",
  "parachain-info",
- "parachain-runtime-constants",
  "parity-scale-codec",
  "polkadot-parachain",
  "polkadot-runtime-common",

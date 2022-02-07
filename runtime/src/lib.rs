@@ -11,7 +11,7 @@ use sp_api::impl_runtime_apis;
 use sp_core::{
 	crypto::KeyTypeId,
 	OpaqueMetadata,
-	u32_trait::{_1, _2, _3, _4, _5},
+	//u32_trait::{_1, _2, _3, _4, _5},
 };
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
@@ -19,9 +19,6 @@ use sp_runtime::{
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult, MultiSignature,
 };
-
-
-use parachain_runtime_constants::{currency::*};
 
 use sp_std::prelude::*;
 #[cfg(feature = "std")]
@@ -191,6 +188,18 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	transaction_version: 0,
 	state_version: 0,
 };
+
+
+
+//For Multisig parameters
+
+pub const MILLICENTS: Balance = 10_000_000_000_000;
+pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
+pub const DOLLARS: Balance = 100 * CENTS;
+
+pub const fn deposit(items: u32, bytes: u32) -> Balance {
+	items as Balance * 15 * CENTS + (bytes as Balance) * 6 * CENTS
+}
 
 /// This determines the average expected block time that we are targeting.
 /// Blocks will be produced at a minimum duration defined by `SLOT_DURATION`.

@@ -5467,6 +5467,8 @@ dependencies = [
  "pallet-authorship",
  "pallet-balances",
  "pallet-collator-selection",
+ "pallet-collective",
+ "pallet-multisig",
  "pallet-session",
  "pallet-sudo",
  "pallet-template",

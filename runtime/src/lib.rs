@@ -191,7 +191,9 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 
 
 
-//For Multisig parameters
+//ToDo: Put constants in its own file 
+
+//Multisig deposit definition
 
 pub const MILLICENTS: Balance = 10_000_000_000_000;
 pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.

@@ -84,7 +84,7 @@ xcm-executor = { git = "https://github.com/paritytech/polkadot", default-feature
 pallet-multisig = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 # Collective pallet
-pallet-collective = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16"}
+# pallet-collective = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16"}
 
 
 [features]
@@ -134,8 +134,9 @@ std = [
 	"polkadot-runtime-common/std",
 	"xcm-builder/std",
 	"xcm-executor/std",
-	"xcm/std","pallet-multisig/std",
-	"pallet-collective/std",
+	"xcm/std",
+	"pallet-multisig/std",
+	
 ]
 
 runtime-benchmarks = [

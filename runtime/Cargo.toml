@@ -1,5 +1,5 @@
 [package]
-name = "parachain-template-runtime"
+name = "kabocha-runtime"
 version = "0.1.0"
 authors = ["Anonymous"]
 description = "A new Cumulus FRAME-based Substrate Runtime, ready for hacking together a parachain."
@@ -86,11 +86,12 @@ pallet-multisig = { git = "https://github.com/paritytech/substrate", default-fea
 # Collective pallet
 # pallet-collective = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16"}
 
+# Vesting Pallet
+pallet-vesting = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 [features]
-default = [
-	"std",
-]
+default = ["std"]
+nostd = []
 std = [
 	"codec/std",
 	"serde",
@@ -136,6 +137,7 @@ std = [
 	"xcm-executor/std",
 	"xcm/std",
 	"pallet-multisig/std",
+	"pallet-vesting/std",
 	
 ]
 
@@ -153,9 +155,14 @@ runtime-benchmarks = [
 	"pallet-timestamp/runtime-benchmarks",
 	"pallet-xcm/runtime-benchmarks",
 	"cumulus-pallet-session-benchmarking/runtime-benchmarks",
+	"pallet-multisig/runtime-benchmarks",
+	"pallet-vesting/runtime-benchmarks",
 ]
 
 try-runtime = [
 	"frame-try-runtime",
 	"frame-executive/try-runtime",
+	"pallet-vesting/try-runtime",
+	"pallet-balances/try-runtime",
+	"pallet-multisig/try-runtime",
 ]

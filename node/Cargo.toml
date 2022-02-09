@@ -1,5 +1,5 @@
 [package]
-name = "parachain-template-node"
+name = "kabocha-node"
 version = "0.1.0"
 authors = ["Anonymous"]
 description = "A new Cumulus FRAME-based Substrate Node, ready for hacking together a parachain."
@@ -20,8 +20,8 @@ name = "parachain-collator"
 path = "src/main.rs"
 
 [features]
-runtime-benchmarks = ["parachain-template-runtime/runtime-benchmarks"]
-try-runtime = [ "parachain-template-runtime/try-runtime" ]
+runtime-benchmarks = ["kabocha-runtime/runtime-benchmarks"]
+try-runtime = [ "kabocha-runtime/try-runtime" ]
 
 [dependencies]
 derive_more = "0.99.2"
@@ -35,7 +35,7 @@ hex-literal = "0.3.1"
 jsonrpc-core = "18.0.0"
 
 # Local Dependencies
-parachain-template-runtime = { path = "../runtime" }
+kabocha-runtime = { path = "../runtime" }
 
 # Substrate Dependencies
 frame-benchmarking = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.16" }

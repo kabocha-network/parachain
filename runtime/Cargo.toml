@@ -1,5 +1,5 @@
 [package]
-name = "parachain-template-runtime"
+name = "kabocha-runtime"
 version = "0.1.0"
 authors = ["Anonymous"]
 description = "A new Cumulus FRAME-based Substrate Runtime, ready for hacking together a parachain."
@@ -60,7 +60,7 @@ pallet-transaction-payment = { git = "https://github.com/paritytech/substrate", 
 pallet-transaction-payment-rpc-runtime-api = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 # Cumulus dependencies
-cumulus-pallet-aura-ext = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false } 
+cumulus-pallet-aura-ext = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
 cumulus-pallet-dmp-queue = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
 cumulus-pallet-parachain-system = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
 cumulus-pallet-xcm = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
@@ -80,10 +80,18 @@ xcm = { git = "https://github.com/paritytech/polkadot", default-features = false
 xcm-builder = { git = "https://github.com/paritytech/polkadot", default-features = false , branch = "release-v0.9.16" }
 xcm-executor = { git = "https://github.com/paritytech/polkadot", default-features = false , branch = "release-v0.9.16" }
 
+# Multisig  pallet
+pallet-multisig = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+
+# Collective pallet
+# pallet-collective = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16"}
+
+# Vesting Pallet
+pallet-vesting = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+
 [features]
-default = [
-	"std",
-]
+default = ["std"]
+nostd = []
 std = [
 	"codec/std",
 	"serde",
@@ -128,6 +136,9 @@ std = [
 	"xcm-builder/std",
 	"xcm-executor/std",
 	"xcm/std",
+	"pallet-multisig/std",
+	"pallet-vesting/std",
+	
 ]
 
 runtime-benchmarks = [
@@ -144,9 +155,14 @@ runtime-benchmarks = [
 	"pallet-timestamp/runtime-benchmarks",
 	"pallet-xcm/runtime-benchmarks",
 	"cumulus-pallet-session-benchmarking/runtime-benchmarks",
+	"pallet-multisig/runtime-benchmarks",
+	"pallet-vesting/runtime-benchmarks",
 ]
 
 try-runtime = [
 	"frame-try-runtime",
 	"frame-executive/try-runtime",
+	"pallet-vesting/try-runtime",
+	"pallet-balances/try-runtime",
+	"pallet-multisig/try-runtime",
 ]

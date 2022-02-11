@@ -544,6 +544,34 @@ impl pallet_template::Config for Runtime {
 	type Event = Event;
 }
 
+parameter_types! {
+	pub const ClassDeposit: Balance = 100 * MILLIUNIT;
+	pub const InstanceDeposit: Balance = MILLIUNIT;
+	pub const KeyLimit: u32 = 32;
+	pub const ValueLimit: u32 = 256;
+	pub const UniquesMetadataDepositBase: Balance = 100 * MILLIUNIT;
+	pub const AttributeDepositBase: Balance = 10 * MILLIUNIT;
+	pub const DepositPerByte: Balance = MILLIUNIT;
+	pub const UniquesStringLimit: u32 = 128;
+}
+
+impl pallet_uniques::Config for Runtime {
+	type Event = Event;
+	type ClassId = u32;
+	type InstanceId = u32;
+	type Currency = Balances;
+	type ForceOrigin = frame_system::EnsureRoot<AccountId>;
+	type ClassDeposit = ClassDeposit;
+	type InstanceDeposit = InstanceDeposit;
+	type MetadataDepositBase = UniquesMetadataDepositBase;
+	type AttributeDepositBase = AttributeDepositBase;
+	type DepositPerByte = DepositPerByte;
+	type StringLimit = UniquesStringLimit;
+	type KeyLimit = KeyLimit;
+	type ValueLimit = ValueLimit;
+	type WeightInfo = ();
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -576,8 +604,9 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 32,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 33,
 
-		// Template
+		// Template= added pallets
 		TemplatePallet: pallet_template::{Pallet, Call, Storage, Event<T>}  = 40,
+		Uniques: pallet_uniques::{Pallet, Call, Storage, Event<T>} = 41,
 	}
 );
 

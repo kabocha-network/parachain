@@ -12,7 +12,7 @@
     "tokenSymbol": "CAN"
   },
   "relay_chain": "rococo-staging",
-  "para_id": 2000,
+  "para_id": 2002,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {
@@ -22,7 +22,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2000
+        "parachainId": 2002
       },
       "balances": {
         "balances": [

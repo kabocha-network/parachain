@@ -5492,6 +5492,82 @@ dependencies = [
 ]
 
 [[package]]
+name = "parachain-template-node"
+version = "0.1.0"
+dependencies = [
+ "cumulus-client-cli",
+ "cumulus-client-collator",
+ "cumulus-client-consensus-aura",
+ "cumulus-client-consensus-common",
+ "cumulus-client-network",
+ "cumulus-client-service",
+ "cumulus-primitives-core",
+ "cumulus-primitives-parachain-inherent",
+ "cumulus-relay-chain-interface",
+ "cumulus-relay-chain-local",
+ "derive_more",
+ "frame-benchmarking",
+ "frame-benchmarking-cli",
+ "hex-literal",
+ "jsonrpc-core",
+ "log",
+ "pallet-transaction-payment-rpc",
+ "parachain-template-runtime",
+ "parity-scale-codec",
+ "polkadot-cli",
+ "polkadot-parachain",
+ "polkadot-primitives",
+ "polkadot-service",
+ "sc-basic-authorship",
+ "sc-chain-spec",
+ "sc-cli",
+ "sc-client-api",
+ "sc-consensus",
+ "sc-executor",
+ "sc-keystore",
+ "sc-network",
+ "sc-rpc",
+ "sc-rpc-api",
+ "sc-service",
+ "sc-telemetry",
+ "sc-tracing",
+ "sc-transaction-pool",
+ "sc-transaction-pool-api",
+ "serde",
+ "sp-api",
+ "sp-block-builder",
+ "sp-blockchain",
+ "sp-consensus",
+ "sp-consensus-aura",
+ "sp-core",
+ "sp-inherents",
+ "sp-keystore",
+ "sp-offchain",
+ "sp-runtime",
+ "sp-session",
+ "sp-timestamp",
+ "sp-transaction-pool",
+ "structopt",
+ "substrate-build-script-utils",
+ "substrate-frame-rpc-system",
+ "substrate-prometheus-endpoint",
+ "try-runtime-cli",
+ "xcm",
+]
+
+[[package]]
+name = "parachain-template-runtime"
+version = "0.1.0"
+dependencies = [
+ "cumulus-primitives-core",
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "scale-info",
+ "serde",
+]
+
+[[package]]
 name = "parity-db"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8619,9 +8695,9 @@ dependencies = [
 
 [[package]]
 name = "security-framework"
-version = "2.6.1"
+version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2dc14f172faf8a0194a3aded622712b0de276821addc574fa54fc0a1167e10dc"
+checksum = "3fed7948b6c68acbb6e20c334f55ad635dc0f75506963de4464289fbd3b051ac"
 dependencies = [
  "bitflags",
  "core-foundation",
@@ -8632,9 +8708,9 @@ dependencies = [
 
 [[package]]
 name = "security-framework-sys"
-version = "2.6.1"
+version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0160a13a177a45bfb43ce71c01580998474f556ad854dcbca936dd2841a5c556"
+checksum = "a57321bf8bc2362081b2599912d2961fe899c0efadf1b4b2f8d48b3e253bb96c"
 dependencies = [
  "core-foundation-sys",
  "libc",

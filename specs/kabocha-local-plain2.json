@@ -4,7 +4,7 @@
   "chainType": "Live",
   "bootNodes": [],
   "telemetryEndpoints": null,
-  "protocolId": "template-local",
+  "protocolId": "kabocha-soupcan",
   "forkId": null,
   "properties": {
     "ss58Format": 27,
@@ -12,7 +12,7 @@
     "tokenSymbol": "CAN"
   },
   "relay_chain": "rococo-staging",
-  "para_id": 2002,
+  "para_id": 2003,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {
@@ -22,7 +22,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2002
+        "parachainId": 2003
       },
       "balances": {
         "balances": [

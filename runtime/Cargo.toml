@@ -83,6 +83,9 @@ xcm = { git = "https://github.com/paritytech/polkadot", default-features = false
 xcm-builder = { git = "https://github.com/paritytech/polkadot", default-features = false , branch = "release-v0.9.16" }
 xcm-executor = { git = "https://github.com/paritytech/polkadot", default-features = false , branch = "release-v0.9.16" }
 
+# RMRK Dependencies
+pallet-rmrk-core = { git = "https://github.com/rmrk-team/rmrk-substrate", package = "pallet-rmrk-core", default-features = false, version = "4.0.0-dev" }
+
 [features]
 default = [
 	"std",
@@ -111,6 +114,7 @@ std = [
 	"pallet-authorship/std",
 	"pallet-balances/std",
 	"pallet-collator-selection/std",
+	"pallet-rmrk-core/std",
 	"pallet-session/std",
 	"pallet-sudo/std",
 	"pallet-template/std",

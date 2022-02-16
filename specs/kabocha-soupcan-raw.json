@@ -3,7 +3,8 @@
   "id": "local_testnet",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWLEKUcDDsKM45sF46ZZgx2US53HCqUCfiNJk1LpVaDHpy"
+    "/dns/soupcan-bn1.jelliedowl.com/tcp/40333/p2p/12D3KooWRD6BNdnJxXXWWdLrteWve3cFGq5Zcx62N7YdLELhJZPn",
+    "/dns/soupcan-bn2.jelliedowl.com/tcp/40333/p2p/12D3KooWRj9MjAiB1VAZAkSunNRUY1DpLwLAnismunh6utCBF87s"
   ],
   "telemetryEndpoints": null,
   "protocolId": "kabocha-soupcan",

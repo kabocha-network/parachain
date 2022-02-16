@@ -60,9 +60,9 @@
       "collatorSelection": {
         "invulnerables": [
           "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-          "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
           "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-          "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523"
+          "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
+          "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18"
         ],
         "candidacyBond": 16000000000,
         "desiredCandidates": 0
@@ -98,7 +98,7 @@
             }
           ]
         ]
-      },
+      }, 
       "aura": {
         "authorities": []
       },
@@ -108,7 +108,7 @@
       },
       "polkadotXcm": {
         "safeXcmVersion": 2
-      }
+      } 
     }
   }
 }

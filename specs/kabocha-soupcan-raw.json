@@ -11,7 +11,7 @@
   "properties": {
     "ss58Format": 27,
     "tokenDecimals": 12,
-    "tokenSymbol": "CAN"
+    "tokenSymbol": "SOUP 🍲 🥫"
   },
   "relay_chain": "rococo-staging",
   "para_id": 2003,

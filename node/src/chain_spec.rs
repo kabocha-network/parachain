@@ -62,17 +62,19 @@ pub fn template_session_keys(keys: AuraId) -> kabocha_runtime::SessionKeys {
 }
 
 pub fn development_config() -> ChainSpec {
+
 	// Give your base currency a unit name and decimal places
 	let mut properties = sc_chain_spec::Properties::new();
-	properties.insert("tokenSymbol".into(), "KAB".into());
+	properties.insert("tokenSymbol".into(), "UNIT".into());
 	properties.insert("tokenDecimals".into(), 12.into());
-	properties.insert("ss58Format".into(), 27.into());
+	properties.insert("ss58Format".into(), 42.into());
+
 
 	ChainSpec::from_genesis(
 		// Name
-		"Development",
+		"Soupcan",
 		// ID
-		"dev",
+		"soup",
 		ChainType::Live,
 		move || {
 			testnet_genesis(
@@ -110,7 +112,7 @@ pub fn development_config() -> ChainSpec {
 		None,
 		None,
 		Extensions {
-			relay_chain: "rococo-local".into(), // You MUST set this to the correct network!
+			relay_chain: "rococo-staging".into(), // You MUST set this to the correct network!
 			para_id: 1000,
 		},
 	)
@@ -122,6 +124,8 @@ pub fn local_testnet_config() -> ChainSpec {
 	properties.insert("tokenSymbol".into(), "UNIT".into());
 	properties.insert("tokenDecimals".into(), 12.into());
 	properties.insert("ss58Format".into(), 42.into());
+
+
 
 	ChainSpec::from_genesis(
 		// Name
@@ -211,6 +215,7 @@ fn testnet_genesis(
 				})
 				.collect(),
 		},
+		sudo: Default::default(),
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
 		// of this.
 		aura: Default::default(),

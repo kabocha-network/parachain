@@ -165,4 +165,5 @@ try-runtime = [
 	"pallet-vesting/try-runtime",
 	"pallet-balances/try-runtime",
 	"pallet-multisig/try-runtime",
+	"pallet-sudo/try-runtime",
 ]

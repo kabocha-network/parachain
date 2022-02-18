@@ -20,8 +20,13 @@ name = "parachain-collator"
 path = "src/main.rs"
 
 [features]
-runtime-benchmarks = ["kabocha-runtime/runtime-benchmarks"]
+runtime-benchmarks = [
+    "kabocha-runtime/runtime-benchmarks",
+    "polkadot-cli/runtime-benchmarks"
+    ]
 try-runtime = [ "kabocha-runtime/try-runtime" ]
+ 
+
 
 [dependencies]
 derive_more = "0.99.2"

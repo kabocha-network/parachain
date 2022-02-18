@@ -1,5 +1,5 @@
 {
-  "name": "Soupcan",
+  "name": "Kabocha Soupcan",
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
@@ -15,7 +15,7 @@
     "tokenSymbol": "SOUP 🍲 🥫"
   },
   "relay_chain": "rococo-staging",
-  "para_id": 2004,
+  "para_id": 2006,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {
@@ -25,7 +25,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2004
+        "parachainId": 2006
       },
       "sudo": {
         "key": "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t" 
@@ -34,7 +34,7 @@
         "balances": [
           [
             "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq",
-            1234567800000
+            12345678000000000000
           ],
           [
             "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t",
@@ -42,18 +42,18 @@
           ],
           [
             "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
-            100000000000000000
+            10000000000000000000
           ],
           [
             "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
-            100000000000000000
+            10000000000000000000
           ]
           
         ]
       },
       "collatorSelection": {
         "invulnerables": [
-          "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq",
+          
           "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
           "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18"
         ],
@@ -80,14 +80,14 @@
             "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
             "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
             {
-              "aura": "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18"
+              "aura": "5DPSWyyQqscgQ1o8bCL1AH7gLDR1zyWqtYw22cpJwMWbErvf"
             }
           ],
           [
             "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
             "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
             {
-              "aura": "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523"
+              "aura": "5CcLtfQuroSgXRYgcVacAAopnF8gN1PrJEGdqxTgh9ZvUzHK"
             }
           ]
         ]

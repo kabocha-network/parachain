@@ -15,7 +15,7 @@
     "tokenSymbol": "SOUP 🍲 🥫"
   },
   "relay_chain": "rococo-staging",
-  "para_id": 2006,
+  "para_id": 2007,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {
@@ -25,7 +25,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2006
+        "parachainId": 2007
       },
       "sudo": {
         "key": "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t" 

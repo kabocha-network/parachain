@@ -138,7 +138,6 @@ std = [
 	"xcm/std",
 	"pallet-multisig/std",
 	"pallet-vesting/std",
-	
 ]
 
 runtime-benchmarks = [

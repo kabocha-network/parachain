@@ -31,7 +31,7 @@ pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
 
 use frame_support::{
 	construct_runtime, match_type, parameter_types,
-	traits::{Everything,Nothing},
+	traits::{Everything,Nothing,Contains},
 	weights::{
 		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND},
 		DispatchClass, IdentityFee, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
@@ -184,8 +184,8 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 4,
-	impl_version: 2,
+	spec_version: 5,
+	impl_version: 3,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 1,
 	state_version: 1,
@@ -247,6 +247,17 @@ pub fn native_version() -> NativeVersion {
 	NativeVersion { runtime_version: VERSION, can_author_with: Default::default() }
 }
 
+
+// Use this filter to block users from calling any functions in the Balances pallet.
+pub struct DontAllowBalances;
+
+impl Contains<Call> for DontAllowBalances {
+	fn contains(c: &Call) -> bool {
+	// This will match against any call from the Balances pallet.
+	!matches!(c, Call::Balances(..))
+	}
+}	
+
 parameter_types! {
 	pub const Version: RuntimeVersion = VERSION;
 
@@ -274,8 +285,11 @@ parameter_types! {
 		})
 		.avg_block_initialization(AVERAGE_ON_INITIALIZE_RATIO)
 		.build_or_panic();
-	pub const SS58Prefix: u16 = 42;
+	pub const SS58Prefix: u16 = 27;
+
 }
+
+
 
 // Configure FRAME pallets to include in runtime.
 
@@ -314,8 +328,9 @@ impl frame_system::Config for Runtime {
 	type OnKilledAccount = ();
 	/// The weight of database operations that the runtime can invoke.
 	type DbWeight = RocksDbWeight;
-	/// The basic call filter to use in dispatchable.
-	type BaseCallFilter = Everything;
+	/// The basic call filter to use in dispatchable.  (Changed from Everything to DontAllowBalances)
+	/// type BaseCallFilter = Everything;
+	type BaseCallFilter = DontAllowBalances;
 	/// Weight information for the extrinsics of this pallet.
 	type SystemWeightInfo = weights::frame_system::WeightInfo<Runtime>;
 	/// Block & extrinsics weights: base values and limits.

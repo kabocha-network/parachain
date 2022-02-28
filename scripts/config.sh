@@ -5,9 +5,9 @@
 export CHAIN_TYPE=parachain
 export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
 export CHAIN_NAME="parachain-collator"
-export PROTOCOL_ID=soupcan
-export SPEC_NAME="kabocha-soupcan-dev-plain-new.json"
-export PARA_ID=2007
+export PROTOCOL_ID=kabsoup
+export SPEC_NAME="kabocha-soupcan-rococo-plain-new.json"
+export PARA_ID=2028
 export RAWSPEC_NAME='kabocha-'"$PARA_ID"'.json'
 export PORT=30333
 export WS_PORT=9944

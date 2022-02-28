@@ -1,16 +1,18 @@
 {
-  "name": "Soupcan",
-  "id": "soup",
+  "name": "Kabocha Soupcan 🎃 🥫",
+  "id": "kabsoup",
   "chainType": "Live",
-  "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
-  ],
+  "bootNodes": [],
   "telemetryEndpoints": null,
-  "protocolId": null,
+  "protocolId": "kabocha-soupcan",
   "forkId": null,
-  "properties": null,
+  "properties": {
+    "ss58Format": 27,
+    "tokenDecimals": 12,
+    "tokenSymbol": "KAB SOUP 🎃 🥫"
+  },
   "relay_chain": "rococo-staging",
-  "para_id": 1000,
+  "para_id": 2028,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {
@@ -20,89 +22,66 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 1000
+        "parachainId": 2028
       },
       "sudo": {
-        "key": null
+        "key": "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t" 
       },
       "balances": {
         "balances": [
           [
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-            1152921504606846976
+            "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq",
+            12345678000000000000
           ],
           [
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-            1152921504606846976
+            "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t",
+            10000000000000000000
           ],
           [
-            "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
-            1152921504606846976
+            "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
+            10000000000000000000
           ],
           [
-            "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
-            1152921504606846976
-          ],
-          [
-            "5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw",
-            1152921504606846976
-          ],
-          [
-            "5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL",
-            1152921504606846976
-          ],
-          [
-            "5GNJqTPyNqANBkUVMN1LPPrxXnFouWXoe2wNSmmEoLctxiZY",
-            1152921504606846976
-          ],
-          [
-            "5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc",
-            1152921504606846976
-          ],
-          [
-            "5Ck5SLSHYac6WFt5UZRSsdJjwmpSZq85fd5TRNAdZQVzEAPT",
-            1152921504606846976
-          ],
-          [
-            "5HKPmK9GYtE1PSLsS1qiYU9xQ9Si1NcEhdeCq9sw5bqu4ns8",
-            1152921504606846976
-          ],
-          [
-            "5FCfAonRZgTFrTd9HREEyeJjDpT397KMzizE6T3DvebLFE7n",
-            1152921504606846976
-          ],
-          [
-            "5CRmqmsiNFExV6VbdmPJViVxrWmkaXXvBrSX8oqBT8R9vmWk",
-            1152921504606846976
+            "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
+            10000000000000000000
           ]
+          
         ]
       },
       "collatorSelection": {
         "invulnerables": [
-          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-          "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+          
+          "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
+          "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq"
         ],
         "candidacyBond": 16000000000,
-        "desiredCandidates": 0
+        "desiredCandidates": 2
       },
       "session": {
         "keys": [
           [
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq",
+            "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq",
             {
-              "aura": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+              "aura": "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq"
+            }
+          ], 
+          [
+            "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
+            "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
+            {
+              "aura": "5DPSWyyQqscgQ1o8bCL1AH7gLDR1zyWqtYw22cpJwMWbErvf"
             }
           ],
           [
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
+            "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
             {
-              "aura": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
+              "aura": "5CcLtfQuroSgXRYgcVacAAopnF8gN1PrJEGdqxTgh9ZvUzHK"
             }
           ]
         ]
-      },
+      }, 
       "aura": {
         "authorities": []
       },

@@ -31,8 +31,8 @@ use sp_version::RuntimeVersion;
 pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
 
 use frame_support::{
-	construct_runtime, match_type, parameter_types,
-	traits::{Everything,Nothing,Contains},
+	construct_runtime, parameter_types,
+	traits::{Everything, Contains},
 	weights::{
 		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND},
 		DispatchClass, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
@@ -177,11 +177,11 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 5,
-	impl_version: 3,
+	spec_version: 6,
+	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
-	transaction_version: 1,
-	state_version: 1,
+	transaction_version: 2,
+	state_version: 2,
 };
 
 

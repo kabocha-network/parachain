@@ -1,15 +1,21 @@
 {
-  "name": "Soupcan",
+  "name": "Kabocha (kabsoup) 🍲 🥫",
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
+    "/dns/soupcan-bn1.jelliedowl.com/tcp/40333/p2p/12D3KooWRD6BNdnJxXXWWdLrteWve3cFGq5Zcx62N7YdLELhJZPn",
+    "/dns/soupcan-bn2.jelliedowl.com/tcp/40333/p2p/12D3KooWRj9MjAiB1VAZAkSunNRUY1DpLwLAnismunh6utCBF87s" 
   ],
   "telemetryEndpoints": null,
-  "protocolId": null,
-  "properties": null,
+  "protocolId": "kabsoup",
+  "forkId": null,
+  "properties": {
+    "ss58Format": 27,
+    "tokenDecimals": 12,
+    "tokenSymbol": "SOUP 🍲 🥫"
+  },
   "relay_chain": "rococo-staging",
-  "para_id": 1000,
+  "para_id": 2068,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {

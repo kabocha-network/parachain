@@ -2,7 +2,10 @@
   "name": "Kabocha (kabsoup) 🍲 🥫",
   "id": "soup",
   "chainType": "Live",
-  "bootNodes": [],
+  "bootNodes": [
+    "/dns/kabsoup-bn1.jelliedowl.com/tcp/40433/p2p/12D3KooWPht4yh3ShexmD9S4K4eSZrNF4bcQgSbPuxjfuMRjUAmS",
+    "/dns/kabsoup-bn2.jelliedowl.com/tcp/40433/p2p/12D3KooWNydRmBdN6KEL7CcHJbAkvcT65r8eAiWy4BdcSvsv52R9"
+  ],
   "telemetryEndpoints": null,
   "protocolId": "kabsoup",
   "properties": {
@@ -24,7 +27,7 @@
         "parachainId": 2068
       },
       "sudo": {
-        "key": "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t" 
+        "key": "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t"
       },
       "balances": {
         "balances": [
@@ -53,12 +56,12 @@
             11235813213400000000
           ]
 
-          
+
         ]
       },
       "collatorSelection": {
         "invulnerables": [
-          
+
           "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
           "5FEXwYeMsBuiehBmBykHKNNjxmBtDGQZyCkT9XYsiRU1KhC4"
         ],
@@ -67,7 +70,7 @@
       },
       "session": {
         "keys": [
-          
+
           [
             "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
             "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
@@ -97,7 +100,7 @@
             }
           ]
         ]
-      }, 
+      },
       "aura": {
         "authorities": []
       },

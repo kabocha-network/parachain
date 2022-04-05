@@ -1,17 +1,15 @@
 {
-  "name": "Kabocha (kabsoup) 🍲 🥫",
+  "name": "Soupcan",
   "id": "soup",
   "chainType": "Live",
-  "bootNodes": [],
+  "bootNodes": [
+    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
+  ],
   "telemetryEndpoints": null,
-  "protocolId": "kabsoup",
-  "properties": {
-    "ss58Format": 27,
-    "tokenDecimals": 12,
-    "tokenSymbol": "SOUP 🍲 🥫"
-  },
+  "protocolId": null,
+  "properties": null,
   "relay_chain": "rococo-staging",
-  "para_id": 2068,
+  "para_id": 1000,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {
@@ -21,83 +19,89 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2068
+        "parachainId": 1000
       },
       "sudo": {
-        "key": "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t" 
+        "key": null
       },
       "balances": {
         "balances": [
           [
-            "5EZy16nDu6KZZT66PaMUXAeeZC8jkC6s7hBSY5ChqM8et5aq",
-            12345678000000000000
+            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            1152921504606846976
           ],
           [
-            "5D7DGQNjk5gAwatPSMf555VB1W8UCq1sQomHX2eRwiLqhc4t",
-            10000000000000000000
+            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            1152921504606846976
           ],
           [
-            "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
-            10000000000000000000
+            "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+            1152921504606846976
           ],
           [
-            "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
-            10000000000000000000
+            "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
+            1152921504606846976
           ],
           [
-            "5FEXwYeMsBuiehBmBykHKNNjxmBtDGQZyCkT9XYsiRU1KhC4",
-            11235813213400000000
+            "5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw",
+            1152921504606846976
           ],
           [
-            "5Cg444efBbBfw1sjyfC1yyNEakDPkkwuRi8RUZgAM4tsiNu9",
-            11235813213400000000
+            "5CiPPseXPECbkjWCa6MnjNokrgYjMqmKndv2rSnekmSK2DjL",
+            1152921504606846976
+          ],
+          [
+            "5GNJqTPyNqANBkUVMN1LPPrxXnFouWXoe2wNSmmEoLctxiZY",
+            1152921504606846976
+          ],
+          [
+            "5HpG9w8EBLe5XCrbczpwq5TSXvedjrBGCwqxK1iQ7qUsSWFc",
+            1152921504606846976
+          ],
+          [
+            "5Ck5SLSHYac6WFt5UZRSsdJjwmpSZq85fd5TRNAdZQVzEAPT",
+            1152921504606846976
+          ],
+          [
+            "5HKPmK9GYtE1PSLsS1qiYU9xQ9Si1NcEhdeCq9sw5bqu4ns8",
+            1152921504606846976
+          ],
+          [
+            "5FCfAonRZgTFrTd9HREEyeJjDpT397KMzizE6T3DvebLFE7n",
+            1152921504606846976
+          ],
+          [
+            "5CRmqmsiNFExV6VbdmPJViVxrWmkaXXvBrSX8oqBT8R9vmWk",
+            1152921504606846976
           ]
-
-          
         ]
       },
       "collatorSelection": {
         "invulnerables": [
-          
-          "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
-          "5FEXwYeMsBuiehBmBykHKNNjxmBtDGQZyCkT9XYsiRU1KhC4"
+          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
         ],
         "candidacyBond": 16000000000,
         "desiredCandidates": 0
       },
       "session": {
         "keys": [
-          
           [
-            "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
-            "5DvXwFVJAhuzMEdQmFsfzCGL1CDUqVJc6nDHyxDqYoSqUE18",
+            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
             {
-              "aura": "5DPSWyyQqscgQ1o8bCL1AH7gLDR1zyWqtYw22cpJwMWbErvf"
+              "aura": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
             }
           ],
           [
-            "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
-            "5D2KWHBa7X2RRt8zGhwmuXxa4KE4ofTGCY4nYg8W6MKxV523",
+            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
             {
-              "aura": "5CcLtfQuroSgXRYgcVacAAopnF8gN1PrJEGdqxTgh9ZvUzHK"
-            }
-          ],
-          [
-            "5FEXwYeMsBuiehBmBykHKNNjxmBtDGQZyCkT9XYsiRU1KhC4",
-            "5FEXwYeMsBuiehBmBykHKNNjxmBtDGQZyCkT9XYsiRU1KhC4",
-            {
-              "aura": "5FpsAGivqphEZiA72157eeGXVZvp4xCvxhw51aosnc6STARp"
-            }
-          ],
-          [
-            "5Cg444efBbBfw1sjyfC1yyNEakDPkkwuRi8RUZgAM4tsiNu9",
-            "5Cg444efBbBfw1sjyfC1yyNEakDPkkwuRi8RUZgAM4tsiNu9",
-            {
-              "aura": "5CyPJEzpyiHXpS734jLWRFc2Cvq2AwsthUXvCejg3h3KzuEA"
+              "aura": "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty"
             }
           ]
         ]
-      }, 
+      },
       "aura": {
         "authorities": []
       },

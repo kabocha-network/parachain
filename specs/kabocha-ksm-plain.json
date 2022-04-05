@@ -1,15 +1,19 @@
 {
-  "name": "Soupcan",
-  "id": "soup",
+  "name": "Kabocha",
+  "id": "kabocha",
   "chainType": "Live",
   "bootNodes": [
     "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
   ],
   "telemetryEndpoints": null,
   "protocolId": null,
-  "properties": null,
-  "relay_chain": "rococo-staging",
-  "para_id": 1000,
+  "properties": {
+    "ss58Format": 27,
+    "tokenDecimals": 12,
+    "tokenSymbol": "KAB"
+  },
+  "relay_chain": "kusama",
+  "para_id": 2113,
   "consensusEngine": null,
   "codeSubstitutes": {},
   "genesis": {

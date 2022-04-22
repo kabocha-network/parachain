@@ -224,5 +224,8 @@ fn testnet_genesis(
 		polkadot_xcm: kabocha_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},
+		council: Default::default(),
+		democracy: Default::default(),
+		technical_committee: Default::default(),
 	}
 }

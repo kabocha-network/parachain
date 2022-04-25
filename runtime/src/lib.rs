@@ -67,7 +67,7 @@ use xcm_builder::{
 use xcm_executor::{Config, XcmExecutor};
 
 /// Import the template pallet.
-pub use pallet_template;
+pub use pallet_mint_currency;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
@@ -609,9 +609,10 @@ impl pallet_collator_selection::Config for Runtime {
 	type WeightInfo = weights::pallet_collator_selection::WeightInfo<Runtime>;
 }
 
-/// Configure the pallet template in pallets/template.
-impl pallet_template::Config for Runtime {
+/// Configure the pallet mint_currency in pallets/mint_currency.
+impl pallet_mint_currency::Config for Runtime {
 	type Event = Event;
+    type Currency = Balances;
 }
 
 parameter_types! {
@@ -917,7 +918,7 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 36,
 
 		// Template
-		TemplatePallet: pallet_template::{Pallet, Call, Storage, Event<T>}  = 43,
+		MintCurrencyPallet: pallet_mint_currency::{Pallet, Call, Storage, Event<T>}  = 43,
 
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 44,
 

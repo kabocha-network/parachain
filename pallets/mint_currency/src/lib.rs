@@ -8,6 +8,7 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
+pub use pallet::*;
 
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
@@ -107,11 +108,11 @@ pub mod pallet {
 		}
 		#[pallet::weight(10_000)]
 		pub fn proposal_value_from_treasury(
-            origin: OriginFor<T>,
-			proposal_hash: u32,
-			target_account: T::AccountId,
-			network_service_provider: T::AccountId,
-            amount: u128,
+            _origin: OriginFor<T>,
+			_proposal_hash: u32,
+			_target_account: T::AccountId,
+			_network_service_provider: T::AccountId,
+            _amount: u128,
 		) -> DispatchResult {
             Err(Error::<T>::NotImplementedYet)?
             // should the transaction be signed ?

@@ -25,7 +25,6 @@ pub mod pallet {
         ensure_root,
     };
 
-	/// Configure the pallet by specifying the parameters and types on which it depends.
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		/// Because this pallet emits events, it depends on the runtime's definition of an event.
@@ -61,8 +60,10 @@ pub mod pallet {
 		ProposalNotAccepted,
         /// There is not enough funds in the treasury to pay the proposal
         NotEnoughFunds,
+        /// Overflow when adding the value to the account
 		Overflow,
-        NotImplementedYet, // TO DELETE ON PRODUCTION
+        /// TO DELETE ON PROD
+        NotImplementedYet,
 	}
 
 	#[pallet::hooks]
@@ -93,11 +94,15 @@ pub mod pallet {
             if let Err(_) = T::Currency::resolve_into_existing(&target_account, neg_imbalance) {
                 //something to do with neg_imbalance to resolve the imbalance: either remove funds,
                 //or add them to the treasury
+                //
+                //can only fail in case of overflow
                 return Err(Error::<T>::Overflow)?;
             };
             if let Err(_) = T::Currency::resolve_into_existing(&network_service_provider, neg_fee_imbalance) {
                 //something to do with neg_fee_imbalance to resolve the imbalance: either remove funds,
                 //or add them to the treasury
+                //
+                //can only fail in case of overflow
                 return Err(Error::<T>::Overflow)?;
             };
 
@@ -105,33 +110,6 @@ pub mod pallet {
                 Event::<T>::ProposalValueMinted(proposal_hash, target_account, amount)
             );
             Ok(())
-		}
-		#[pallet::weight(10_000)]
-		pub fn proposal_value_from_treasury(
-            _origin: OriginFor<T>,
-			_proposal_hash: u32,
-			_target_account: T::AccountId,
-			_network_service_provider: T::AccountId,
-            _amount: u128,
-		) -> DispatchResult {
-            Err(Error::<T>::NotImplementedYet)?
-            // should the transaction be signed ?
-            // if yes, by root ?
-            // ensure_root(origin)?;
-
-            // ensure the proposal_hash have been accepted
-            // else, return Error::ProposalNotAccepted
-
-            // let fee_amount: u128 = amount / 10;
-            // let total_amount = amount + fee_amount;
-
-            // check if there is enough funds in treasury
-
-            // transfer
-            // Self::deposit_event(
-            //     Event::<T>::ProposalValueAddedFromTreasury(proposal_hash, target_account, amount)
-            // );
-            // Ok(())
 		}
 	}
 }

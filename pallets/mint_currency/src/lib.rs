@@ -12,7 +12,7 @@ pub use pallet::*;
 pub use frame_support::{
         dispatch::DispatchResult, pallet_prelude::*,
         traits::Currency,
-        sp_runtime::traits::CheckedConversion
+        sp_runtime::traits::{CheckedConversion, CheckedDiv}
     };
 pub use frame_system::{
         pallet_prelude::*,
@@ -56,14 +56,8 @@ pub mod pallet {
 
 	#[pallet::error]
 	pub enum Error<T> {
-		/// The proposal have not been yet accepted
-		ProposalNotAccepted,
-        /// There is not enough funds in the treasury to pay the proposal
-        NotEnoughFunds,
         /// Overflow when adding the value to the account
 		Overflow,
-        /// TO DELETE ON PROD
-        NotImplementedYet,
 	}
 
     #[pallet::storage]
@@ -96,26 +90,28 @@ pub mod pallet {
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
+        ///mint value to the target account and fees to the network_service_provider account
 		#[pallet::weight(10_000)]
-		pub fn proposal_value_mint(
+		pub fn mint(
             origin: OriginFor<T>,
-			proposal_hash: u32,
 			target_account: T::AccountId,
 			network_service_provider: T::AccountId,
             amount: u128,
 		) -> DispatchResult {
             ensure_root(origin)?;
 
-            let fee_amount: u128 = amount / Self::percent_for_nsp().unwrap() as u128;
+            let fee_amount: u128 = amount.checked_div(Self::percent_for_nsp().unwrap() as u128);
 
             let neg_imbalance = T::Currency::issue(amount.checked_into().ok_or(Error::<T>::Overflow)?);
-            let neg_fee_imbalance = T::Currency::issue(fee_amount.checked_into().ok_or(Error::<T>::Overflow)?);
-
             T::Currency::resolve_creating(&target_account, neg_imbalance);
-            T::Currency::resolve_creating(&network_service_provider, neg_fee_imbalance);
-
             Self::deposit_event(
-                Event::<T>::ValueMinted(proposal_hash, target_account, amount)
+                Event::<T>::ValueMinted(target_account, amount)
+            );
+
+            let neg_fee_imbalance = T::Currency::issue(fee_amount.checked_into().ok_or(Error::<T>::Overflow)?);
+            T::Currency::resolve_creating(&network_service_provider, neg_fee_imbalance);
+            Self::deposit_event(
+                Event::<T>::FeesMinted(network_service_provider, fee_amount)
             );
             Ok(())
 		}

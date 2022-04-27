@@ -74,7 +74,7 @@ pub mod pallet {
 	#[cfg(feature = "std")]
 	impl Default for GenesisConfig {
 		fn default() -> Self {
-			Self {
+            if ()
 				percent_for_nsp: 10,
 			}
 		}
@@ -83,6 +83,9 @@ pub mod pallet {
     #[pallet::genesis_build]
     impl<T: Config> GenesisBuild<T> for GenesisConfig {
 		fn build(&self) {
+            if (self.percent_for_nsp > 100) {
+                panic!("Percentage for NSP must be less than 100");
+            }
             PercentForNSM::<T>::put(self.percent_for_nsp);
 		}
 	}

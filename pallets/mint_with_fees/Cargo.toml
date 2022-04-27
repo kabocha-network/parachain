@@ -1,5 +1,5 @@
 [package]
-name = "pallet-mint-currency"
+name = "pallet-mint-with-fees"
 authors = ["Erudyx"]
 description = "pallet mint-currency for minting proposal value."
 version = "0.1.0"

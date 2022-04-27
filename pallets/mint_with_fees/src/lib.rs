@@ -46,18 +46,20 @@ pub mod pallet {
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		/// the proposal value have been minted on the target account
-		/// [proposal_id, target_account, value]
-		ValueMinted(u32, T::AccountId, u128),
-		/// the proposal value have been minted on the target account
-		/// [proposal_id, target_account, value]
-		FeesMinted(u32, T::AccountId, u128),
+		/// the value have been minted on the target account
+		/// [target_account, value]
+		ValueMinted(T::AccountId, u128),
+		/// the fees have been minted on the nsm account
+		/// [nsp_account, value]
+		FeesMinted(T::AccountId, u128),
 	}
 
 	#[pallet::error]
 	pub enum Error<T> {
         /// Overflow when adding the value to the account
 		Overflow,
+        /// Amount is 0
+        ZeroAmount,
 	}
 
     #[pallet::storage]
@@ -99,8 +101,11 @@ pub mod pallet {
             amount: u128,
 		) -> DispatchResult {
             ensure_root(origin)?;
+            if amount == 0 {
+                return Err(Error::<T>::ZeroAmount.into());
+            }
 
-            let fee_amount: u128 = amount.checked_div(Self::percent_for_nsp().unwrap() as u128);
+            let fee_amount: u128 = amount.checked_div(Self::percent_for_nsp().unwrap() as u128).unwrap();
 
             let neg_imbalance = T::Currency::issue(amount.checked_into().ok_or(Error::<T>::Overflow)?);
             T::Currency::resolve_creating(&target_account, neg_imbalance);

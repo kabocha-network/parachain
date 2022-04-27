@@ -1,4 +1,4 @@
-use crate as pallet_mint_currency;
+use crate as pallet_mint_with_fees;
 use frame_support::{parameter_types, traits::Everything};
 // use frame_system;
 use sp_core::H256;
@@ -18,7 +18,7 @@ frame_support::construct_runtime!(
 		UncheckedExtrinsic = UncheckedExtrinsic,
 	{
 		System: frame_system::{Pallet, Call, Config, Storage, Event<T>},
-		MintCurrency: pallet_mint_currency::{Pallet, Call, Storage, Event<T>},
+		MintWithFees: pallet_mint_with_fees::{Pallet, Call, Storage, Event<T>},
 
         Balances: pallet_balances,
 	}
@@ -79,7 +79,7 @@ impl pallet_balances::Config for Test {
 	type ReserveIdentifier = [u8; 8];
 }
 
-impl pallet_mint_currency::Config for Test {
+impl pallet_mint_with_fees::Config for Test {
 	type Event = Event;
     type Currency = Balances;
 }

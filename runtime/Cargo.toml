@@ -23,7 +23,7 @@ serde = { version = "1.0.132", optional = true, features = ["derive"] }
 smallvec = "1.6.1"
 
 # Local Dependencies
-pallet-mint-currency = { path = "../pallets/mint_currency", default-features = false }
+pallet-mint-with-fees = { path = "../pallets/mint_with_fees", default-features = false }
 
 # Substrate Dependencies
 ## Substrate Primitive Dependencies
@@ -134,7 +134,7 @@ std = [
     "pallet-child-bounties/std",
     "pallet-session/std",
 	"pallet-sudo/std",
-	"pallet-mint-currency/std",
+	"pallet-mint-with-fees/std",
 	"pallet-timestamp/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",
 	"pallet-transaction-payment/std",
@@ -166,7 +166,7 @@ runtime-benchmarks = [
 	"frame-system/runtime-benchmarks",
 	"pallet-balances/runtime-benchmarks",
 	"pallet-collator-selection/runtime-benchmarks",
-	"pallet-mint-currency/runtime-benchmarks",
+	"pallet-mint-with-fees/runtime-benchmarks",
 	"pallet-timestamp/runtime-benchmarks",
 	"pallet-xcm/runtime-benchmarks",
 	"cumulus-pallet-session-benchmarking/runtime-benchmarks",

@@ -3434,7 +3434,7 @@ dependencies = [
  "pallet-collator-selection",
  "pallet-collective",
  "pallet-democracy",
- "pallet-mint-currency",
+ "pallet-mint-with-fees",
  "pallet-multisig",
  "pallet-preimage",
  "pallet-scheduler",
@@ -5325,7 +5325,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-mint-currency"
+name = "pallet-mint-with-fees"
 version = "0.1.0"
 dependencies = [
  "frame-benchmarking",

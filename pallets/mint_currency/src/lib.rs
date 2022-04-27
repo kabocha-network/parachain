@@ -9,21 +9,22 @@ mod mock;
 mod tests;
 
 pub use pallet::*;
+pub use frame_support::{
+        dispatch::DispatchResult, pallet_prelude::*,
+        traits::Currency,
+        sp_runtime::traits::CheckedConversion
+    };
+pub use frame_system::{
+        pallet_prelude::*,
+        ensure_root,
+    };
 
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
 
 #[frame_support::pallet]
 pub mod pallet {
-	use frame_support::{
-        dispatch::DispatchResult, pallet_prelude::*,
-        traits::Currency,
-        sp_runtime::traits::CheckedConversion
-    };
-	use frame_system::{
-        pallet_prelude::*,
-        ensure_root,
-    };
+    use super::*;
 
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
@@ -42,16 +43,15 @@ pub mod pallet {
 
 	// #[pallet::storage]
 	// #[pallet::getter(fn something)]
-	// pub type Something<T> = StorageValue<_, u32>;
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
 		/// the proposal value have been minted on the target account
 		/// [proposal_id, target_account, value]
-		ProposalValueMinted(u32, T::AccountId, u128),
-		/// the proposal value have been added on the target account from the treasury
+		ValueMinted(u32, T::AccountId, u128),
+		/// the proposal value have been minted on the target account
 		/// [proposal_id, target_account, value]
-		ProposalValueAddedFromTreasury(u32, T::AccountId, u128),
+		FeesMinted(u32, T::AccountId, u128),
 	}
 
 	#[pallet::error]
@@ -64,6 +64,31 @@ pub mod pallet {
 		Overflow,
         /// TO DELETE ON PROD
         NotImplementedYet,
+	}
+
+    #[pallet::storage]
+    #[pallet::getter(fn percent_for_nsp)]
+    pub type PercentForNSM<T: Config> = StorageValue<_, u8>;
+
+    #[pallet::genesis_config]
+	pub struct GenesisConfig {
+		pub percent_for_nsp: u8
+	}
+
+	#[cfg(feature = "std")]
+	impl Default for GenesisConfig {
+		fn default() -> Self {
+			Self {
+				percent_for_nsp: 10,
+			}
+		}
+	}
+
+    #[pallet::genesis_build]
+    impl<T: Config> GenesisBuild<T> for GenesisConfig {
+		fn build(&self) {
+            PercentForNSM::<T>::put(self.percent_for_nsp);
+		}
 	}
 
 	#[pallet::hooks]
@@ -79,35 +104,18 @@ pub mod pallet {
 			network_service_provider: T::AccountId,
             amount: u128,
 		) -> DispatchResult {
-            // should the transaction be signed ?
-            // if yes, by root ?
             ensure_root(origin)?;
 
-            // ensure the proposal_hash have been accepted
-            // else, return Error::ProposalNotAccepted
-
-            let fee_amount: u128 = amount / 10;
+            let fee_amount: u128 = amount / Self::percent_for_nsp().unwrap() as u128;
 
             let neg_imbalance = T::Currency::issue(amount.checked_into().ok_or(Error::<T>::Overflow)?);
             let neg_fee_imbalance = T::Currency::issue(fee_amount.checked_into().ok_or(Error::<T>::Overflow)?);
 
-            if let Err(_) = T::Currency::resolve_into_existing(&target_account, neg_imbalance) {
-                //something to do with neg_imbalance to resolve the imbalance: either remove funds,
-                //or add them to the treasury
-                //
-                //can only fail in case of overflow
-                return Err(Error::<T>::Overflow)?;
-            };
-            if let Err(_) = T::Currency::resolve_into_existing(&network_service_provider, neg_fee_imbalance) {
-                //something to do with neg_fee_imbalance to resolve the imbalance: either remove funds,
-                //or add them to the treasury
-                //
-                //can only fail in case of overflow
-                return Err(Error::<T>::Overflow)?;
-            };
+            T::Currency::resolve_creating(&target_account, neg_imbalance);
+            T::Currency::resolve_creating(&network_service_provider, neg_fee_imbalance);
 
             Self::deposit_event(
-                Event::<T>::ProposalValueMinted(proposal_hash, target_account, amount)
+                Event::<T>::ValueMinted(proposal_hash, target_account, amount)
             );
             Ok(())
 		}

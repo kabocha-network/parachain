@@ -1,6 +1,6 @@
-use crate as pallet_template;
+use crate as pallet_mint_currency;
 use frame_support::{parameter_types, traits::Everything};
-use frame_system as system;
+// use frame_system;
 use sp_core::H256;
 use sp_runtime::{
 	testing::Header,
@@ -18,16 +18,19 @@ frame_support::construct_runtime!(
 		UncheckedExtrinsic = UncheckedExtrinsic,
 	{
 		System: frame_system::{Pallet, Call, Config, Storage, Event<T>},
-		TemplateModule: pallet_template::{Pallet, Call, Storage, Event<T>},
+		MintCurrency: pallet_mint_currency::{Pallet, Call, Storage, Event<T>},
+
+        Balances: pallet_balances,
 	}
 );
+
 
 parameter_types! {
 	pub const BlockHashCount: u64 = 250;
 	pub const SS58Prefix: u8 = 42;
 }
 
-impl system::Config for Test {
+impl frame_system::Config for Test {
 	type BaseCallFilter = Everything;
 	type BlockWeights = ();
 	type BlockLength = ();
@@ -45,7 +48,7 @@ impl system::Config for Test {
 	type BlockHashCount = BlockHashCount;
 	type Version = ();
 	type PalletInfo = PalletInfo;
-	type AccountData = ();
+	type AccountData = pallet_balances::AccountData<u128>;
 	type OnNewAccount = ();
 	type OnKilledAccount = ();
 	type SystemWeightInfo = ();
@@ -54,11 +57,70 @@ impl system::Config for Test {
 	type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
-impl pallet_template::Config for Test {
+pub type Balance = u128;
+
+parameter_types! {
+	pub const ExistentialDeposit: Balance = 1_000_000_000;
+	pub const MaxLocks: u32 = 50;
+	pub const MaxReserves: u32 = 50;
+}
+
+impl pallet_balances::Config for Test {
+	type MaxLocks = MaxLocks;
+	/// The type for recording an account's balance.
+	type Balance = Balance;
+	/// The ubiquitous event type.
 	type Event = Event;
+	type DustRemoval = ();
+	type ExistentialDeposit = ExistentialDeposit;
+	type AccountStore = System;
+	type WeightInfo = ();
+	type MaxReserves = MaxReserves;
+	type ReserveIdentifier = [u8; 8];
+}
+
+impl pallet_mint_currency::Config for Test {
+	type Event = Event;
+    type Currency = Balances;
 }
 
 // Build genesis storage according to the mock runtime.
-pub fn new_test_ext() -> sp_io::TestExternalities {
-	system::GenesisConfig::default().build_storage::<Test>().unwrap().into()
+
+/// Mock users AccountId
+pub const ALICE: u64 = 1;
+pub const BOB: u64 = 2;
+
+pub struct ExtBuilder {
+	caps_endowed_accounts: Vec<(u64, u128)>,
+}
+
+impl Default for ExtBuilder {
+	fn default() -> Self {
+		ExtBuilder {
+			caps_endowed_accounts: Vec::new(),
+		}
+	}
+}
+
+impl ExtBuilder {
+	pub fn balances(mut self, accounts: Vec<(u64, u128)>) -> Self {
+		for account in accounts {
+			self.caps_endowed_accounts.push(account);
+		}
+		self
+	}
+
+	pub fn build(self) -> sp_io::TestExternalities {
+		let mut t = frame_system::GenesisConfig::default().build_storage::<Test>().unwrap();
+
+		pallet_balances::GenesisConfig::<Test> {
+			balances: self.caps_endowed_accounts,
+		}
+		.assimilate_storage(&mut t)
+		.unwrap();
+
+		let mut ext = sp_io::TestExternalities::new(t);
+		ext.execute_with(|| System::set_block_number(1));
+		ext
+	}
 }

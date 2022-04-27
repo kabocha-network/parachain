@@ -918,7 +918,7 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 36,
 
 		// Template
-		MintCurrencyPallet: pallet_mint_currency::{Pallet, Call, Event<T>}  = 43,
+		MintCurrency: pallet_mint_currency::{Pallet, Call, Event<T>}  = 43,
 
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 44,
 

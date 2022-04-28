@@ -1,6 +1,6 @@
 [package]
-name = "pallet-mint-with-fees"
-authors = ["Erudyx"]
+name = "pallet-mint-with-fee"
+authors = ["Nathan GD <https://github.com/gdnathan>"]
 description = "pallet mint-currency for minting proposal value."
 version = "0.1.0"
 license = "Unlicense"
@@ -14,6 +14,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 [dependencies]
 codec = { package = "parity-scale-codec", version = "2.0.0", features = ["derive"], default-features = false }
 scale-info = { version = "1.0.0", default-features = false, features = ["derive"] }
+sp-std = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true , branch = "polkadot-v0.9.16" }
 frame-support = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
@@ -34,6 +35,7 @@ std = [
 	"scale-info/std",
 	"frame-support/std",
 	"frame-system/std",
+    "sp-std/std",
 	"frame-benchmarking/std",
 ]
 try-runtime = [ "frame-support/try-runtime" ]

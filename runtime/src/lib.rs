@@ -67,7 +67,7 @@ use xcm_builder::{
 use xcm_executor::{Config, XcmExecutor};
 
 /// Import the template pallet.
-pub use pallet_mint_with_fees;
+pub use pallet_mint_with_fee;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
@@ -609,8 +609,8 @@ impl pallet_collator_selection::Config for Runtime {
 	type WeightInfo = weights::pallet_collator_selection::WeightInfo<Runtime>;
 }
 
-/// Configure the pallet mint_with_fees in pallets/mint_with_fees.
-impl pallet_mint_with_fees::Config for Runtime {
+/// Configure the pallet mint_with_fee in pallets/mint_with_fee.
+impl pallet_mint_with_fee::Config for Runtime {
 	type Event = Event;
     type Currency = Balances;
 }
@@ -918,7 +918,7 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 36,
 
 		// Template
-		MintWithFees: pallet_mint_with_fees::{Pallet, Call, Event<T>}  = 43,
+		MintWithfee: pallet_mint_with_fee::{Pallet, Call, Event<T>}  = 43,
 
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 44,
 

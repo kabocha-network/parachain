@@ -1,16 +1,67 @@
-use crate::{mock::*, Error};
+use super::mock::*;
+use crate::Error;
 use frame_support::{assert_noop, assert_ok};
 
 #[test]
-fn it_works_for_default_value() {
+fn functional_mint_call() {
 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
-        // assert_ok!(MintCurrency::proposal_value_mint(Origin::signed(0), 0, ));
-		// Dispatch a signed extrinsic.
-		// assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
-		// Read pallet storage and assert an expected result.
-		// assert_eq!(TemplateModule::something(), Some(42));
+		assert_ok!(MintWithFee::mint(Origin::root(), BOB, None, 100_000, vec!(1, 2, 3)));
+
+		assert_eq!(Balances::free_balance(BOB), 100_100_000);
 	});
 }
+
+#[test]
+fn functional_mint_with_fee_call() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_ok!(MintWithFee::change_fee_percent(Origin::root(), 10));
+		assert_ok!(MintWithFee::mint(Origin::root(), BOB, Some(CHARLIE), 100_000, vec!(1, 2, 3)));
+
+
+		assert_eq!(Balances::free_balance(BOB), 100_100_000);
+		assert_eq!(Balances::free_balance(CHARLIE), 100_010_000);
+	});
+}
+
+#[test]
+fn mint_0_token() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_ok!(MintWithFee::mint(Origin::root(), BOB, Some(CHARLIE), 0, vec!(1, 2, 3)));
+
+		assert_eq!(Balances::free_balance(BOB), 100_000_000);
+		assert_eq!(Balances::free_balance(CHARLIE), 100_000_000);
+	});
+}
+
+#[test]
+fn change_fee_percent() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_ok!(MintWithFee::change_fee_percent(Origin::root(), 30));
+
+		assert_eq!(MintWithFee::fee_percent(), 30);
+	});
+}
+
+#[test]
+fn change_fee_percent_over_100() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_noop!(
+			MintWithFee::change_fee_percent(Origin::root(), 110),
+			Error::<Test>::InvalidPercentage
+		);
+	});
+}
+
+// #[test]
+// fn oversized_metadata() {
+// 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+//         assert_ok!(MintWithFee::mint(Origin::root(), BOB, Some(CHARLIE), 0, vec!(1,2,3)));
+//
+//         assert_eq!(Balances::free_balance(BOB), 100_000_000);
+//         assert_eq!(Balances::free_balance(CHARLIE), 100_000_000);
+// 	});
+// }
+
 //
 // #[test]
 // fn correct_error_for_none_value() {

@@ -18,7 +18,7 @@ frame_support::construct_runtime!(
 		UncheckedExtrinsic = UncheckedExtrinsic,
 	{
 		System: frame_system::{Pallet, Call, Config, Storage, Event<T>},
-		MintWithfee: pallet_mint_with_fee::{Pallet, Call, Storage, Event<T>},
+		MintWithFee: pallet_mint_with_fee::{Pallet, Call, Storage, Event<T>},
 
         Balances: pallet_balances,
 	}
@@ -60,7 +60,7 @@ impl frame_system::Config for Test {
 pub type Balance = u128;
 
 parameter_types! {
-	pub const ExistentialDeposit: Balance = 1_000_000_000;
+	pub const ExistentialDeposit: Balance = 1_000_000;
 	pub const MaxLocks: u32 = 50;
 	pub const MaxReserves: u32 = 50;
 }
@@ -89,6 +89,7 @@ impl pallet_mint_with_fee::Config for Test {
 /// Mock users AccountId
 pub const ALICE: u64 = 1;
 pub const BOB: u64 = 2;
+pub const CHARLIE: u64 = 3;
 
 pub struct ExtBuilder {
 	caps_endowed_accounts: Vec<(u64, u128)>,
@@ -97,7 +98,11 @@ pub struct ExtBuilder {
 impl Default for ExtBuilder {
 	fn default() -> Self {
 		ExtBuilder {
-			caps_endowed_accounts: Vec::new(),
+			caps_endowed_accounts: vec![
+			(ALICE, 1_000_000_000_000_000_000),
+			(BOB, 100_000_000),
+			(CHARLIE, 100_000_000),
+		],
 		}
 	}
 }
@@ -118,6 +123,10 @@ impl ExtBuilder {
 		}
 		.assimilate_storage(&mut t)
 		.unwrap();
+
+        pallet_mint_with_fee::GenesisConfig {
+            fee_percent: 10,
+        };
 
 		let mut ext = sp_io::TestExternalities::new(t);
 		ext.execute_with(|| System::set_block_number(1));

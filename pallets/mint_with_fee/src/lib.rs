@@ -46,6 +46,9 @@ pub mod pallet {
 		/// the fees have been minted on the nsm account
 		/// [nsp_account, value, metadata]
 		FeeMinted(T::AccountId, u128, Vec<u8>),
+        /// the percentage have been changed
+        /// [new_percentage]
+        FeeChanged(u8),
 	}
 
 	#[pallet::error]
@@ -53,8 +56,6 @@ pub mod pallet {
         /// the amount have a wrong format, causing an error when converting
         /// should only happen if the Currency is not a u128
 		BadAmount,
-        /// percentage is more than 100
-        InvalidPercentage,
         /// Overflow
         Overflow,
         /// Too long metadata
@@ -81,9 +82,6 @@ pub mod pallet {
 	#[pallet::genesis_build]
 	impl<T: Config> GenesisBuild<T> for GenesisConfig {
 		fn build(&self) {
-			if self.fee_percent > 100 {
-				panic!("Percentage must be less than 100");
-			}
 			FeePercent::<T>::put(self.fee_percent);
 		}
 	}
@@ -134,10 +132,8 @@ pub mod pallet {
 		pub fn change_fee_percent(origin: OriginFor<T>, percentage: u8) -> DispatchResult {
 			ensure_root(origin)?;
 
-            if percentage > 100 {
-                return Err(Error::<T>::InvalidPercentage.into());
-            }
 			FeePercent::<T>::put(percentage);
+            Self::deposit_event(Event::<T>::FeeChanged(percentage));
 			Ok(())
 		}
 	}

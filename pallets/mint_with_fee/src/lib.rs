@@ -117,8 +117,20 @@ pub mod pallet {
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
-        /// Mints the given amount of value on the target account
-        /// Mint a percent of the amount on the fee account, if provided
+        /// Mints the given amount of value on the target account,
+        /// and mint a percent of the amount on the fee account, if provided
+        ///
+        /// `mint` will increase the total issuance, and increase the amounts of the targets accounts.
+        ///
+        /// The dispatch origin for this call must be `Signed` by the root.
+        ///
+        /// # <weight>
+        ///
+        /// Related functions:
+        /// - `mint_to_account` can be one or two times, dpending on if the fee account is provided or not.
+        ///
+        ///
+        /// # </weight>
 		#[pallet::weight(10_000)]
 		pub fn mint(
 			origin: OriginFor<T>,
@@ -156,7 +168,12 @@ pub mod pallet {
 			Ok(())
 		}
 
-        /// change the fee percentage
+        /// Change the value of the fee percentage in storage
+        ///
+        /// `set_fee` will change the value of the fee percentage in storage,
+        /// affecting the next calls to `mint`
+        ///
+        /// The dispatch origin for this call must be `Signed` by the root.
 		#[pallet::weight(10_000)]
 		pub fn change_fee_percent(origin: OriginFor<T>, percentage: BalanceOf<T>) -> DispatchResult {
 			ensure_root(origin)?;
@@ -168,7 +185,9 @@ pub mod pallet {
 	}
 
 	impl<T: Config> Pallet<T> {
-        /// Mints the given amount of value on the target account
+        /// Mints the given amount on the target account
+        ///
+        /// cannot fail
 		fn mint_to_account(target_account: &T::AccountId, amount: BalanceOf<T>) -> Result<(), Error<T>> {
 			let negative_amount_imbalance = T::Currency::issue(amount);
 			T::Currency::resolve_creating(&target_account, negative_amount_imbalance);

@@ -1,6 +1,6 @@
 use super::mock::*;
-// use crate::Error;
-use frame_support::assert_ok;
+use frame_support::{assert_noop, assert_ok};
+use sp_runtime::traits::BadOrigin;
 
 #[test]
 fn functional_mint_call() {
@@ -34,6 +34,16 @@ fn mint_0_token() {
 }
 
 #[test]
+fn mint_bad_origin() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_noop!(
+            MintWithFee::mint(Origin::signed(1), BOB, None , 30, vec!(0)),
+            BadOrigin
+            );
+	});
+}
+
+#[test]
 fn change_fee_percent() {
 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
 		assert_ok!(MintWithFee::change_fee_percent(Origin::root(), 30));
@@ -42,31 +52,12 @@ fn change_fee_percent() {
 	});
 }
 
-// #[test]
-// fn change_fee_percent_over_100() {
-// 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
-// 		assert_noop!(
-// 			MintWithFee::change_fee_percent(Origin::root(), 110),
-// 			Error::<Test>::InvalidPercentage
-// 		);
-// 	});
-// }
-
-// #[test]
-// fn oversized_metadata() {
-// 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
-//         assert_ok!(MintWithFee::mint(Origin::root(), BOB, Some(CHARLIE), 0, vec!(1,2,3)));
-//
-//         assert_eq!(Balances::free_balance(BOB), 100_000_000);
-//         assert_eq!(Balances::free_balance(CHARLIE), 100_000_000);
-// 	});
-// }
-
-//
-// #[test]
-// fn correct_error_for_none_value() {
-// 	new_test_ext().execute_with(|| {
-// 		// Ensure the expected error is thrown when no value is present.
-// 		assert_noop!(TemplateModule::cause_error(Origin::signed(1)), Error::<Test>::NoneValue);
-// 	});
-// }
+#[test]
+fn change_fee_bad_origin() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_noop!(
+            MintWithFee::change_fee_percent(Origin::signed(1), 30),
+            BadOrigin
+            );
+	});
+}

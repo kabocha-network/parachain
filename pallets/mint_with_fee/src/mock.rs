@@ -48,7 +48,7 @@ impl frame_system::Config for Test {
 	type BlockHashCount = BlockHashCount;
 	type Version = ();
 	type PalletInfo = PalletInfo;
-	type AccountData = pallet_balances::AccountData<u128>;
+	type AccountData = pallet_balances::AccountData<u64>;
 	type OnNewAccount = ();
 	type OnKilledAccount = ();
 	type SystemWeightInfo = ();
@@ -57,19 +57,17 @@ impl frame_system::Config for Test {
 	type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
-pub type Balance = u128;
+pub type Balance = u64;
 
 parameter_types! {
-	pub const ExistentialDeposit: Balance = 1_000_000;
+	pub const ExistentialDeposit: Balance = 1_000;
 	pub const MaxLocks: u32 = 50;
 	pub const MaxReserves: u32 = 50;
 }
 
 impl pallet_balances::Config for Test {
 	type MaxLocks = MaxLocks;
-	/// The type for recording an account's balance.
 	type Balance = Balance;
-	/// The ubiquitous event type.
 	type Event = Event;
 	type DustRemoval = ();
 	type ExistentialDeposit = ExistentialDeposit;
@@ -84,31 +82,29 @@ impl pallet_mint_with_fee::Config for Test {
     type Currency = Balances;
 }
 
-// Build genesis storage according to the mock runtime.
-
 /// Mock users AccountId
 pub const ALICE: u64 = 1;
 pub const BOB: u64 = 2;
 pub const CHARLIE: u64 = 3;
 
 pub struct ExtBuilder {
-	caps_endowed_accounts: Vec<(u64, u128)>,
+	caps_endowed_accounts: Vec<(u64, u64)>,
 }
 
 impl Default for ExtBuilder {
 	fn default() -> Self {
 		ExtBuilder {
 			caps_endowed_accounts: vec![
-			(ALICE, 1_000_000_000_000_000_000),
-			(BOB, 100_000_000),
-			(CHARLIE, 100_000_000),
+			(ALICE, 1_000_000),
+			(BOB, 100_000),
+			(CHARLIE, 100_000),
 		],
 		}
 	}
 }
 
 impl ExtBuilder {
-	pub fn balances(mut self, accounts: Vec<(u64, u128)>) -> Self {
+	pub fn balances(mut self, accounts: Vec<(u64, u64)>) -> Self {
 		for account in accounts {
 			self.caps_endowed_accounts.push(account);
 		}
@@ -124,8 +120,8 @@ impl ExtBuilder {
 		.assimilate_storage(&mut t)
 		.unwrap();
 
-        pallet_mint_with_fee::GenesisConfig {
-            fee_percent: 10,
+        pallet_mint_with_fee::GenesisConfig::<Test> {
+            fee_percent: (10 as u32).into(),
         };
 
 		let mut ext = sp_io::TestExternalities::new(t);

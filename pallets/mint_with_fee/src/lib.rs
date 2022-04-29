@@ -1,6 +1,35 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+//! # MintWithFee Pallet
+//!
+//! The MintWithFee pallet provide functionality to mint tokens with an optional fee,
+//! that is a percentage of the total amount of tokens minted.
+//!
+//! ## Overview
+//!
+//! The MintWithFee pallet provide function for:
+//!
+//! - Minting tokens with an optional fee.
+//! - Changing the percentage of the fee.
+//!
+//! ## Interface
+//!
+//! ### Dispatchable Functions
+//!
+//! - `set_fee` - Set the fee percentage.
+//! - `mint` - Mint tokens with an optional fee.
+//!
+//! ## GenesisConfig
+//!
+//! The MintWithFee pallet requires a `GenesisConfig` to be set containing:
+//!
+//! - `fee_percent` - The percentage of the total amount of tokens minted that will be used as a fee.
+//!
+//! ## Assumptions
+//!
+//! If the amount of the Currency trait is not an u128, it could cause a incorrect conversion, and
+//! the function will return an BadAmount error.
 
-// pub use pallet::*;
+
+#![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(test)]
 mod mock;
@@ -19,6 +48,8 @@ pub use sp_std::prelude::Vec;
 
 #[cfg(feature = "runtime-benchmarks")]
 mod benchmarking;
+
+pub type BalanceOf<T> = <<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -42,20 +73,17 @@ pub mod pallet {
 	pub enum Event<T: Config> {
 		/// the value have been minted on the target accout
 		/// [target_account, value, metadata]
-		ValueMinted(T::AccountId, u128, Vec<u8>),
+		ValueMinted(T::AccountId, BalanceOf<T>, Vec<u8>),
 		/// the fees have been minted on the nsm account
 		/// [nsp_account, value, metadata]
-		FeeMinted(T::AccountId, u128, Vec<u8>),
+		FeeMinted(T::AccountId, BalanceOf<T>, Vec<u8>),
         /// the percentage have been changed
         /// [new_percentage]
-        FeeChanged(u8),
+        FeeChanged(BalanceOf<T>),
 	}
 
 	#[pallet::error]
 	pub enum Error<T> {
-        /// the amount have a wrong format, causing an error when converting
-        /// should only happen if the Currency is not a u128
-		BadAmount,
         /// Overflow
         Overflow,
         /// Too long metadata
@@ -64,39 +92,39 @@ pub mod pallet {
 
 
 	#[pallet::storage]
+    /// Holds the percentage of the amount that will be minted on the fee account (if provided)
 	#[pallet::getter(fn fee_percent)]
-	pub type FeePercent<T: Config> = StorageValue<_, u8, ValueQuery>;
+	pub type FeePercent<T: Config> = StorageValue<_, BalanceOf<T>, ValueQuery>;
 
 	#[pallet::genesis_config]
-	pub struct GenesisConfig {
-		pub fee_percent: u8,
+	pub struct GenesisConfig<T: Config> {
+		pub fee_percent: BalanceOf<T>,
 	}
 
 	#[cfg(feature = "std")]
-	impl Default for GenesisConfig {
+	impl<T: Config> Default for GenesisConfig<T> {
 		fn default() -> Self {
-			GenesisConfig { fee_percent: 10 }
+			GenesisConfig { fee_percent: (10 as u32).into() }
 		}
 	}
 
 	#[pallet::genesis_build]
-	impl<T: Config> GenesisBuild<T> for GenesisConfig {
+	impl<T: Config> GenesisBuild<T> for GenesisConfig<T> {
 		fn build(&self) {
 			FeePercent::<T>::put(self.fee_percent);
 		}
 	}
 
-    // T::x -> x est def dans la config
-    // x::<T> -> est générique de T
-    // x<T> -> est générique de T (mais dans la déclaration)
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
+        /// Mints the given amount of value on the target account
+        /// Mint a percent of the amount on the fee account, if provided
 		#[pallet::weight(10_000)]
 		pub fn mint(
 			origin: OriginFor<T>,
 			target_account: T::AccountId,
 			fee_target_account: Option<T::AccountId>,
-			amount: u128,
+			#[pallet::compact] amount: BalanceOf<T>,
 			metadata: Vec<u8>,
 		) -> DispatchResult {
 			ensure_root(origin)?;
@@ -106,7 +134,7 @@ pub mod pallet {
             }
 
             if let Some(fee_target_account) = fee_target_account {
-			    let fee_amount: u128 = amount.checked_mul(Self::fee_percent().into()).ok_or(Error::<T>::Overflow)? / 100;
+			    let fee_amount = amount.checked_mul(&Self::fee_percent()).ok_or(Error::<T>::Overflow)? / (100 as u32).into();
 
 			    Self::mint_to_account(&fee_target_account, fee_amount)?;
 
@@ -128,20 +156,21 @@ pub mod pallet {
 			Ok(())
 		}
 
+        /// change the fee percentage
 		#[pallet::weight(10_000)]
-		pub fn change_fee_percent(origin: OriginFor<T>, percentage: u8) -> DispatchResult {
+		pub fn change_fee_percent(origin: OriginFor<T>, percentage: BalanceOf<T>) -> DispatchResult {
 			ensure_root(origin)?;
-
 			FeePercent::<T>::put(percentage);
+
             Self::deposit_event(Event::<T>::FeeChanged(percentage));
 			Ok(())
 		}
 	}
 
 	impl<T: Config> Pallet<T> {
-		fn mint_to_account(target_account: &T::AccountId, amount: u128) -> Result<(), Error<T>> {
-			let negative_amount_imbalance =
-				T::Currency::issue(amount.checked_into().ok_or(Error::<T>::BadAmount)?);
+        /// Mints the given amount of value on the target account
+		fn mint_to_account(target_account: &T::AccountId, amount: BalanceOf<T>) -> Result<(), Error<T>> {
+			let negative_amount_imbalance = T::Currency::issue(amount);
 			T::Currency::resolve_creating(&target_account, negative_amount_imbalance);
 
 			Ok(())

@@ -1,13 +1,13 @@
 use super::mock::*;
-use crate::Error;
-use frame_support::{assert_noop, assert_ok};
+// use crate::Error;
+use frame_support::assert_ok;
 
 #[test]
 fn functional_mint_call() {
 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
 		assert_ok!(MintWithFee::mint(Origin::root(), BOB, None, 100_000, vec!(1, 2, 3)));
 
-		assert_eq!(Balances::free_balance(BOB), 100_100_000);
+		assert_eq!(Balances::free_balance(BOB), 200_000);
 	});
 }
 
@@ -18,8 +18,8 @@ fn functional_mint_with_fee_call() {
 		assert_ok!(MintWithFee::mint(Origin::root(), BOB, Some(CHARLIE), 100_000, vec!(1, 2, 3)));
 
 
-		assert_eq!(Balances::free_balance(BOB), 100_100_000);
-		assert_eq!(Balances::free_balance(CHARLIE), 100_010_000);
+		assert_eq!(Balances::free_balance(BOB), 200_000);
+		assert_eq!(Balances::free_balance(CHARLIE), 110_000);
 	});
 }
 
@@ -28,8 +28,8 @@ fn mint_0_token() {
 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
 		assert_ok!(MintWithFee::mint(Origin::root(), BOB, Some(CHARLIE), 0, vec!(1, 2, 3)));
 
-		assert_eq!(Balances::free_balance(BOB), 100_000_000);
-		assert_eq!(Balances::free_balance(CHARLIE), 100_000_000);
+		assert_eq!(Balances::free_balance(BOB), 100_000);
+		assert_eq!(Balances::free_balance(CHARLIE), 100_000);
 	});
 }
 
@@ -42,15 +42,15 @@ fn change_fee_percent() {
 	});
 }
 
-#[test]
-fn change_fee_percent_over_100() {
-	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
-		assert_noop!(
-			MintWithFee::change_fee_percent(Origin::root(), 110),
-			Error::<Test>::InvalidPercentage
-		);
-	});
-}
+// #[test]
+// fn change_fee_percent_over_100() {
+// 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+// 		assert_noop!(
+// 			MintWithFee::change_fee_percent(Origin::root(), 110),
+// 			Error::<Test>::InvalidPercentage
+// 		);
+// 	});
+// }
 
 // #[test]
 // fn oversized_metadata() {

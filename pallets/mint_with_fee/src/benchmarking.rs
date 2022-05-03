@@ -1,20 +1,28 @@
-//! Benchmarking setup for pallet-template
+//! Benchmarking setup for pallet-mint-with-fee
+
+#![cfg(feature = "runtime-benchmarks")]
 
 use super::*;
-
-#[allow(unused)]
-use crate::Pallet as Template;
-use frame_benchmarking::{benchmarks, impl_benchmark_test_suite, whitelisted_caller};
+use crate::Pallet as MintWithFee;
+use frame_benchmarking::{account as benchmark_account, benchmarks, impl_benchmark_test_suite};
 use frame_system::RawOrigin;
+use sp_std::vec;
+
+pub fn get_account<T: Config>(name: &'static str) -> T::AccountId {
+	let account: T::AccountId = benchmark_account(name, 0, 0);
+	account
+}
 
 benchmarks! {
-	do_something {
-		let s in 0 .. 100;
-		let caller: T::AccountId = whitelisted_caller();
-	}: _(RawOrigin::Signed(caller), s)
+	mint {
+        let bob: T::AccountId = get_account::<T>("BOB");
+        let charlie: T::AccountId = get_account::<T>("CHARLIE");
+		let i in 100_000 .. 1_000_000;
+	}: _(RawOrigin::Root, bob.clone(), Some(charlie.clone()), i.into(), vec!(0))
 	verify {
-		assert_eq!(Something::<T>::get(), Some(s));
+
 	}
 }
 
-impl_benchmark_test_suite!(Template, crate::mock::new_test_ext(), crate::mock::Test,);
+// impl_benchmark_test_suite!(Capsule, crate::tests::mock::new_test_ext(), crate::tests::mock::Test);
+// impl_benchmark_test_suite!(MintWithFee, mock::ExtBuilder::default().balances(vec![]).build(), Test);

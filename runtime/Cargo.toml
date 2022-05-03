@@ -99,7 +99,7 @@ pallet-multisig = { git = "https://github.com/paritytech/substrate", default-fea
 pallet-vesting = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 [features]
-default = ["std"]
+default = ["runtime-benchmarks", "std"]
 nostd = []
 std = [
 	"codec/std",
@@ -166,6 +166,7 @@ runtime-benchmarks = [
 	"frame-system/runtime-benchmarks",
 	"pallet-balances/runtime-benchmarks",
 	"pallet-collator-selection/runtime-benchmarks",
+    "pallet-collective/runtime-benchmarks",
 	"pallet-mint-with-fee/runtime-benchmarks",
 	"pallet-timestamp/runtime-benchmarks",
 	"pallet-xcm/runtime-benchmarks",

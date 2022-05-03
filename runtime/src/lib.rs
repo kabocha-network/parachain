@@ -940,6 +940,7 @@ mod benches {
 		[pallet_collator_selection, CollatorSelection]
 		[pallet_vesting, Vesting]
 		[pallet_multisig, Multisig]
+        [pallet_mint_with_fee, MintWithfee]
 	//	[pallet_sudo, Sudo]
 
 	);
@@ -1052,18 +1053,18 @@ impl_runtime_apis! {
 		}
 	}
 
-	#[cfg(feature = "try-runtime")]
-	impl frame_try_runtime::TryRuntime<Block> for Runtime {
-		fn on_runtime_upgrade() -> (Weight, Weight) {
-			log::info!("try-runtime::on_runtime_upgrade kabocha.");
-			let weight = Executive::try_runtime_upgrade().unwrap();
-			(weight, RuntimeBlockWeights::get().max_block)
-		}
-
-		fn execute_block_no_check(block: Block) -> Weight {
-			Executive::execute_block_no_check(block)
-		}
-	}
+	// #[cfg(feature = "runtime-benchmarks")]
+	// impl frame_try_runtime::TryRuntime<Block> for Runtime {
+	// 	fn on_runtime_upgrade() -> (Weight, Weight) {
+	// 		// log::info!("try-runtime::on_runtime_upgrade kabocha.");
+	// 		let weight = Executive::try_runtime_upgrade().unwrap();
+	// 		(weight, RuntimeBlockWeights::get().max_block)
+	// 	}
+	//
+	// 	fn execute_block_no_check(block: Block) -> Weight {
+	// 		Executive::execute_block_no_check(block)
+	// 	}
+	// }
 
 	#[cfg(feature = "runtime-benchmarks")]
 	impl frame_benchmarking::Benchmark<Block> for Runtime {
@@ -1078,6 +1079,7 @@ impl_runtime_apis! {
 
 			let mut list = Vec::<BenchmarkList>::new();
 			list_benchmarks!(list, extra);
+            // list_benchmarks!(list, extra, pallet_mint_with_fee, MintWithFee);
 			// list_benchmark!(list, extra, pallet_vesting, Vesting);
 			// list_benchmark!(list, extra, pallet_balances, Balances);
 			// list_benchmark!(list, extra, pallet_multisig, Multisig);

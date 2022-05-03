@@ -99,7 +99,7 @@ pallet-multisig = { git = "https://github.com/paritytech/substrate", default-fea
 pallet-vesting = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 [features]
-default = ["runtime-benchmarks", "std"]
+default = ["std"]
 nostd = []
 std = [
 	"codec/std",

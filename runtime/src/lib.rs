@@ -613,6 +613,8 @@ impl pallet_collator_selection::Config for Runtime {
 impl pallet_mint_with_fee::Config for Runtime {
 	type Event = Event;
     type Currency = Balances;
+    type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Runtime>;
+    // type WeightInfo = weights::pallet_mint_with_fee::WeightInfo<Runtime>;
 }
 
 parameter_types! {
@@ -917,8 +919,7 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 35,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 36,
 
-		// Template
-		MintWithfee: pallet_mint_with_fee::{Pallet, Call, Event<T>}  = 43,
+		MintWithfee: pallet_mint_with_fee::{Pallet, Call, Event<T>, Storage, Config<T>}  = 43,
 
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 44,
 

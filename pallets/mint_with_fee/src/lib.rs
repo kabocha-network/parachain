@@ -37,6 +37,9 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
+pub mod weights;
+pub use weights::*;
+
 pub use frame_support::{
 	dispatch::DispatchResult,
 	sp_runtime::traits::{CheckedConversion, CheckedDiv, CheckedMul},
@@ -60,8 +63,8 @@ pub mod pallet {
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
-
 		type Currency: Currency<Self::AccountId>;
+        type WeightInfo: WeightInfo;
 	}
 
 	#[pallet::pallet]
@@ -104,7 +107,7 @@ pub mod pallet {
 	#[cfg(feature = "std")]
 	impl<T: Config> Default for GenesisConfig<T> {
 		fn default() -> Self {
-			GenesisConfig { fee_percent: (10 as u32).into() }
+			GenesisConfig { fee_percent: 10u32.into() }
 		}
 	}
 
@@ -131,7 +134,8 @@ pub mod pallet {
         ///
         ///
         /// # </weight>
-		#[pallet::weight(10_000)]
+		#[pallet::weight(T::WeightInfo::mint())]
+        // #[pallet::weight(0)]
 		pub fn mint(
 			origin: OriginFor<T>,
 			target_account: T::AccountId,
@@ -146,7 +150,7 @@ pub mod pallet {
             }
 
             if let Some(fee_target_account) = fee_target_account {
-			    let fee_amount = amount.checked_mul(&Self::fee_percent()).ok_or(Error::<T>::Overflow)? / (100 as u32).into();
+			    let fee_amount = (amount / 100u32.into()).checked_mul(&Self::fee_percent()).ok_or(Error::<T>::Overflow)?;
 
 			    Self::mint_to_account(&fee_target_account, fee_amount)?;
 
@@ -174,7 +178,8 @@ pub mod pallet {
         /// affecting the next calls to `mint`
         ///
         /// The dispatch origin for this call must be `Signed` by the root.
-		#[pallet::weight(10_000)]
+		// #[pallet::weight(10_000)]
+		#[pallet::weight(T::WeightInfo::change_fee_percent())]
 		pub fn change_fee_percent(origin: OriginFor<T>, percentage: BalanceOf<T>) -> DispatchResult {
 			ensure_root(origin)?;
 			FeePercent::<T>::put(percentage);

@@ -227,7 +227,7 @@ fn testnet_genesis(
 		council: Default::default(),
 		democracy: Default::default(),
 		technical_committee: Default::default(),
-        // mint_with_fee: Default::default(),
+        mint_withfee: Default::default()
 
 	}
 }

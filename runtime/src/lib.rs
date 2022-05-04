@@ -614,7 +614,6 @@ impl pallet_mint_with_fee::Config for Runtime {
 	type Event = Event;
     type Currency = Balances;
     type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Runtime>;
-    // type WeightInfo = weights::pallet_mint_with_fee::WeightInfo<Runtime>;
 }
 
 parameter_types! {

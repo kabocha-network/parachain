@@ -44,6 +44,16 @@ fn mint_bad_origin() {
 }
 
 #[test]
+fn mint_too_long_metadata() {
+	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
+		assert_noop!(
+            MintWithFee::mint(Origin::root(), BOB, None , 30, vec![0;200]),
+            TooLongMetadata
+            );
+	});
+}
+
+#[test]
 fn change_fee_percent() {
 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
 		assert_ok!(MintWithFee::change_fee_percent(Origin::root(), 30));

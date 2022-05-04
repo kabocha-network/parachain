@@ -80,6 +80,7 @@ impl pallet_balances::Config for Test {
 impl pallet_mint_with_fee::Config for Test {
 	type Event = Event;
     type Currency = Balances;
+    type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Test>;
 }
 
 /// Mock users AccountId

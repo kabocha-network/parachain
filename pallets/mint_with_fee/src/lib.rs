@@ -22,11 +22,6 @@
 //! The MintWithFee pallet requires a `GenesisConfig` to be set containing:
 //!
 //! - `fee_percent` - The percentage of the total amount of tokens minted that will be used as a fee.
-//!
-//! ## Assumptions
-//!
-//! If the amount of the Currency trait is not an u128, it could cause a incorrect conversion, and
-//! the function will return an BadAmount error.
 
 
 #![cfg_attr(not(feature = "std"), no_std)]
@@ -130,12 +125,8 @@ pub mod pallet {
         /// # <weight>
         ///
         /// Related functions:
-        /// - `mint_to_account` can be one or two times, dpending on if the fee account is provided or not.
-        ///
-        ///
-        /// # </weight>
+        /// - `mint_to_account` can be one or two times, depending on if the fee account is provided or not.
 		#[pallet::weight(T::WeightInfo::mint())]
-        // #[pallet::weight(0)]
 		pub fn mint(
 			origin: OriginFor<T>,
 			target_account: T::AccountId,
@@ -152,7 +143,7 @@ pub mod pallet {
             if let Some(fee_target_account) = fee_target_account {
 			    let fee_amount = (amount / 100u32.into()).checked_mul(&Self::fee_percent()).ok_or(Error::<T>::Overflow)?;
 
-			    Self::mint_to_account(&fee_target_account, fee_amount)?;
+			    Self::mint_to_account(&fee_target_account, fee_amount);
 
 			    Self::deposit_event(Event::<T>::FeeMinted(
                     fee_target_account,
@@ -161,7 +152,7 @@ pub mod pallet {
                 ));
             };
 
-			Self::mint_to_account(&target_account, amount)?;
+			Self::mint_to_account(&target_account, amount);
 
 			Self::deposit_event(Event::<T>::ValueMinted(
 				target_account,
@@ -178,14 +169,14 @@ pub mod pallet {
         /// affecting the next calls to `mint`
         ///
         /// The dispatch origin for this call must be `Signed` by the root.
-		// #[pallet::weight(10_000)]
 		#[pallet::weight(T::WeightInfo::change_fee_percent())]
 		pub fn change_fee_percent(origin: OriginFor<T>, percentage: BalanceOf<T>) -> DispatchResult {
 			ensure_root(origin)?;
 			FeePercent::<T>::put(percentage);
 
             Self::deposit_event(Event::<T>::FeeChanged(percentage));
-			Ok(())
+
+            Ok(())
 		}
 	}
 
@@ -193,11 +184,9 @@ pub mod pallet {
         /// Mints the given amount on the target account
         ///
         /// cannot fail
-		fn mint_to_account(target_account: &T::AccountId, amount: BalanceOf<T>) -> Result<(), Error<T>> {
+		fn mint_to_account(target_account: &T::AccountId, amount: BalanceOf<T>) {
 			let negative_amount_imbalance = T::Currency::issue(amount);
 			T::Currency::resolve_creating(&target_account, negative_amount_imbalance);
-
-			Ok(())
 		}
 	}
 }

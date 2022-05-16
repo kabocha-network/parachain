@@ -5634,13 +5634,16 @@ dependencies = [
 [[package]]
 name = "pallet-supersig"
 version = "0.1.0"
-source = "git+https://github.com/rusty-crewmates/pallet_supersig?branch=polkadot-v0.9.16#1f24c91cc9575ce647ebe38bfd820d2a89efe37b"
 dependencies = [
+ "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "pallet-balances",
  "parity-scale-codec",
  "scale-info",
+ "serde",
  "sp-core",
+ "sp-io",
  "sp-runtime",
  "sp-std",
 ]

@@ -67,6 +67,7 @@ use xcm_builder::{
 use xcm_executor::{Config, XcmExecutor};
 
 pub use pallet_mint_with_fee;
+pub use pallet_supersig;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;

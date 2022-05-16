@@ -5176,23 +5176,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-dorg"
-version = "0.1.0"
-dependencies = [
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "pallet-balances",
- "parity-scale-codec",
- "scale-info",
- "serde",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
 name = "pallet-election-provider-multi-phase"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v0.9.16#19162e43be45817b44c7d48e50d03f074f60fbf4"
@@ -5651,16 +5634,13 @@ dependencies = [
 [[package]]
 name = "pallet-supersig"
 version = "0.1.0"
+source = "git+https://github.com/rusty-crewmates/pallet_supersig?branch=polkadot-v0.9.16#1f24c91cc9575ce647ebe38bfd820d2a89efe37b"
 dependencies = [
- "frame-benchmarking",
  "frame-support",
  "frame-system",
- "pallet-balances",
  "parity-scale-codec",
  "scale-info",
- "serde",
  "sp-core",
- "sp-io",
  "sp-runtime",
  "sp-std",
 ]

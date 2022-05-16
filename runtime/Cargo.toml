@@ -24,7 +24,7 @@ smallvec = "1.6.1"
 
 # Local Dependencies
 pallet-mint-with-fee = { path = "../pallets/mint_with_fee", default-features = false }
-pallet-supersig = { path = "../pallets/supersig", default-features = false }
+pallet-supersig = { git = "https://github.com/rusty-crewmates/pallet_supersig", default-features = false , branch = "polkadot-v0.9.16" }
 
 # Substrate Dependencies
 ## Substrate Primitive Dependencies

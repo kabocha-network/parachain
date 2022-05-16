@@ -1,3 +1,0 @@
-[submodule "pallets/supersig"]
-	path = pallets/supersig
-	url = git@github.com:rusty-crewmates/pallet_supersig.git

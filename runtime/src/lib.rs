@@ -617,7 +617,7 @@ impl pallet_mint_with_fee::Config for Runtime {
 }
 
 parameter_types! {
-	pub const SupersigPalletId: PalletId = PalletId(*b"id/dsupersig");
+	pub const SupersigPalletId: PalletId = PalletId(*b"id/susig");
 	pub const SupersigPreimageByteDeposit: Balance = 1 * CENTS;
 }
 

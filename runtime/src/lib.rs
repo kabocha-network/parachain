@@ -627,6 +627,7 @@ impl pallet_supersig::Config for Runtime {
 	type PalletId = SupersigPalletId;
     type Call = Call;
 	type PreimageByteDeposit = SupersigPreimageByteDeposit;
+    type WeightInfo = pallet_supersig::weights::SubstrateWeight<Runtime>;
 }
 
 parameter_types! {
@@ -932,12 +933,12 @@ construct_runtime!(
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 36,
 
 		MintWithfee: pallet_mint_with_fee::{Pallet, Call, Event<T>, Storage, Config<T>}  = 43,
-	    Supersig: pallet_supersig::{Pallet, Call, Event<T>, Storage}  = 44,
+        Supersig: pallet_supersig::{Pallet, Call, Event<T>, Storage}  = 44,
 
-		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 45,
+        Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 45,
 
 
-	}
+}
 );
 
 #[cfg(feature = "runtime-benchmarks")]
@@ -946,15 +947,16 @@ extern crate frame_benchmarking;
 
 #[cfg(feature = "runtime-benchmarks")]
 mod benches {
-	define_benchmarks!(
-		[frame_system, SystemBench::<Runtime>]
-		[pallet_balances, Balances]
-		[pallet_session, SessionBench::<Runtime>]
-		[pallet_timestamp, Timestamp]
-		[pallet_collator_selection, CollatorSelection]
-		[pallet_vesting, Vesting]
-		[pallet_multisig, Multisig]
-        [pallet_mint_with_fee, MintWithfee]
+define_benchmarks!(
+    [frame_system, SystemBench::<Runtime>]
+    [pallet_balances, Balances]
+    [pallet_session, SessionBench::<Runtime>]
+    [pallet_timestamp, Timestamp]
+    [pallet_collator_selection, CollatorSelection]
+    [pallet_vesting, Vesting]
+    [pallet_multisig, Multisig]
+    [pallet_mint_with_fee, MintWithfee]
+    [pallet_supersig, Supersig]
 	//	[pallet_sudo, Sudo]
 
 	);

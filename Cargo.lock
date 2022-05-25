@@ -5328,16 +5328,13 @@ dependencies = [
 [[package]]
 name = "pallet-mint-with-fee"
 version = "0.1.0"
+source = "git+https://github.com/rusty-crewmates/pallet_mint_with_fee?branch=polkadot-v0.9.16#2c5ce123128477662de1471ef16b6b2409c1862e"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "pallet-balances",
  "parity-scale-codec",
  "scale-info",
- "serde",
- "sp-core",
- "sp-io",
  "sp-runtime",
  "sp-std",
 ]
@@ -5634,16 +5631,14 @@ dependencies = [
 [[package]]
 name = "pallet-supersig"
 version = "0.1.0"
+source = "git+https://github.com/rusty-crewmates/pallet_supersig?branch=polkadot-v0.9.16#ab6a46168e8fbfac5cf63d79522b686fa6648a0d"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "pallet-balances",
  "parity-scale-codec",
  "scale-info",
- "serde",
  "sp-core",
- "sp-io",
  "sp-runtime",
  "sp-std",
 ]

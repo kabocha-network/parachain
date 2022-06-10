@@ -23,7 +23,7 @@ serde = { version = "1.0.132", optional = true, features = ["derive"] }
 smallvec = "1.6.1"
 
 # Local Dependencies
-pallet-supersig = { git = "https://github.com/rusty-crewmates/pallet_supersig", default-features = false , branch = "polkadot-v0.9.16" }
+pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", default-features = false, tag = "release-v1.1.0" }
 pallet-mint-with-fee = { git = "https://github.com/rusty-crewmates/pallet_mint_with_fee", default-features = false , branch = "polkadot-v0.9.16" }
 
 # Substrate Dependencies
@@ -136,6 +136,7 @@ std = [
     "pallet-session/std",
 	"pallet-sudo/std",
 	"pallet-mint-with-fee/std",
+	"pallet-supersig/std",
 	"pallet-timestamp/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",
 	"pallet-transaction-payment/std",

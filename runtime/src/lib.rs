@@ -619,8 +619,8 @@ impl pallet_mint_with_fee::Config for Runtime {
 
 parameter_types! {
 	pub const SupersigPalletId: PalletId = PalletId(*b"id/susig");
-	pub const PricePerByte: Balance = 1 * CENTS;
-    pub const MaxUsersPerTransaction: u32 = 10;
+	pub const DepositPerByte: Balance = 1 * CENTS;
+    pub const MaxAccountsPerTransaction: u32 = 10;
 }
 
 impl pallet_supersig::Config for Runtime {
@@ -629,10 +629,10 @@ impl pallet_supersig::Config for Runtime {
     type Call = Call;
     // the pallet id from which the supersig addresses will be generated
 	type PalletId = SupersigPalletId;
-    // the price of each byte stored bytes
-    type PricePerByte = PricePerByte;
+    // the amount of currency that will be deposited for each byte stored bytes
+    type DepositPerByte = DepositPerByte;
     // the maximum number of users per transaction (add_users, remove_users...)
-    type MaxUsersPerTransaction = MaxUsersPerTransaction;
+    type MaxAccountsPerTransaction = MaxAccountsPerTransaction;
     type WeightInfo = pallet_supersig::weights::SubstrateWeight<Runtime>;
 }
 

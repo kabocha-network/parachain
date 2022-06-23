@@ -3,13 +3,13 @@
 
 #VARIABLES
 export CHAIN_TYPE=parachain
-export RELAY_CHAIN_SPEC="../specs/kusama.json"
+export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=kabocha
-export SPEC_NAME="kabocha-ksm-plain.json"
-export RAWSPEC_NAME="2113-raw.json"
+export SPEC_NAME="kabocha-june-pop-plain.json"
+export RAWSPEC_NAME="kabocha-june-pop-raw.json"
 
-export PARA_ID=2113
+export PARA_ID=2006
 
 export GENESIS_HEAD='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-genesis'
 export GENESIS_WASM='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-wasm'

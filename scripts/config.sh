@@ -9,7 +9,7 @@ export PROTOCOL_ID=kabocha
 export SPEC_NAME="kabocha-june-pop-plain.json"
 export RAWSPEC_NAME="kabocha-june-pop-raw.json"
 
-export PARA_ID=2006
+export PARA_ID=2008
 
 export GENESIS_HEAD='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-genesis'
 export GENESIS_WASM='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-wasm'

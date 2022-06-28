@@ -3858,6 +3858,7 @@ dependencies = [
  "pallet-balances",
  "pallet-collator-selection",
  "pallet-multisig",
+ "pallet-scheduler",
  "pallet-session",
  "pallet-sudo",
  "pallet-template",

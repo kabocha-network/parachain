@@ -10,6 +10,7 @@ mod weights;
 pub mod xcm_config;
 
 use smallvec::smallvec;
+
 use sp_api::impl_runtime_apis;
 use sp_core::{
 	crypto::KeyTypeId,
@@ -32,7 +33,7 @@ pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
 
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{Everything, Contains},
+	traits::{Everything, Contains, PreimageProvider, PrivilegeCmp},
 	weights::{
 		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND},
 		DispatchClass, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
@@ -177,7 +178,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 6,
+	spec_version: 7,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -523,6 +524,27 @@ impl pallet_vesting::Config for Runtime {
 	const MAX_VESTING_SCHEDULES: u32 = 28;
 }
 
+parameter_types! {
+	pub const MaximumScheduledPerBlock: u32 = 100;
+	pub const NoPreimagePostponement: Option<u32> = Some(10);
+}
+
+impl pallet_scheduler::Config for Runtime {
+	type Event = Event;
+	type Origin: OriginTrait<PalletsOrigin = Self::PalletsOrigin>;
+	type PalletsOrigin = frame_support::dispatch::RawOrigin<AccountId>;
+	type Call = Call;
+	type MaximumWeight = ();
+	type ScheduleOrigin = Self::ScheduleOrigin;
+	type MaxScheduledPerBlock = MaximumScheduledPerBlock;
+	// type WeightInfo = weights::pallet_scheduler::WeightInfo<Runtime>;
+	type WeightInfo = ();	
+	type OriginPrivilegeCmp: PrivilegeCmp<Self::PalletsOrigin>;
+    type PreimageProvider = ();
+    type NoPreimagePostponement = NoPreimagePostponement;
+
+}
+
 impl pallet_sudo::Config for Runtime {
 	type Event = Event;
 	type Call = Call;
@@ -562,6 +584,9 @@ construct_runtime!(
 		
 		// Sudo
 		Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
+
+		// Scheduler 
+		Scheduler: pallet_scheduler::{Pallet, Call, Storage, Event<T>} = 5,
 
 		// Monetary stuff.
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
@@ -606,6 +631,7 @@ mod benches {
 		[pallet_collator_selection, CollatorSelection]
 		[pallet_vesting, Vesting]
 		[pallet_multisig, Multisig]
+	//	[pallet_scheduler, Scheduler]
 	//	[pallet_sudo, Sudo]
 		
 		[cumulus_pallet_xcmp_queue, XcmpQueue]

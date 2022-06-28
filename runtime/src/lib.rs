@@ -529,17 +529,19 @@ parameter_types! {
 	pub const NoPreimagePostponement: Option<u32> = Some(10);
 }
 
+use frame_support::traits::OriginTrait;
+
 impl pallet_scheduler::Config for Runtime {
 	type Event = Event;
-	type Origin: OriginTrait<PalletsOrigin = Self::PalletsOrigin>;
-	type PalletsOrigin = frame_support::dispatch::RawOrigin<AccountId>;
+	type Origin = Origin;
+	type PalletsOrigin = OriginCaller;
 	type Call = Call;
 	type MaximumWeight = ();
-	type ScheduleOrigin = Self::ScheduleOrigin;
+	type ScheduleOrigin = EnsureRoot<AccountId>;
 	type MaxScheduledPerBlock = MaximumScheduledPerBlock;
 	// type WeightInfo = weights::pallet_scheduler::WeightInfo<Runtime>;
-	type WeightInfo = ();	
-	type OriginPrivilegeCmp: PrivilegeCmp<Self::PalletsOrigin>;
+	type WeightInfo = ();
+	type OriginPrivilegeCmp = frame_support::traits::EqualPrivilegeOnly;
     type PreimageProvider = ();
     type NoPreimagePostponement = NoPreimagePostponement;
 
@@ -581,7 +583,7 @@ construct_runtime!(
 		ParachainSystem: cumulus_pallet_parachain_system::{ Pallet, Call, Config, Storage, Inherent, Event<T>, ValidateUnsigned} = 1,
 		Timestamp: pallet_timestamp::{Pallet, Call, Storage, Inherent} = 2,
 		ParachainInfo: parachain_info::{Pallet, Storage, Config} = 3,
-		
+
 		// Sudo
 		Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
 

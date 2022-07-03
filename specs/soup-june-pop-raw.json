@@ -3,7 +3,7 @@
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
+    "/dns/soupcan-bn1.jelliedowl.com/tcp/40333/p2p/12D3KooWRD6BNdnJxXXWWdLrteWve3cFGq5Zcx62N7YdLELhJZPn"
   ],
   "telemetryEndpoints": null,
   "protocolId": null,

@@ -2,7 +2,11 @@
   "name": "Kabocha",
   "id": "kabocha",
   "chainType": "Live",
-  "bootNodes": [],
+  "bootNodes": [
+    "/dns/kabocha-bn1.jelliedowl.com/tcp/42333/p2p/12D3KooWHd9DEPB52E4QfEZWfW772ygUDQzUXpWZZQg3Pf8uxEQj",
+    "/dns/kabocha.jelliedowl.com/tcp/42333/p2p/12D3KooWJ1Tw2Ykfjjwc29MgMJmrwseijXerSNk4ntBkkPRGRxi8",
+    "/ip4/138.68.171.63/tcp/40334/p2p/12D3KooWLQyBfGcit5nZ3oxnkD17mHpwUKYRhe4eKjuuKqHvbe6h"
+  ],
   "telemetryEndpoints": null,
   "protocolId": null,
   "properties": {

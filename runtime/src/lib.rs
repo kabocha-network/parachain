@@ -178,7 +178,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 7,
+	spec_version: 9,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -510,19 +510,19 @@ impl pallet_multisig::Config for Runtime {
 }
 
 // Vesting pallet requirement to lock balances of KAB earned by crowdloan and EDG snapshot. 
-parameter_types! {
-	pub const MinVestedTransfer: Balance = 100 * CENTS;
-}
+// parameter_types! {
+// 	pub const MinVestedTransfer: Balance = 100 * CENTS;
+// }
 
-impl pallet_vesting::Config for Runtime {
-	type Event = Event;
-	type Currency = Balances;
-	type BlockNumberToBalance = ConvertInto;
-	type MinVestedTransfer = MinVestedTransfer;
-	type WeightInfo = weights::pallet_vesting::WeightInfo<Runtime>;
+// impl pallet_vesting::Config for Runtime {
+// 	type Event = Event;
+// 	type Currency = Balances;
+// 	type BlockNumberToBalance = ConvertInto;
+// 	type MinVestedTransfer = MinVestedTransfer;
+// 	type WeightInfo = weights::pallet_vesting::WeightInfo<Runtime>;
 
-	const MAX_VESTING_SCHEDULES: u32 = 28;
-}
+// 	const MAX_VESTING_SCHEDULES: u32 = 28;
+// }
 
 parameter_types! {
 	pub const MaximumScheduledPerBlock: u32 = 100;
@@ -602,7 +602,7 @@ construct_runtime!(
 		AuraExt: cumulus_pallet_aura_ext::{Pallet, Storage, Config} = 24,
 
 		// Vesting. Usable initially, but removed once all vesting is finished.
-		Vesting: pallet_vesting::{Pallet, Call, Storage, Event<T>, Config<T>} = 28,
+		// Vesting: pallet_vesting::{Pallet, Call, Storage, Event<T>, Config<T>} = 28,
 
 		// XCM helpers.
 		XcmpQueue: cumulus_pallet_xcmp_queue::{Pallet, Call, Storage, Event<T>} = 30,
@@ -631,7 +631,7 @@ mod benches {
 		[pallet_session, SessionBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
 		[pallet_collator_selection, CollatorSelection]
-		[pallet_vesting, Vesting]
+	//	[pallet_vesting, Vesting]
 		[pallet_multisig, Multisig]
 	//	[pallet_scheduler, Scheduler]
 	//	[pallet_sudo, Sudo]

@@ -195,7 +195,7 @@ fn testnet_genesis(
 		balances: kabocha_runtime::BalancesConfig {
 			balances: endowed_accounts.iter().cloned().map(|k| (k, 1 << 60)).collect(),
 		},
-		vesting: kabocha_runtime::VestingConfig { vesting: vec![] },
+		// vesting: kabocha_runtime::VestingConfig { vesting: vec![] },
 		//council: Default::default(),
 		parachain_info: kabocha_runtime::ParachainInfoConfig { parachain_id: id },
 		collator_selection: kabocha_runtime::CollatorSelectionConfig {

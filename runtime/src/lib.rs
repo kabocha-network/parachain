@@ -502,6 +502,7 @@ impl pallet_relay_schedule::Config for Runtime {
 	type Event = Event;
 	type Call = Call;
 	type AtBlockNumber = AtBlockNumber;
+	type MaxBlockWeight = MAXIMUM_BLOCK_WEIGHT;
 }
 
 parameter_types! {

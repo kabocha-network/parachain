@@ -13,10 +13,7 @@ mod benchmarking;
 
 use frame_support::weights::{GetDispatchInfo, PostDispatchInfo};
 
-use sp_runtime::sp_std::{
-	boxed::Box,
-	vec::Vec,
-};
+use sp_runtime::sp_std::{boxed::Box, vec::Vec};
 
 pub use sp_runtime::traits::Dispatchable;
 
@@ -34,6 +31,7 @@ pub mod pallet {
 			+ GetDispatchInfo
 			+ From<frame_system::Call<Self>>;
 		type AtBlockNumber: Get<u32>;
+		type MaxBlockWeight: Get<Weight>;
 	}
 
 	#[pallet::pallet]
@@ -51,7 +49,7 @@ pub mod pallet {
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
 		AddedCall(<T as Config>::Call),
-		BlockNumberUp(u32, OriginFor<T>),
+		BlockNumberUp(u32),
 	}
 
 	#[pallet::hooks]
@@ -78,10 +76,12 @@ pub mod pallet {
 								// error_calls.push(call);
 							} else {
 								weight += result.unwrap();
-									//check weight to break
+								if weight >= T::MaxBlockWeight::get() {
+									break;
+								}
 							}
 						} else {
-							break;
+							break
 						}
 					}
 					// calls = [calls, &error_calls].concat();
@@ -98,15 +98,15 @@ pub mod pallet {
 		pub fn schedule(origin: OriginFor<T>, call: Box<<T as Config>::Call>) -> DispatchResult {
 			ensure_root(origin)?;
 
-			Calls::<T>::mutate(|unwrapped_list| {
-				if let Some(list) = unwrapped_list {
-					list.push(*call.clone());
-					// return Some(list)
-				} else {
-					let newvec = vec!(*call.clone());
-					unwrapped_list = Some(*newvec);
-				}
-			});
+			let mut new_calls: Vec<<T as Config>::Call> = Vec::new();
+			let calls = Calls::<T>::take();
+
+			if let Some(calls) = calls {
+				new_calls = calls;
+			}
+			new_calls.push(*call.clone());
+
+			Calls::<T>::put(new_calls);
 
 			Self::deposit_event(Event::<T>::AddedCall(*call));
 			Ok(())
@@ -117,7 +117,7 @@ pub mod pallet {
 			// ensure_none(origin)?;
 
 			CurrentBlock::<T>::put(block);
-			Self::deposit_event(Event::<T>::BlockNumberUp(block, origin));
+			Self::deposit_event(Event::<T>::BlockNumberUp(block));
 			Ok(())
 		}
 	}

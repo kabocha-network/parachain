@@ -30,7 +30,7 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 
 pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
-
+use cumulus_pallet_parachain_system::OnSystemEvent;
 use frame_support::{
 	construct_runtime, parameter_types,
 	traits::{Everything, Contains, PreimageProvider, PrivilegeCmp},
@@ -40,6 +40,7 @@ use frame_support::{
 		WeightToFeePolynomial,
 	},
 	PalletId,
+	pallet_prelude::Get,
 };
 use frame_system::{
 	limits::{BlockLength, BlockWeights},
@@ -61,6 +62,7 @@ use xcm_executor::XcmExecutor;
 
 /// Import the template pallet.
 pub use pallet_template;
+pub use pallet_relay_schedule;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
@@ -178,7 +180,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 9,
+	spec_version: 11,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -187,7 +189,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 
 
 
-//ToDo: Put constants in its own file 
+//ToDo: Put constants in its own file
 
 // Multisig deposit definition
 
@@ -250,7 +252,7 @@ impl Contains<Call> for DontAllowBalances {
 	// This will match against any call from the Balances pallet.
 	!matches!(c, Call::Balances(..))
 	}
-}	
+}
 
 parameter_types! {
 	pub const Version: RuntimeVersion = VERSION;
@@ -398,11 +400,12 @@ impl pallet_transaction_payment::Config for Runtime {
 parameter_types! {
 	pub const ReservedXcmpWeight: Weight = MAXIMUM_BLOCK_WEIGHT / 4;
 	pub const ReservedDmpWeight: Weight = MAXIMUM_BLOCK_WEIGHT / 4;
+
 }
 
 impl cumulus_pallet_parachain_system::Config for Runtime {
 	type Event = Event;
-	type OnSystemEvent = ();
+	type OnSystemEvent = onSystemEvent;
 	type SelfParaId = parachain_info::Pallet<Runtime>;
 	type DmpMessageHandler = DmpQueue;
 	type ReservedDmpWeight = ReservedDmpWeight;
@@ -492,6 +495,16 @@ impl pallet_template::Config for Runtime {
 }
 
 parameter_types! {
+		pub const AtBlockNumber: u32 = 1_298_800;
+}
+
+impl pallet_relay_schedule::Config for Runtime {
+	type Event = Event;
+	type Call = Call;
+	type AtBlockNumber = AtBlockNumber;
+}
+
+parameter_types! {
     // One storage item; key size is 32; value is size 4+4+16+32 bytes = 56 bytes.
     pub const DepositBase: Balance = deposit(1, 88);
     // Additional storage item size of 32 bytes.
@@ -509,7 +522,7 @@ impl pallet_multisig::Config for Runtime {
 	type WeightInfo = weights::pallet_multisig::WeightInfo<Runtime>;
 }
 
-// Vesting pallet requirement to lock balances of KAB earned by crowdloan and EDG snapshot. 
+// Vesting pallet requirement to lock balances of KAB earned by crowdloan and EDG snapshot.
 // parameter_types! {
 // 	pub const MinVestedTransfer: Balance = 100 * CENTS;
 // }
@@ -587,8 +600,9 @@ construct_runtime!(
 		// Sudo
 		Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
 
-		// Scheduler 
+		// Scheduler
 		Scheduler: pallet_scheduler::{Pallet, Call, Storage, Event<T>} = 5,
+		RelaySchedule: pallet_relay_schedule::{Pallet, Call, Storage, Event<T>} = 6,
 
 		// Monetary stuff.
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
@@ -635,7 +649,7 @@ mod benches {
 		[pallet_multisig, Multisig]
 	//	[pallet_scheduler, Scheduler]
 	//	[pallet_sudo, Sudo]
-		
+
 		[cumulus_pallet_xcmp_queue, XcmpQueue]
 	);
 }
@@ -843,4 +857,15 @@ cumulus_pallet_parachain_system::register_validate_block! {
 	Runtime = Runtime,
 	BlockExecutor = cumulus_pallet_aura_ext::BlockExecutor::<Runtime, Executive>,
 	CheckInherents = CheckInherents,
+}
+
+pub struct onSystemEvent;
+
+impl OnSystemEvent for onSystemEvent {
+	fn on_validation_data(data: &cumulus_primitives_core::PersistedValidationData) {
+		let block_number = data.relay_parent_number;
+		pallet_relay_schedule::pallet::Call::<Runtime>::set_block_number { block: block_number };
+		// pallet_relay_schedule::
+	}
+	fn on_validation_code_applied() {}
 }

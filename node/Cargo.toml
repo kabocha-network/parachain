@@ -25,6 +25,7 @@ codec = { package = "parity-scale-codec", version = "3.0.0" }
 serde = { version = "1.0.132", features = ["derive"] }
 hex-literal = "0.3.4"
 jsonrpc-core = "18.0.0"
+syn = "=1.0.97"
 
 # Local Dependencies
 kabocha-runtime = { path = "../runtime" }

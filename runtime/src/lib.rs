@@ -496,13 +496,14 @@ impl pallet_template::Config for Runtime {
 
 parameter_types! {
 		pub const AtBlockNumber: u32 = 1_298_800;
+		pub const MaxBlockWeight: Weight = MAXIMUM_BLOCK_WEIGHT;
 }
 
 impl pallet_relay_schedule::Config for Runtime {
 	type Event = Event;
 	type Call = Call;
 	type AtBlockNumber = AtBlockNumber;
-	type MaxBlockWeight = MAXIMUM_BLOCK_WEIGHT;
+	type MaxBlockWeight = MaxBlockWeight;
 }
 
 parameter_types! {

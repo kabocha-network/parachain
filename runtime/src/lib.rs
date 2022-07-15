@@ -40,7 +40,6 @@ use frame_support::{
 		WeightToFeePolynomial,
 	},
 	PalletId,
-	pallet_prelude::Get,
 };
 use frame_system::{
 	limits::{BlockLength, BlockWeights},
@@ -180,7 +179,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 11,
+	spec_version: 14,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -495,14 +494,12 @@ impl pallet_template::Config for Runtime {
 }
 
 parameter_types! {
-		pub const AtBlockNumber: u32 = 1_298_800;
 		pub const MaxBlockWeight: Weight = MAXIMUM_BLOCK_WEIGHT;
 }
 
 impl pallet_relay_schedule::Config for Runtime {
 	type Event = Event;
 	type Call = Call;
-	type AtBlockNumber = AtBlockNumber;
 	type MaxBlockWeight = MaxBlockWeight;
 }
 
@@ -543,8 +540,6 @@ parameter_types! {
 	pub const MaximumScheduledPerBlock: u32 = 100;
 	pub const NoPreimagePostponement: Option<u32> = Some(10);
 }
-
-use frame_support::traits::OriginTrait;
 
 impl pallet_scheduler::Config for Runtime {
 	type Event = Event;
@@ -866,7 +861,7 @@ pub struct onSystemEvent;
 impl OnSystemEvent for onSystemEvent {
 	fn on_validation_data(data: &cumulus_primitives_core::PersistedValidationData) {
 		let block_number = data.relay_parent_number;
-		pallet_relay_schedule::pallet::Call::<Runtime>::set_block_number { block: block_number };
+		let _ = pallet_relay_schedule::pallet::Pallet::<Runtime>::set_block_number(block_number);
 		// pallet_relay_schedule::
 	}
 	fn on_validation_code_applied() {}

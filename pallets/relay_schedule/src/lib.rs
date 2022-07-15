@@ -13,8 +13,9 @@ mod benchmarking;
 
 use frame_support::weights::{GetDispatchInfo, PostDispatchInfo};
 
-use sp_runtime::sp_std::{boxed::Box, vec::Vec};
+use sp_runtime::sp_std::{boxed::Box, marker::PhantomData, vec::Vec};
 
+pub use frame_system::RawOrigin;
 pub use sp_runtime::traits::Dispatchable;
 
 #[frame_support::pallet]
@@ -30,7 +31,6 @@ pub mod pallet {
 			+ Dispatchable<Origin = Self::Origin, PostInfo = PostDispatchInfo>
 			+ GetDispatchInfo
 			+ From<frame_system::Call<Self>>;
-		type AtBlockNumber: Get<u32>;
 		type MaxBlockWeight: Get<Weight>;
 	}
 
@@ -42,6 +42,9 @@ pub mod pallet {
 	pub type CurrentBlock<T> = StorageValue<_, u32, ValueQuery>;
 
 	#[pallet::storage]
+	pub type AtBlockNumber<T> = StorageValue<_, u32, ValueQuery>;
+
+	#[pallet::storage]
 	#[pallet::unbounded]
 	pub type Calls<T: Config> = StorageValue<_, Vec<<T as Config>::Call>>;
 
@@ -50,42 +53,51 @@ pub mod pallet {
 	pub enum Event<T: Config> {
 		AddedCall(<T as Config>::Call),
 		BlockNumberUp(u32),
+		AtBlockNumberUpdated(u32),
+		Dispatched(<T as Config>::Call, DispatchResult),
 	}
 
 	#[pallet::hooks]
 	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
 		/// Execute the scheduled calls
 		fn on_initialize(_now: T::BlockNumber) -> Weight {
-			let at = T::AtBlockNumber::get();
+			let at = AtBlockNumber::<T>::get();
 			let now = CurrentBlock::<T>::get();
-			let mut weight = 0;
+			let mut weight: Weight = 0;
 
 			if now >= at {
 				let calls = Calls::<T>::take();
+				weight = weight.saturating_add(T::DbWeight::get().reads_writes(1, 0));
 				// let calls = temp.as_mut();
 				if let Some(mut calls) = calls {
 					// let mut error_calls: Vec<<T as Config>::Call> = Vec::new();
 					loop {
 						let call = calls.pop();
 						if let Some(call) = call {
-							let result = call
-								.dispatch(frame_system::RawOrigin::Root.into())
-								.map(|res| res.actual_weight.unwrap_or(0))
-								.map_err(|e| e.error);
-							if result.is_err() {
-								// error_calls.push(call);
-							} else {
-								weight += result.unwrap();
-								if weight >= T::MaxBlockWeight::get() {
-									break;
-								}
+							let call_weight = call.get_dispatch_info().weight;
+							// let result = call.dispatch(frame_system::RawOrigin::Root.into());
+							let (maybe_actual_call_weight, result) =
+								match call.clone().dispatch(frame_system::RawOrigin::Root.into()) {
+									Ok(post_info) => (post_info.actual_weight, Ok(())),
+									Err(error_and_info) => (
+										error_and_info.post_info.actual_weight,
+										Err(error_and_info.error),
+									),
+								};
+							let actual_call_weight =
+								maybe_actual_call_weight.unwrap_or(call_weight);
+							weight = weight.saturating_add(actual_call_weight);
+							Self::deposit_event(Event::Dispatched(call, result));
+							if weight >= T::MaxBlockWeight::get() / 2 {
+								break
 							}
 						} else {
 							break
 						}
 					}
 					// calls = [calls, &error_calls].concat();
-					Calls::<T>::put(calls)
+					Calls::<T>::put(calls);
+					weight = weight.saturating_add(T::DbWeight::get().reads_writes(0, 1));
 				}
 			}
 			weight
@@ -113,9 +125,17 @@ pub mod pallet {
 		}
 
 		#[pallet::weight(T::DbWeight::get().writes(1))]
-		pub fn set_block_number(origin: OriginFor<T>, block: u32) -> DispatchResult {
-			// ensure_none(origin)?;
+		pub fn set_at_block_number(origin: OriginFor<T>, block: u32) -> DispatchResult {
+			ensure_root(origin)?;
 
+			AtBlockNumber::<T>::put(block);
+			Self::deposit_event(Event::<T>::AtBlockNumberUpdated(block));
+			Ok(())
+		}
+	}
+
+	impl<T: Config> Pallet<T> {
+		pub fn set_block_number(block: u32) -> DispatchResult {
 			CurrentBlock::<T>::put(block);
 			Self::deposit_event(Event::<T>::BlockNumberUp(block));
 			Ok(())

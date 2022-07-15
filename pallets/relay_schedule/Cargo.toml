@@ -22,6 +22,8 @@ frame-support = { default-features = false, version = "4.0.0-dev", git = "https:
 frame-system = { default-features = false, version = "4.0.0-dev", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
 frame-benchmarking = { default-features = false, version = "4.0.0-dev", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18", optional = true }
 sp-runtime = { default-features = false, git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
+cumulus-primitives-core = { git = "https://github.com/paritytech/cumulus", default-features = false,  branch = "polkadot-v0.9.18" }
+cumulus-pallet-parachain-system = { git = "https://github.com/paritytech/cumulus", default-features = false,  branch = "polkadot-v0.9.18" }
 
 # cumulus-primitives-core = {  default-features = false, git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.18"  }
 # cumulus-pallet-parachain-system = {  default-features = false, git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.18"  }

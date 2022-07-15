@@ -5893,6 +5893,8 @@ dependencies = [
 name = "pallet-relay_schedule"
 version = "1.0.0"
 dependencies = [
+ "cumulus-pallet-parachain-system",
+ "cumulus-primitives-core",
  "frame-benchmarking",
  "frame-support",
  "frame-system",

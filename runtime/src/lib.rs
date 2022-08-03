@@ -33,7 +33,7 @@ pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
 
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{Everything, Contains, PreimageProvider, PrivilegeCmp},
+	traits::{Everything, Contains, PreimageProvider, PrivilegeCmp, OriginTrait},
 	weights::{
 		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND},
 		DispatchClass, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
@@ -48,6 +48,7 @@ use frame_system::{
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{MultiAddress, Perbill, Permill};
 use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
+use cumulus_pallet_parachain_system::RelaychainBlockNumberProvider;
 
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
@@ -524,12 +525,11 @@ impl pallet_multisig::Config for Runtime {
 // 	const MAX_VESTING_SCHEDULES: u32 = 28;
 // }
 
+
 parameter_types! {
 	pub const MaximumScheduledPerBlock: u32 = 100;
 	pub const NoPreimagePostponement: Option<u32> = Some(10);
 }
-
-use frame_support::traits::OriginTrait;
 
 impl pallet_scheduler::Config for Runtime {
 	type Event = Event;

@@ -3,13 +3,12 @@
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
   ],
   "telemetryEndpoints": null,
   "protocolId": null,
   "properties": null,
   "relay_chain": "rococo-staging",
-  "para_id": 2009,
+  "para_id": 2012,
   "codeSubstitutes": {},
   "genesis": {
     "runtime": {
@@ -18,7 +17,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2009
+        "parachainId": 2012
       },
       "sudo": {
         "key": "3nCK8qSYJ5K2E7CecHeHxLsGr21bVCL7BmqxbFeo19jd5RXX"
@@ -105,9 +104,6 @@
         "authorities": []
       },
       "auraExt": null,
-      "vesting": {
-        "vesting": []
-      },
       "polkadotXcm": {
         "safeXcmVersion": 2
       }

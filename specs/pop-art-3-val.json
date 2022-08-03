@@ -3,7 +3,8 @@
     "id": "rococo_staging_testnet",
     "chainType": "Live",
     "bootNodes": [
-      "/ip4/134.122.101.173/tcp/30333/p2p/12D3KooWDHAB5GLbVBgHgvv1yuKbPKTmd8ZxEa5PUsAhDY1VYRW9"
+      "/dns/popart-bn1.jelliedowl.com/tcp/30333/p2p/12D3KooWLK1Gf56E3F8JmCVyvpSgc7QXp1aN8D9apECnqRtBaNw5",
+      "/dns/popart-bn2.jelliedowl.com/tcp/30333/p2p/12D3KooWF2AMHrR3H4pgFXX9Vc6jqVJrLPB765thZjJSnx3YPzHD"
     ],
     "telemetryEndpoints": [
       [

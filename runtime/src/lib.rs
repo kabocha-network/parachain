@@ -9,6 +9,7 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 mod weights;
 pub mod xcm_config;
 
+use cumulus_pallet_parachain_system::RelayNumberStrictlyIncreases;
 use smallvec::smallvec;
 
 use sp_api::impl_runtime_apis;
@@ -30,14 +31,13 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 
 pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
-use cumulus_pallet_parachain_system::{OnSystemEvent, AnyRelayNumber};
+use cumulus_pallet_parachain_system::OnSystemEvent;
 use frame_support::{
 	construct_runtime, parameter_types,
 	traits::Contains,
 	weights::{
-		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND, RocksDbWeight},
-		DispatchClass, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
-		WeightToFeePolynomial, IdentityFee
+		constants::WEIGHT_PER_SECOND, ConstantMultiplier, DispatchClass, Weight,
+		WeightToFeeCoefficient, WeightToFeeCoefficients, WeightToFeePolynomial,
 	},
 	PalletId,
 };
@@ -52,8 +52,10 @@ use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
 
-// Polkadot Imports
+// Polkadot imports
 use polkadot_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
+
+use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
 
 // XCM Imports
 use xcm::latest::prelude::BodyId;
@@ -381,6 +383,7 @@ impl pallet_balances::Config for Runtime {
 }
 
 parameter_types! {
+	pub const TransactionByteFee: Balance = 10 * MILLICENTS;
 	pub const OperationalFeeMultiplier: u8 = 5;
 }
 
@@ -388,7 +391,7 @@ impl pallet_transaction_payment::Config for Runtime {
 	type Event = Event;
 	type OnChargeTransaction = pallet_transaction_payment::CurrencyAdapter<Balances, ()>;
 	type WeightToFee = WeightToFee;
-	type LengthToFee = IdentityFee<Balance>;
+	type LengthToFee = ConstantMultiplier<Balance, TransactionByteFee>;
 	type FeeMultiplierUpdate = SlowAdjustingFeeUpdate<Self>;
 	type OperationalFeeMultiplier = OperationalFeeMultiplier;
 }
@@ -401,14 +404,14 @@ parameter_types! {
 
 impl cumulus_pallet_parachain_system::Config for Runtime {
 	type Event = Event;
-	type CheckAssociatedRelayNumber = AnyRelayNumber;
 	type OnSystemEvent = OnSystemEventStruct;
 	type SelfParaId = parachain_info::Pallet<Runtime>;
+	type OutboundXcmpMessageSource = XcmpQueue;
 	type DmpMessageHandler = DmpQueue;
 	type ReservedDmpWeight = ReservedDmpWeight;
-	type OutboundXcmpMessageSource = XcmpQueue;
 	type XcmpMessageHandler = XcmpQueue;
 	type ReservedXcmpWeight = ReservedXcmpWeight;
+	type CheckAssociatedRelayNumber = RelayNumberStrictlyIncreases;
 }
 
 impl parachain_info::Config for Runtime {}

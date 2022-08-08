@@ -19,7 +19,7 @@ use sp_core::{
 };
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
-	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, ConvertInto, IdentifyAccount, Verify},
+	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, Verify},
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult, MultiSignature,
 };
@@ -30,14 +30,14 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 
 pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
-use cumulus_pallet_parachain_system::OnSystemEvent;
+use cumulus_pallet_parachain_system::{OnSystemEvent, AnyRelayNumber};
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{Everything, Contains, PreimageProvider, PrivilegeCmp},
+	traits::Contains,
 	weights::{
-		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND},
+		constants::{BlockExecutionWeight, ExtrinsicBaseWeight, WEIGHT_PER_SECOND, RocksDbWeight},
 		DispatchClass, Weight, WeightToFeeCoefficient, WeightToFeeCoefficients,
-		WeightToFeePolynomial,
+		WeightToFeePolynomial, IdentityFee
 	},
 	PalletId,
 };
@@ -53,7 +53,7 @@ use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
 pub use sp_runtime::BuildStorage;
 
 // Polkadot Imports
-use polkadot_runtime_common::{BlockHashCount, RocksDbWeight, SlowAdjustingFeeUpdate};
+use polkadot_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
 
 // XCM Imports
 use xcm::latest::prelude::BodyId;
@@ -381,15 +381,14 @@ impl pallet_balances::Config for Runtime {
 }
 
 parameter_types! {
-	/// Relay Chain `TransactionByteFee` / 10
-	pub const TransactionByteFee: Balance = 10 * MICROUNIT;
 	pub const OperationalFeeMultiplier: u8 = 5;
 }
 
 impl pallet_transaction_payment::Config for Runtime {
+	type Event = Event;
 	type OnChargeTransaction = pallet_transaction_payment::CurrencyAdapter<Balances, ()>;
-	type TransactionByteFee = TransactionByteFee;
 	type WeightToFee = WeightToFee;
+	type LengthToFee = IdentityFee<Balance>;
 	type FeeMultiplierUpdate = SlowAdjustingFeeUpdate<Self>;
 	type OperationalFeeMultiplier = OperationalFeeMultiplier;
 }
@@ -402,7 +401,8 @@ parameter_types! {
 
 impl cumulus_pallet_parachain_system::Config for Runtime {
 	type Event = Event;
-	type OnSystemEvent = onSystemEvent;
+	type CheckAssociatedRelayNumber = AnyRelayNumber;
+	type OnSystemEvent = OnSystemEventStruct;
 	type SelfParaId = parachain_info::Pallet<Runtime>;
 	type DmpMessageHandler = DmpQueue;
 	type ReservedDmpWeight = ReservedDmpWeight;
@@ -596,7 +596,7 @@ construct_runtime!(
 
 		// Monetary stuff.
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
-		TransactionPayment: pallet_transaction_payment::{Pallet, Storage} = 11,
+		TransactionPayment: pallet_transaction_payment::{Pallet, Storage, Event<T>} = 11,
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Call, Storage} = 20,
@@ -846,9 +846,9 @@ cumulus_pallet_parachain_system::register_validate_block! {
 	CheckInherents = CheckInherents,
 }
 
-pub struct onSystemEvent;
+pub struct OnSystemEventStruct;
 
-impl OnSystemEvent for onSystemEvent {
+impl OnSystemEvent for OnSystemEventStruct {
 	fn on_validation_data(data: &cumulus_primitives_core::PersistedValidationData) {
 		let block_number = data.relay_parent_number;
 		let _ = pallet_relay_schedule::pallet::Pallet::<Runtime>::set_block_number(block_number);

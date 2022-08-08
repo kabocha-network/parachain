@@ -13,7 +13,7 @@ mod benchmarking;
 
 use frame_support::weights::{GetDispatchInfo, PostDispatchInfo};
 
-use sp_runtime::sp_std::{boxed::Box, marker::PhantomData, vec::Vec};
+use sp_runtime::sp_std::{boxed::Box, vec::Vec};
 
 pub use frame_system::RawOrigin;
 pub use sp_runtime::traits::Dispatchable;

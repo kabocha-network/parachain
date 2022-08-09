@@ -9,7 +9,7 @@
   "protocolId": null,
   "properties": null,
   "relay_chain": "rococo-staging",
-  "para_id": 2009,
+  "para_id": 2013,
   "codeSubstitutes": {},
   "genesis": {
     "runtime": {
@@ -18,7 +18,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2009
+        "parachainId": 2013
       },
       "sudo": {
         "key": "3nCK8qSYJ5K2E7CecHeHxLsGr21bVCL7BmqxbFeo19jd5RXX"
@@ -105,9 +105,6 @@
         "authorities": []
       },
       "auraExt": null,
-      "vesting": {
-        "vesting": []
-      },
       "polkadotXcm": {
         "safeXcmVersion": 2
       }

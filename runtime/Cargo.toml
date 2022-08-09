@@ -75,8 +75,13 @@ cumulus-primitives-utility = { git = "https://github.com/paritytech/cumulus", br
 pallet-collator-selection = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.27", default-features = false }
 parachain-info = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.27", default-features = false }
 
+# pallets
 pallet-multisig = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
 pallet-scheduler = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
+
+pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", default-features = false, branch = "polkadot-v0.9.27" }
+pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.27" }
+
 
 [features]
 default = ["std"]

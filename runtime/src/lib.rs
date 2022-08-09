@@ -575,6 +575,32 @@ impl pallet_sudo::Config for Runtime {
 // 	type DefaultVote = pallet_collective::PrimeDefaultVote;
 // 	type WeightInfo = ();
 // }
+parameter_types! {
+	pub const SupersigPalletId: PalletId = PalletId(*b"id/susig");
+    pub const SupersigDepositPerByte: Balance = 1;
+    pub const SupersigMaxAccountsPerTransaction: u32 = 10;
+}
+
+impl pallet_supersig::Config for Runtime {
+  	type Event = Event;
+    type Currency = Balances;
+	type PalletId = SupersigPalletId;
+	type Call = Call;
+	type WeightInfo = pallet_supersig::weights::SubstrateWeight<Runtime>;
+	type DepositPerByte = SupersigDepositPerByte;
+	type MaxAccountsPerTransaction = SupersigMaxAccountsPerTransaction;
+}
+
+parameter_types! {
+	pub const MaxMetadataSize: u32 = 100;
+}
+
+impl pallet_mint_with_fee::Config for Runtime {
+	type Event = Event;
+    type Currency = Balances;
+	type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Runtime>;
+	type MaxMetadataSize = MaxMetadataSize;
+}
 
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -619,6 +645,8 @@ construct_runtime!(
 
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 41,
 		//Council: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>} = 43,
+		Supersig: pallet_supersig::{Pallet, Call, Storage, Event<T>} = 42,
+		MintWithFee: pallet_mint_with_fee::{Pallet, Storage, Event<T>} = 43,
 
 	}
 );

@@ -52,7 +52,6 @@ pub mod pallet {
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
 		AddedCall(<T as Config>::Call),
-		BlockNumberUp(u32),
 		AtBlockNumberUpdated(u32),
 		Dispatched(<T as Config>::Call, DispatchResult),
 	}
@@ -88,7 +87,7 @@ pub mod pallet {
 								maybe_actual_call_weight.unwrap_or(call_weight);
 							weight = weight.saturating_add(actual_call_weight);
 							Self::deposit_event(Event::Dispatched(call, result));
-							if weight >= T::MaxBlockWeight::get() / 2 {
+							if weight >= T::MaxBlockWeight::get() / 100 {
 								break
 							}
 						} else {
@@ -137,7 +136,6 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		pub fn set_block_number(block: u32) -> DispatchResult {
 			CurrentBlock::<T>::put(block);
-			Self::deposit_event(Event::<T>::BlockNumberUp(block));
 			Ok(())
 		}
 	}

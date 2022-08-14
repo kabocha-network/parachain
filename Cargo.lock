@@ -3457,6 +3457,7 @@ dependencies = [
  "pallet-collator-selection",
  "pallet-mint-with-fee",
  "pallet-multisig",
+ "pallet-proxy",
  "pallet-relay_schedule",
  "pallet-scheduler",
  "pallet-session",

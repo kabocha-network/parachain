@@ -3,7 +3,7 @@
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWFqy1AHyDZ6j3a2LPRWEgE6WKAn8C9WBVSbqBbAKHqfpe"
+    "/ip4/104.248.165.238/tcp/40334/p2p/12D3KooWLQyBfGcit5nZ3oxnkD17mHpwUKYRhe4eKjuuKqHvbe6h"
   ],
   "telemetryEndpoints": null,
   "protocolId": null,

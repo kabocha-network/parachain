@@ -31,15 +31,16 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 
 pub struct EnsureOneOf<L, R>(sp_std::marker::PhantomData<(L, R)>);
+pub use codec::{Decode, Encode, MaxEncodedLen};
 use cumulus_pallet_parachain_system::OnSystemEvent;
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::Contains,
+	traits::{Contains, InstanceFilter},
 	weights::{
 		constants::WEIGHT_PER_SECOND, ConstantMultiplier, DispatchClass, Weight,
 		WeightToFeeCoefficient, WeightToFeeCoefficients, WeightToFeePolynomial,
 	},
-	PalletId,
+	PalletId, RuntimeDebug,
 };
 use frame_system::{
 	limits::{BlockLength, BlockWeights},
@@ -179,14 +180,12 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 9,
+	spec_version: 10,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
 	state_version: 2,
 };
-
-
 
 //ToDo: Put constants in its own file
 
@@ -242,14 +241,13 @@ pub fn native_version() -> NativeVersion {
 	NativeVersion { runtime_version: VERSION, can_author_with: Default::default() }
 }
 
-
 // Use this filter to block users from calling any functions in the Balances pallet.
 pub struct DontAllowBalances;
 
 impl Contains<Call> for DontAllowBalances {
 	fn contains(c: &Call) -> bool {
-	// This will match against any call from the Balances pallet.
-	!matches!(c, Call::Balances(..))
+		// This will match against any call from the Balances pallet.
+		!matches!(c, Call::Balances(..))
 	}
 }
 
@@ -283,8 +281,6 @@ parameter_types! {
 	pub const SS58Prefix: u16 = 27;
 
 }
-
-
 
 // Configure FRAME pallets to include in runtime.
 
@@ -490,7 +486,7 @@ impl pallet_collator_selection::Config for Runtime {
 }
 
 parameter_types! {
-		pub const MaxBlockWeight: Weight = MAXIMUM_BLOCK_WEIGHT;
+	pub const MaxBlockWeight: Weight = MAXIMUM_BLOCK_WEIGHT;
 }
 
 impl pallet_relay_schedule::Config for Runtime {
@@ -500,11 +496,111 @@ impl pallet_relay_schedule::Config for Runtime {
 }
 
 parameter_types! {
-    // One storage item; key size is 32; value is size 4+4+16+32 bytes = 56 bytes.
-    pub const DepositBase: Balance = deposit(1, 88);
-    // Additional storage item size of 32 bytes.
-    pub const DepositFactor: Balance = deposit(0, 32);
-    pub const MaxSignatories: u16 = 100;
+	// One storage item; key size 32, value size 8; .
+	pub const ProxyDepositBase: Balance = deposit(1, 8);
+	// Additional storage item size of 33 bytes.
+	pub const ProxyDepositFactor: Balance = deposit(0, 33);
+	pub const MaxProxies: u16 = 32;
+	pub const AnnouncementDepositBase: Balance = deposit(1, 8);
+	pub const AnnouncementDepositFactor: Balance = deposit(0, 66);
+	pub const MaxPending: u16 = 32;
+}
+
+/// The type used to represent the kinds of proxying allowed.
+#[derive(
+	Copy,
+	Clone,
+	Eq,
+	PartialEq,
+	Ord,
+	PartialOrd,
+	Encode,
+	Decode,
+	RuntimeDebug,
+	MaxEncodedLen,
+	scale_info::TypeInfo,
+)]
+pub enum ProxyType {
+	Any,
+	NonTransfer,
+	Governance,
+	Staking,
+	IdentityJudgement,
+	CancelProxy,
+	Auction,
+	Society,
+}
+
+impl Default for ProxyType {
+	fn default() -> Self {
+		Self::Any
+	}
+}
+
+impl InstanceFilter<Call> for ProxyType {
+	fn filter(&self, c: &Call) -> bool {
+		match self {
+			ProxyType::Any => true,
+			ProxyType::NonTransfer => matches!(
+				c,
+				Call::System(..) |
+				Call::Timestamp(..) |
+				// Specifically omitting the entire Balances pallet
+				Call::Authorship(..) |
+				Call::Session(..) |
+				Call::Scheduler(..) |
+				Call::RelaySchedule(..) |
+				Call::Proxy(..) |
+				Call::Multisig(..)
+				// Specifically omitting the entire XCM Pallet
+			),
+			ProxyType::Governance => matches!(
+				c,
+				Call::Supersig(..)
+			),
+			ProxyType::Staking => {
+				matches!(c, Call::Session(..))
+			},
+			ProxyType::IdentityJudgement => false,
+			ProxyType::CancelProxy => {
+				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
+			},
+			ProxyType::Auction => false,
+			ProxyType::Society => false
+		}
+	}
+	fn is_superset(&self, o: &Self) -> bool {
+		match (self, o) {
+			(x, y) if x == y => true,
+			(ProxyType::Any, _) => true,
+			(_, ProxyType::Any) => false,
+			(ProxyType::NonTransfer, _) => true,
+			_ => false,
+		}
+	}
+}
+
+impl pallet_proxy::Config for Runtime {
+	type Event = Event;
+	type Call = Call;
+	type Currency = Balances;
+	type ProxyType = ProxyType;
+	type ProxyDepositBase = ProxyDepositBase;
+	type ProxyDepositFactor = ProxyDepositFactor;
+	type MaxProxies = MaxProxies;
+	type WeightInfo = pallet_proxy::weights::SubstrateWeight<Runtime>;
+	type MaxPending = MaxPending;
+	type CallHasher = BlakeTwo256;
+	type AnnouncementDepositBase = AnnouncementDepositBase;
+	type AnnouncementDepositFactor = AnnouncementDepositFactor;
+}
+
+parameter_types! {
+	// One storage item; key size is 32; value is size 4+4+16+32 bytes = 56 bytes.
+	pub const DepositBase: Balance = deposit(1, 88);
+	// Additional storage item size of 32 bytes.
+	pub const DepositFactor: Balance = deposit(0, 32);
+	pub const MaxSignatories: u16 = 100;
 }
 
 impl pallet_multisig::Config for Runtime {
@@ -548,16 +644,14 @@ impl pallet_scheduler::Config for Runtime {
 	// type WeightInfo = weights::pallet_scheduler::WeightInfo<Runtime>;
 	type WeightInfo = ();
 	type OriginPrivilegeCmp = frame_support::traits::EqualPrivilegeOnly;
-    type PreimageProvider = ();
-    type NoPreimagePostponement = NoPreimagePostponement;
-
+	type PreimageProvider = ();
+	type NoPreimagePostponement = NoPreimagePostponement;
 }
 
 impl pallet_sudo::Config for Runtime {
 	type Event = Event;
 	type Call = Call;
 }
-
 
 // parameter_types! {
 // 	pub const CouncilMotionDuration: BlockNumber = 5 * DAYS;
@@ -577,13 +671,13 @@ impl pallet_sudo::Config for Runtime {
 // }
 parameter_types! {
 	pub const SupersigPalletId: PalletId = PalletId(*b"id/susig");
-    pub const SupersigDepositPerByte: Balance = 1;
-    pub const SupersigMaxAccountsPerTransaction: u32 = 10;
+	pub const SupersigDepositPerByte: Balance = 1;
+	pub const SupersigMaxAccountsPerTransaction: u32 = 10;
 }
 
 impl pallet_supersig::Config for Runtime {
-  	type Event = Event;
-    type Currency = Balances;
+	type Event = Event;
+	type Currency = Balances;
 	type PalletId = SupersigPalletId;
 	type Call = Call;
 	type WeightInfo = pallet_supersig::weights::SubstrateWeight<Runtime>;
@@ -597,11 +691,10 @@ parameter_types! {
 
 impl pallet_mint_with_fee::Config for Runtime {
 	type Event = Event;
-    type Currency = Balances;
+	type Currency = Balances;
 	type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Runtime>;
 	type MaxMetadataSize = MaxMetadataSize;
 }
-
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -643,10 +736,12 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 32,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 33,
 
+		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 40,
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 41,
 		//Council: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>} = 43,
 		Supersig: pallet_supersig::{Pallet, Call, Storage, Event<T>} = 42,
-		MintWithFee: pallet_mint_with_fee::{Pallet, Storage, Event<T>} = 43,
+		MintWithFee: pallet_mint_with_fee::{Pallet, Call, Storage, Event<T>} = 43,
+
 
 	}
 );

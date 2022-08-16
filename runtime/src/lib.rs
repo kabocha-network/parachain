@@ -47,7 +47,7 @@ use frame_system::{
 	EnsureRoot, EnsureSigned
 };
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
-pub use sp_runtime::{MultiAddress, Perbill, Permill};
+pub use sp_runtime::{MultiAddress, Perbill, Percent, Permill};
 use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
 
 #[cfg(any(feature = "std", test))]
@@ -194,6 +194,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 pub const MILLICENTS: Balance = 10_000_000_000;
 pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
 pub const DOLLARS: Balance = 100 * CENTS;
+pub const GRAND: Balance = CENTS * 100_000;
 
 pub const fn deposit(items: u32, bytes: u32) -> Balance {
 	items as Balance * 15 * CENTS + (bytes as Balance) * 6 * CENTS
@@ -551,9 +552,15 @@ impl InstanceFilter<Call> for ProxyType {
 				Call::Scheduler(..) |
 				Call::RelaySchedule(..) |
 				Call::Proxy(..) |
-				Call::Multisig(..) // Specifically omitting the entire XCM Pallet
+				Call::Treasury(..) |
+				Call::Multisig(..) 
 			),
-			ProxyType::Governance => matches!(c, Call::Supersig(..)),
+			ProxyType::Governance => matches!(
+				c, 
+				Call::Supersig(..) |
+				Call::Democracy(..) |
+				Call::Treasury(..) 
+			),
 			ProxyType::Staking => {
 				matches!(c, Call::Session(..))
 			},
@@ -744,6 +751,45 @@ impl pallet_democracy::Config for Runtime {
 	type MaxProposals = MaxProposals;
 }
 
+parameter_types! {
+	pub const ProposalBond: Permill = Permill::from_percent(5);
+	pub const ProposalBondMinimum: Balance = 2000 * CENTS;
+	pub const ProposalBondMaximum: Balance = 1 * GRAND;
+	pub const SpendPeriod: BlockNumber = 6 * DAYS;
+	pub const Burn: Permill = Permill::from_perthousand(2);
+	pub const TreasuryPalletId: PalletId = PalletId(*b"py/trsry");
+
+	pub const TipCountdown: BlockNumber = 1 * DAYS;
+	pub const TipFindersFee: Percent = Percent::from_percent(20);
+	pub const TipReportDepositBase: Balance = 100 * CENTS;
+	pub const DataDepositPerByte: Balance = 1 * CENTS;
+	pub const MaxApprovals: u32 = 100;
+	//pub const MaxAuthorities: u32 = 100_000;
+	pub const MaxKeys: u32 = 10_000;
+	pub const MaxPeerInHeartbeats: u32 = 10_000;
+	pub const MaxPeerDataEncodingSize: u32 = 1_000;
+}
+
+impl pallet_treasury::Config for Runtime {
+	type PalletId = TreasuryPalletId;
+	type Currency = Balances;
+	type ApproveOrigin = EnsureSigned<AccountId>;
+	type RejectOrigin = EnsureSigned<AccountId>;
+	type Event = Event;
+	type OnSlash = Treasury;
+	type ProposalBond = ProposalBond;
+	type ProposalBondMinimum = ProposalBondMinimum;
+	type ProposalBondMaximum = ProposalBondMaximum;
+	type SpendPeriod = SpendPeriod;
+	type Burn = Burn;
+	type BurnDestination = ();
+	type MaxApprovals = MaxApprovals;
+	type WeightInfo = weights::pallet_treasury::WeightInfo<Runtime>;
+	type SpendFunds = ();
+	type SpendOrigin = frame_support::traits::NeverEnsureOrigin<Balance>;
+}
+
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -768,6 +814,9 @@ construct_runtime!(
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage, Event<T>} = 11,
 
+		Democracy: pallet_democracy::{Pallet, Call, Storage, Event<T>, Config<T> } = 13,
+		Treasury: pallet_treasury::{Pallet, Call, Storage, Config, Event<T>} = 18,
+
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Call, Storage} = 20,
 		CollatorSelection: pallet_collator_selection::{Pallet, Call, Storage, Event<T>, Config<T>} = 21,
@@ -784,7 +833,7 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 32,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 33,
 
-		Democracy: pallet_democracy::{Pallet, Call, Storage, Event<T>, Config<T> } = 39,
+		
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 40,
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 41,
 		//Council: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>} = 43,

@@ -80,6 +80,7 @@ pallet-multisig = { git = "https://github.com/paritytech/substrate", default-fea
 pallet-scheduler = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
 pallet-proxy = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
 pallet-democracy = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
+pallet-treasury = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
 
 pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", default-features = false, branch = "polkadot-v0.9.27" }
 pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.27" }

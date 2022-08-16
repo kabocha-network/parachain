@@ -221,6 +221,7 @@ fn testnet_genesis(
 		aura: Default::default(),
 		aura_ext: Default::default(),
 		parachain_system: Default::default(),
+		democracy: Default::default(),
 		polkadot_xcm: kabocha_runtime::PolkadotXcmConfig {
 			safe_xcm_version: Some(SAFE_XCM_VERSION),
 		},

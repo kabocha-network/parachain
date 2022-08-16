@@ -44,7 +44,7 @@ use frame_support::{
 };
 use frame_system::{
 	limits::{BlockLength, BlockWeights},
-	EnsureRoot,
+	EnsureRoot, EnsureSigned
 };
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{MultiAddress, Perbill, Permill};
@@ -54,7 +54,7 @@ use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
 pub use sp_runtime::BuildStorage;
 
 // Polkadot imports
-use polkadot_runtime_common::{BlockHashCount, SlowAdjustingFeeUpdate};
+use polkadot_runtime_common::{prod_or_fast, BlockHashCount, SlowAdjustingFeeUpdate};
 
 use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
 
@@ -551,13 +551,9 @@ impl InstanceFilter<Call> for ProxyType {
 				Call::Scheduler(..) |
 				Call::RelaySchedule(..) |
 				Call::Proxy(..) |
-				Call::Multisig(..)
-				// Specifically omitting the entire XCM Pallet
+				Call::Multisig(..) // Specifically omitting the entire XCM Pallet
 			),
-			ProxyType::Governance => matches!(
-				c,
-				Call::Supersig(..)
-			),
+			ProxyType::Governance => matches!(c, Call::Supersig(..)),
 			ProxyType::Staking => {
 				matches!(c, Call::Session(..))
 			},
@@ -566,7 +562,7 @@ impl InstanceFilter<Call> for ProxyType {
 				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
 			},
 			ProxyType::Auction => false,
-			ProxyType::Society => false
+			ProxyType::Society => false,
 		}
 	}
 	fn is_superset(&self, o: &Self) -> bool {
@@ -696,6 +692,58 @@ impl pallet_mint_with_fee::Config for Runtime {
 	type MaxMetadataSize = MaxMetadataSize;
 }
 
+parameter_types! {
+	pub LaunchPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_LAUNCH_PERIOD");
+	pub VotingPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_VOTING_PERIOD");
+	pub FastTrackVotingPeriod: BlockNumber = prod_or_fast!(2 * HOURS, 1 * MINUTES, "KAB_FAST_TRACK_VOTING_PERIOD");
+	pub const MinimumDeposit: Balance = 100 * CENTS;
+	pub EnactmentPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_ENACTMENT_PERIOD");
+	pub CooloffPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_COOLOFF_PERIOD");
+	pub const InstantAllowed: bool = true;
+	pub const MaxVotes: u32 = 100;
+	pub const MaxProposals: u32 = 100;
+	pub const PreimageByteDeposit: Balance = 1 * CENTS;
+}
+
+impl pallet_democracy::Config for Runtime {
+	type Proposal = Call;
+	type Event = Event;
+	type Currency = Balances;
+	type EnactmentPeriod = EnactmentPeriod;
+	type VoteLockingPeriod = EnactmentPeriod;
+	type LaunchPeriod = LaunchPeriod;
+	type VotingPeriod = VotingPeriod;
+	type MinimumDeposit = MinimumDeposit;
+	type ExternalOrigin = EnsureSigned<AccountId>;
+	type ExternalMajorityOrigin = EnsureSigned<AccountId>;
+	/// A unanimous council can have the next scheduled referendum be a straight default-carries
+	/// (NTB) vote.
+	type ExternalDefaultOrigin = EnsureSigned<AccountId>;
+	/// Two thirds of the technical committee can have an `ExternalMajority/ExternalDefault` vote
+	/// be tabled immediately and with a shorter voting/enactment period.
+	type FastTrackOrigin = EnsureSigned<AccountId>;
+	type InstantOrigin = EnsureSigned<AccountId>;
+	type InstantAllowed = InstantAllowed;
+	type FastTrackVotingPeriod = FastTrackVotingPeriod;
+	// To cancel a proposal which has been passed, 2/3 of the council must agree to it.
+	type CancellationOrigin = EnsureRoot<AccountId>;
+	type BlacklistOrigin = EnsureRoot<AccountId>;
+	// To cancel a proposal before it has been passed, root must agree.
+	type CancelProposalOrigin = EnsureRoot<AccountId>;
+	// Any single technical committee member may veto a coming council proposal, however they can
+	// only do it once and it lasts only for the cooloff period.
+	type VetoOrigin = EnsureSigned<AccountId>;
+	type CooloffPeriod = CooloffPeriod;
+	type PreimageByteDeposit = PreimageByteDeposit;
+	type OperationalPreimageOrigin = EnsureSigned<AccountId>;
+	type Slash = ();
+	type Scheduler = Scheduler;
+	type PalletsOrigin = OriginCaller;
+	type MaxVotes = MaxVotes;
+	type WeightInfo = pallet_democracy::weights::SubstrateWeight<Runtime>;
+	type MaxProposals = MaxProposals;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -736,6 +784,7 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 32,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 33,
 
+		Democracy: pallet_democracy::{Pallet, Call, Storage, Event<T>, Config<T> } = 39,
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 40,
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 41,
 		//Council: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>} = 43,

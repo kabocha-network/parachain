@@ -3412,6 +3412,7 @@ dependencies = [
  "pallet-balances",
  "pallet-collator-selection",
  "pallet-democracy",
+ "pallet-identity",
  "pallet-mint-with-fee",
  "pallet-multisig",
  "pallet-proxy",

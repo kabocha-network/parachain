@@ -180,7 +180,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 12,
+	spec_version: 13,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -380,10 +380,12 @@ impl pallet_balances::Config for Runtime {
 }
 
 parameter_types! {
-	pub const TransactionByteFee: Balance = 10 * MILLICENTS;
+	// For KSM it is 10 * MILLICENTS
+	pub const TransactionByteFee: Balance = 1/10 * MILLICENTS;
 	pub const OperationalFeeMultiplier: u8 = 5;
 }
 
+// https://paritytech.github.io/substrate/master/pallet_transaction_payment/index.html#modules
 impl pallet_transaction_payment::Config for Runtime {
 	type Event = Event;
 	type OnChargeTransaction = pallet_transaction_payment::CurrencyAdapter<Balances, ()>;
@@ -553,6 +555,7 @@ impl InstanceFilter<Call> for ProxyType {
 				Call::RelaySchedule(..) |
 				Call::Proxy(..) |
 				Call::Treasury(..) |
+				Call::Identity(..) |
 				Call::Multisig(..) 
 			),
 			ProxyType::Governance => matches!(
@@ -564,7 +567,10 @@ impl InstanceFilter<Call> for ProxyType {
 			ProxyType::Staking => {
 				matches!(c, Call::Session(..))
 			},
-			ProxyType::IdentityJudgement => false,
+			ProxyType::IdentityJudgement => matches!(
+				c,
+				Call::Identity(pallet_identity::Call::provide_judgement { .. })
+			),
 			ProxyType::CancelProxy => {
 				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
 			},
@@ -756,7 +762,7 @@ parameter_types! {
 	pub const ProposalBondMinimum: Balance = 2000 * CENTS;
 	pub const ProposalBondMaximum: Balance = 1 * GRAND;
 	pub const SpendPeriod: BlockNumber = 6 * DAYS;
-	pub const Burn: Permill = Permill::from_perthousand(2);
+	pub const Burn: Permill = Permill::from_perthousand(0);
 	pub const TreasuryPalletId: PalletId = PalletId(*b"py/trsry");
 
 	pub const TipCountdown: BlockNumber = 1 * DAYS;
@@ -787,6 +793,31 @@ impl pallet_treasury::Config for Runtime {
 	type WeightInfo = weights::pallet_treasury::WeightInfo<Runtime>;
 	type SpendFunds = ();
 	type SpendOrigin = frame_support::traits::NeverEnsureOrigin<Balance>;
+}
+
+parameter_types! {
+	// (Taken from Kusama) Minimum 100 bytes/KSM deposited (1 CENT/byte)
+	pub const BasicDeposit: Balance = 1000 * CENTS;       // 258 bytes on-chain
+	pub const FieldDeposit: Balance = 250 * CENTS;        // 66 bytes on-chain
+	pub const SubAccountDeposit: Balance = 200 * CENTS;   // 53 bytes on-chain
+	pub const MaxSubAccounts: u32 = 100;
+	pub const MaxAdditionalFields: u32 = 100;
+	pub const MaxRegistrars: u32 = 20;
+}
+
+impl pallet_identity::Config for Runtime {
+	type Event = Event;
+	type Currency = Balances;
+	type BasicDeposit = BasicDeposit;
+	type FieldDeposit = FieldDeposit;
+	type SubAccountDeposit = SubAccountDeposit;
+	type MaxSubAccounts = MaxSubAccounts;
+	type MaxAdditionalFields = MaxAdditionalFields;
+	type MaxRegistrars = MaxRegistrars;
+	type Slashed = Treasury;
+	type ForceOrigin = EnsureRoot<AccountId>;
+	type RegistrarOrigin = EnsureRoot<AccountId>;
+	type WeightInfo = weights::pallet_identity::WeightInfo<Runtime>;
 }
 
 
@@ -823,6 +854,7 @@ construct_runtime!(
 		Session: pallet_session::{Pallet, Call, Storage, Event, Config<T>} = 22,
 		Aura: pallet_aura::{Pallet, Storage, Config<T>} = 23,
 		AuraExt: cumulus_pallet_aura_ext::{Pallet, Storage, Config} = 24,
+		Identity: pallet_identity::{Pallet, Call, Storage, Event<T>} = 25,
 
 		// Vesting. Usable initially, but removed once all vesting is finished.
 		// Vesting: pallet_vesting::{Pallet, Call, Storage, Event<T>, Config<T>} = 28,
@@ -856,6 +888,7 @@ mod benches {
 		[pallet_session, SessionBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
 		[pallet_collator_selection, CollatorSelection]
+		[pallet_identity, Identity]
 	//	[pallet_vesting, Vesting]
 		[pallet_multisig, Multisig]
 	//	[pallet_scheduler, Scheduler]

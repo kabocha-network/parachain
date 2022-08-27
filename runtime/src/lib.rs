@@ -180,7 +180,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 13,
+	spec_version: 14,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -381,7 +381,7 @@ impl pallet_balances::Config for Runtime {
 
 parameter_types! {
 	// For KSM it is 10 * MILLICENTS
-	pub const TransactionByteFee: Balance = 1/10 * MILLICENTS;
+	pub const TransactionByteFee: Balance = 1 * MILLICENTS;
 	pub const OperationalFeeMultiplier: u8 = 5;
 }
 

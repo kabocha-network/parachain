@@ -83,7 +83,12 @@ pallet-democracy = { git = "https://github.com/paritytech/substrate", default-fe
 pallet-treasury = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
 pallet-identity = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.27" }
 
-pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", default-features = false, branch = "polkadot-v0.9.27" }
+# Supersig
+pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", branch = "polkadot-v0.9.27", default-features = false }
+pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pallet_supersig.git", branch = "polkadot-v0.9.27", default-features = false}
+
+
+# Mint
 pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.27" }
 
 
@@ -137,6 +142,7 @@ std = [
 	"xcm-executor/std",
 	"xcm/std",
 	"pallet-multisig/std",
+	"pallet-supersig/std",
 	# "pallet-vesting/std",
 	"pallet-scheduler/std",
 ]
@@ -166,6 +172,7 @@ try-runtime = [
 	# "pallet-vesting/try-runtime",
 	"pallet-balances/try-runtime",
 	"pallet-multisig/try-runtime",
+	"pallet-supersig/try-runtime",
 	"pallet-sudo/try-runtime",
 	"pallet-scheduler/try-runtime",
 	"pallet-identity/try-runtime",

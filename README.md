@@ -8,7 +8,7 @@ parathreads [here](https://wiki.polkadot.network/docs/learn-parathreads).
 🧙 Learn about how to use this template and run your own parachain testnet for it in the
 [Devhub Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/start-relay/).
 
-## Crowdloan and auction process (completed)
+## Crowdloan and auction process (completed) 
 
 We have launched as a featureless parachain template, with only balances and vesting. We are now in "sudo phase" after the auction win. The sudo holder will populate balances and vested balances with required amounts both from crowdloan participation and EDG snapshot. Balances will have a filter so that people can transfer balances. A runtime upgrade will then occur to include governance related pallets. Once that happens, anyone can make a proposal to kill the sudo account, once that happens a runtime upgrade to unfilter balances will ensue and the chain will be in its first live state. Thereafter, future runtime upgrades to add custom pallets and features will go through Kabocha on-chain governance. 
 ## Kabocha pallet ingredients 

@@ -890,6 +890,8 @@ mod benches {
 		[pallet_collator_selection, CollatorSelection]
 		[pallet_identity, Identity]
 		[pallet_multisig, Multisig]
+		[pallet_supersig, Supersig]
+
 		// Democracy
 		// RelaySchedule
 		// Scheduler
@@ -1052,6 +1054,7 @@ impl_runtime_apis! {
 
 			let mut list = Vec::<BenchmarkList>::new();
 			list_benchmarks!(list, extra);
+			list_benchmark!(list, extra, pallet_supersig, Supersig);
 			// list_benchmark!(list, extra, pallet_vesting, Vesting);
 			// list_benchmark!(list, extra, pallet_balances, Balances);
 			// list_benchmark!(list, extra, pallet_multisig, Multisig);

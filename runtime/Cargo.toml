@@ -143,7 +143,6 @@ std = [
 	"xcm/std",
 	"pallet-multisig/std",
 	"pallet-supersig/std",
-	# "pallet-vesting/std",
 	"pallet-scheduler/std",
 ]
 
@@ -153,23 +152,28 @@ runtime-benchmarks = [
 	"frame-support/runtime-benchmarks",
 	"frame-system-benchmarking",
 	"frame-system/runtime-benchmarks",
+	"sp-runtime/runtime-benchmarks",
+	"xcm-builder/runtime-benchmarks",
+	"cumulus-pallet-xcmp-queue/runtime-benchmarks",
+	"cumulus-pallet-session-benchmarking/runtime-benchmarks",
+	"pallet-xcm/runtime-benchmarks",
+	"pallet-multisig/runtime-benchmarks",
+	"pallet-scheduler/runtime-benchmarks",
 	"pallet-balances/runtime-benchmarks",
 	"pallet-collator-selection/runtime-benchmarks",
 	"pallet-identity/runtime-benchmarks",
 	"pallet-timestamp/runtime-benchmarks",
-	"pallet-xcm/runtime-benchmarks",
-	"sp-runtime/runtime-benchmarks",
-	"xcm-builder/runtime-benchmarks",
-	"cumulus-pallet-session-benchmarking/runtime-benchmarks",
-	"pallet-multisig/runtime-benchmarks",
-	# "pallet-vesting/runtime-benchmarks",
-	"pallet-scheduler/runtime-benchmarks",
-	"cumulus-pallet-xcmp-queue/runtime-benchmarks",
+	
+
+	# add benchmarks
+	# "pallet-supersig/runtime-benchmarks",
+	
+
+	
 ]
 
 try-runtime = [
 	"frame-executive/try-runtime",
-	# "pallet-vesting/try-runtime",
 	"pallet-balances/try-runtime",
 	"pallet-multisig/try-runtime",
 	"pallet-supersig/try-runtime",

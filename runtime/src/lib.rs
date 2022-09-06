@@ -146,7 +146,7 @@ impl WeightToFeePolynomial for WeightToFee {
 	fn polynomial() -> WeightToFeeCoefficients<Self::Balance> {
 		// in Rococo, extrinsic base weight (smallest non-zero weight) is mapped to 1 MILLIUNIT:
 		// in our template, we map to 1/10 of that, or 1/10 MILLIUNIT
-		let p = MILLIUNIT / 10;
+		let p = MICROUNIT * 500000;
 		let q = 100 * Balance::from(ExtrinsicBaseWeight::get());
 		smallvec![WeightToFeeCoefficient {
 			degree: 1,
@@ -185,7 +185,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 19,
+	spec_version: 25,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -194,9 +194,11 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 
 //ToDo: Put constants in its own file
 
-// Multisig deposit definition
 
+
+pub const MINICENTS: Balance = 10_000_000;
 pub const MILLICENTS: Balance = 10_000_000_000;
+pub const MICROCENTS: Balance = 100_000_000_000; 
 pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
 pub const DOLLARS: Balance = 100 * CENTS;
 pub const GRAND: Balance = CENTS * 100_000;
@@ -386,7 +388,7 @@ impl pallet_balances::Config for Runtime {
 
 parameter_types! {
 	// For KSM it is 10 * MILLICENTS
-	pub const TransactionByteFee: Balance =  10 * MILLICENTS;
+	pub const TransactionByteFee: Balance =  5 * MINICENTS;
 	pub const OperationalFeeMultiplier: u8 = 5;
 }
 
@@ -714,13 +716,13 @@ parameter_types! {
 	pub LaunchPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_LAUNCH_PERIOD");
 	pub VotingPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_VOTING_PERIOD");
 	pub FastTrackVotingPeriod: BlockNumber = prod_or_fast!(2 * HOURS, 1 * MINUTES, "KAB_FAST_TRACK_VOTING_PERIOD");
-	pub const MinimumDeposit: Balance = 100 * CENTS;
+	pub const MinimumDeposit: Balance = 1 * CENTS;
 	pub EnactmentPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_ENACTMENT_PERIOD");
 	pub CooloffPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_COOLOFF_PERIOD");
 	pub const InstantAllowed: bool = true;
 	pub const MaxVotes: u32 = 100;
 	pub const MaxProposals: u32 = 100;
-	pub const PreimageByteDeposit: Balance = 1 * CENTS;
+	pub const PreimageByteDeposit: Balance = 1 * MICROCENTS;
 }
 
 impl pallet_democracy::Config for Runtime {
@@ -734,22 +736,14 @@ impl pallet_democracy::Config for Runtime {
 	type MinimumDeposit = MinimumDeposit;
 	type ExternalOrigin = EnsureSigned<AccountId>;
 	type ExternalMajorityOrigin = EnsureSigned<AccountId>;
-	/// A unanimous council can have the next scheduled referendum be a straight default-carries
-	/// (NTB) vote.
 	type ExternalDefaultOrigin = EnsureSigned<AccountId>;
-	/// Two thirds of the technical committee can have an `ExternalMajority/ExternalDefault` vote
-	/// be tabled immediately and with a shorter voting/enactment period.
 	type FastTrackOrigin = EnsureSigned<AccountId>;
 	type InstantOrigin = EnsureSigned<AccountId>;
 	type InstantAllowed = InstantAllowed;
 	type FastTrackVotingPeriod = FastTrackVotingPeriod;
-	// To cancel a proposal which has been passed, 2/3 of the council must agree to it.
 	type CancellationOrigin = EnsureRoot<AccountId>;
 	type BlacklistOrigin = EnsureRoot<AccountId>;
-	// To cancel a proposal before it has been passed, root must agree.
 	type CancelProposalOrigin = EnsureRoot<AccountId>;
-	// Any single technical committee member may veto a coming council proposal, however they can
-	// only do it once and it lasts only for the cooloff period.
 	type VetoOrigin = EnsureSigned<AccountId>;
 	type CooloffPeriod = CooloffPeriod;
 	type PreimageByteDeposit = PreimageByteDeposit;
@@ -764,7 +758,7 @@ impl pallet_democracy::Config for Runtime {
 
 parameter_types! {
 	pub const ProposalBond: Permill = Permill::from_percent(5);
-	pub const ProposalBondMinimum: Balance = 2000 * CENTS;
+	pub const ProposalBondMinimum: Balance = 20 * CENTS;
 	pub const ProposalBondMaximum: Balance = 1 * GRAND;
 	pub const SpendPeriod: BlockNumber = 6 * DAYS;
 	pub const Burn: Permill = Permill::from_perthousand(0);
@@ -772,8 +766,8 @@ parameter_types! {
 
 	pub const TipCountdown: BlockNumber = 1 * DAYS;
 	pub const TipFindersFee: Percent = Percent::from_percent(20);
-	pub const TipReportDepositBase: Balance = 100 * CENTS;
-	pub const DataDepositPerByte: Balance = 1 * CENTS;
+	pub const TipReportDepositBase: Balance = 1 * CENTS;
+	pub const DataDepositPerByte: Balance = 10 * MILLICENTS;
 	pub const MaxApprovals: u32 = 100;
 	//pub const MaxAuthorities: u32 = 100_000;
 	pub const MaxKeys: u32 = 10_000;
@@ -802,9 +796,9 @@ impl pallet_treasury::Config for Runtime {
 
 parameter_types! {
 	// (Taken from Kusama) Minimum 100 bytes/KSM deposited (1 CENT/byte)
-	pub const BasicDeposit: Balance = 1000 * CENTS;       // 258 bytes on-chain
-	pub const FieldDeposit: Balance = 250 * CENTS;        // 66 bytes on-chain
-	pub const SubAccountDeposit: Balance = 200 * CENTS;   // 53 bytes on-chain
+	pub const BasicDeposit: Balance = 1 * CENTS;       // 258 bytes on-chain
+	pub const FieldDeposit: Balance = 250 * MILLICENTS;        // 66 bytes on-chain
+	pub const SubAccountDeposit: Balance = 200 * MILLICENTS;   // 53 bytes on-chain
 	pub const MaxSubAccounts: u32 = 100;
 	pub const MaxAdditionalFields: u32 = 100;
 	pub const MaxRegistrars: u32 = 20;
@@ -889,17 +883,24 @@ extern crate frame_benchmarking;
 mod benches {
 	define_benchmarks!(
 		[frame_system, SystemBench::<Runtime>]
+		[cumulus_pallet_xcmp_queue, XcmpQueue]
 		[pallet_balances, Balances]
 		[pallet_session, SessionBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
 		[pallet_collator_selection, CollatorSelection]
 		[pallet_identity, Identity]
-	//	[pallet_vesting, Vesting]
 		[pallet_multisig, Multisig]
+		// Democracy
+		// RelaySchedule
+		// Scheduler
+		// Treasury
+		//Supersig
+		// MintWithFee
+		// Proxy
+
 	//	[pallet_scheduler, Scheduler]
 	//	[pallet_sudo, Sudo]
-
-		[cumulus_pallet_xcmp_queue, XcmpQueue]
+		
 	);
 }
 

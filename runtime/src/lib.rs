@@ -185,7 +185,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 25,
+	spec_version: 26,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -198,6 +198,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 
 pub const MINICENTS: Balance = 10_000_000;
 pub const MILLICENTS: Balance = 10_000_000_000;
+pub const BILLICENTS: Balance = 1_000_000_000;
 pub const MICROCENTS: Balance = 100_000_000_000; 
 pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
 pub const DOLLARS: Balance = 100 * CENTS;
@@ -722,7 +723,7 @@ parameter_types! {
 	pub const InstantAllowed: bool = true;
 	pub const MaxVotes: u32 = 100;
 	pub const MaxProposals: u32 = 100;
-	pub const PreimageByteDeposit: Balance = 1 * MICROCENTS;
+	pub const PreimageByteDeposit: Balance = 1 * BILLICENTS;
 }
 
 impl pallet_democracy::Config for Runtime {

@@ -40,7 +40,7 @@ pub use codec::{Decode, Encode, MaxEncodedLen};
 use cumulus_pallet_parachain_system::OnSystemEvent;
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{Contains, InstanceFilter},
+	traits::{Contains, InstanceFilter, Everything},
 	weights::{
 		constants::WEIGHT_PER_SECOND, ConstantMultiplier, DispatchClass, Weight,
 		WeightToFeeCoefficient, WeightToFeeCoefficients, WeightToFeePolynomial,
@@ -251,14 +251,14 @@ pub fn native_version() -> NativeVersion {
 }
 
 // Use this filter to block users from calling any functions in the Balances pallet.
-pub struct DontAllowBalances;
+// pub struct DontAllowBalances;
 
-impl Contains<Call> for DontAllowBalances {
-	fn contains(c: &Call) -> bool {
-		// This will match against any call from the Balances pallet.
-		!matches!(c, Call::Balances(..))
-	}
-}
+// impl Contains<Call> for DontAllowBalances {
+// 	fn contains(c: &Call) -> bool {
+// 		// This will match against any call from the Balances pallet.
+// 		!matches!(c, Call::Balances(..))
+// 	}
+// }
 
 parameter_types! {
 	pub const Version: RuntimeVersion = VERSION;
@@ -330,7 +330,7 @@ impl frame_system::Config for Runtime {
 	type DbWeight = RocksDbWeight;
 	/// The basic call filter to use in dispatchable.  (Changed from Everything to DontAllowBalances)
 	/// type BaseCallFilter = Everything;
-	type BaseCallFilter = DontAllowBalances;
+	type BaseCallFilter = Everything;
 	/// Weight information for the extrinsics of this pallet.
 	type SystemWeightInfo = weights::frame_system::WeightInfo<Runtime>;
 	/// Block & extrinsics weights: base values and limits.

@@ -5319,8 +5319,9 @@ dependencies = [
 [[package]]
 name = "pallet-mint-with-fee"
 version = "0.1.1"
-source = "git+https://github.com/kabocha-network/pallet_mint_with_fee?branch=polkadot-v0.9.28#739bef668eca5d464418238a8cda8ecdbfc7f822"
+source = "git+https://github.com/kabocha-network/pallet_mint_with_fee?branch=polkadot-v0.9.28#2bb072dafa21fe9116fb7d1ce59ee7708fe6b366"
 dependencies = [
+ "frame-benchmarking",
  "frame-support",
  "frame-system",
  "parity-scale-codec",

@@ -891,18 +891,18 @@ mod benches {
 		[pallet_collator_selection, CollatorSelection]
 		[pallet_identity, Identity]
 		[pallet_multisig, Multisig]
-		[pallet_supersig, Supersig]
+		[pallet_democracy, Democracy]
+		[pallet_treasury, Treasury]
+		[pallet_scheduler, Scheduler]
+		[pallet_proxy, Proxy]
+	
+
+		// [pallet_supersig, Supersig]
 
 		// Democracy
-		// RelaySchedule
-		// Scheduler
 		// Treasury
 		//Supersig
 		// MintWithFee
-		// Proxy
-
-	//	[pallet_scheduler, Scheduler]
-	//	[pallet_sudo, Sudo]
 		
 	);
 }
@@ -1057,9 +1057,9 @@ impl_runtime_apis! {
 			list_benchmarks!(list, extra);
 			list_benchmark!(list, extra, pallet_supersig, Supersig);
 			// list_benchmark!(list, extra, pallet_vesting, Vesting);
-			// list_benchmark!(list, extra, pallet_balances, Balances);
-			// list_benchmark!(list, extra, pallet_multisig, Multisig);
-			// list_benchmark!(list, extra, pallet_sudo, Sudo);
+			list_benchmark!(list, extra, pallet_balances, Balances);
+			list_benchmark!(list, extra, pallet_multisig, Multisig);
+		
 
 			let storage_info = AllPalletsWithSystem::storage_info();
 			return (list, storage_info)

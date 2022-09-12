@@ -47,10 +47,13 @@ pub use rocksdb_weights::constants::RocksDbWeight;
 
 pub mod frame_system;
 pub mod pallet_balances;
-// pub mod pallet_vesting;
+//pub mod pallet_vesting;
 pub mod pallet_multisig;
 pub mod pallet_timestamp;
 pub mod pallet_collator_selection;
 pub mod pallet_session;
 pub mod pallet_treasury;
 pub mod pallet_identity;
+pub mod pallet_democracy;
+pub mod pallet_scheduler;
+pub mod pallet_proxy;

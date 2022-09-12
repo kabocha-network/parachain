@@ -1,5 +1,5 @@
 # This is the build stage for Kabocha. Here we create the binary in a temporary image.
-FROM paritytech/ci-linux:production as builder
+FROM docker.io/paritytech/ci-linux:production as builder
 
 WORKDIR /kabocha
 COPY . /kabocha

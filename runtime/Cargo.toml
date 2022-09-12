@@ -165,13 +165,12 @@ runtime-benchmarks = [
 	"pallet-collator-selection/runtime-benchmarks",
 	"pallet-identity/runtime-benchmarks",
 	"pallet-supersig/runtime-benchmarks",
+	"pallet-democracy/runtime-benchmarks",
+	"pallet-proxy/runtime-benchmarks",
+	"pallet-treasury/runtime-benchmarks",
 	
-
 	# add benchmarks
 	# "pallet-supersig/runtime-benchmarks",
-	
-
-	
 ]
 
 try-runtime = [

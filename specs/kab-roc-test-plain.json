@@ -1,15 +1,14 @@
 {
-  "name": "Soupcan",
+  "name": "Kabocha (kabsoup)",
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/12D3KooWHQMyuHCcBFjfNjMXQKKuuutvp44HdzvuAurwxaRcAwUU"
   ],
   "telemetryEndpoints": null,
   "protocolId": null,
   "properties": null,
   "relay_chain": "rococo-staging",
-  "para_id": 4113,
+  "para_id": 2113,
   "codeSubstitutes": {},
   "genesis": {
     "runtime": {
@@ -18,7 +17,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 4113
+        "parachainId": 2113
       },
       "sudo": {
         "key": "nT7xzcUcFpV6w7NVe3pQKYmvK9iPXjhQxmLHanmk3qsSm5o"

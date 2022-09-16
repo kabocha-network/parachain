@@ -15,15 +15,19 @@ targets = ["x86_64-unknown-linux-gnu"]
 substrate-wasm-builder = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.28" }
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+	"derive",
+] }
 hex-literal = { version = "0.3.4", optional = true }
 log = { version = "0.4.17", default-features = false }
-scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+scale-info = { version = "2.1.1", default-features = false, features = [
+	"derive",
+] }
 serde = { version = "1.0.143", optional = true, features = ["derive"] }
 smallvec = "1.9.0"
 
 # Local
-pallet-relay_schedule= { path = "../pallets/relay_schedule", default-features = false }
+pallet-relay_schedule = { path = "../pallets/relay_schedule", default-features = false }
 
 # Substrate
 frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true, branch = "polkadot-v0.9.28" }
@@ -66,7 +70,7 @@ xcm-executor = { git = "https://github.com/paritytech/polkadot", default-feature
 cumulus-pallet-aura-ext = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false }
 cumulus-pallet-dmp-queue = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false }
 cumulus-pallet-parachain-system = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false }
-cumulus-pallet-session-benchmarking = {git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false, version = "3.0.0"}
+cumulus-pallet-session-benchmarking = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false, version = "3.0.0" }
 cumulus-pallet-xcm = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false }
 cumulus-pallet-xcmp-queue = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false }
 cumulus-primitives-core = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.28", default-features = false }
@@ -85,8 +89,7 @@ pallet-identity = { git = "https://github.com/paritytech/substrate", default-fea
 
 # Supersig
 pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", branch = "polkadot-v0.9.28", default-features = false }
-pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pallet_supersig.git", branch = "polkadot-v0.9.28", default-features = false}
-
+pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pallet_supersig.git", branch = "polkadot-v0.9.28", default-features = false }
 
 # Mint
 pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.28" }
@@ -144,7 +147,8 @@ std = [
 	"pallet-scheduler/std",
 	"pallet-multisig/std",
 	"pallet-supersig/std",
-	
+	"pallet-mint-with-fee/std",
+
 ]
 
 runtime-benchmarks = [
@@ -168,9 +172,10 @@ runtime-benchmarks = [
 	"pallet-democracy/runtime-benchmarks",
 	"pallet-proxy/runtime-benchmarks",
 	"pallet-treasury/runtime-benchmarks",
-	
+
 	# add benchmarks
-	# "pallet-supersig/runtime-benchmarks",
+	"pallet-supersig/runtime-benchmarks",
+	"pallet-mint-with-fee/runtime-benchmarks",
 ]
 
 try-runtime = [

@@ -3434,7 +3434,7 @@ dependencies = [
  "pallet-collator-selection",
  "pallet-democracy",
  "pallet-identity",
- "pallet-mint-with-fee",
+ "pallet-mint-with-fee 0.1.1 (git+https://github.com/kabocha-network/pallet_mint_with_fee?branch=polkadot-v0.9.28)",
  "pallet-multisig",
  "pallet-proxy",
  "pallet-relay_schedule",
@@ -5328,8 +5328,27 @@ dependencies = [
 [[package]]
 name = "pallet-mint-with-fee"
 version = "0.1.1"
-source = "git+https://github.com/kabocha-network/pallet_mint_with_fee?branch=polkadot-v0.9.28#fc722cc905551ff2311fa6946e0aafb531dff14f"
 dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "pallet-balances",
+ "parity-scale-codec",
+ "scale-info",
+ "serde",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+ "syn",
+]
+
+[[package]]
+name = "pallet-mint-with-fee"
+version = "0.1.1"
+source = "git+https://github.com/kabocha-network/pallet_mint_with_fee?branch=polkadot-v0.9.28#2bb072dafa21fe9116fb7d1ce59ee7708fe6b366"
+dependencies = [
+ "frame-benchmarking",
  "frame-support",
  "frame-system",
  "parity-scale-codec",

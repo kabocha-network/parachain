@@ -10,12 +10,9 @@ mod weights;
 pub mod xcm_config;
 
 use cumulus_pallet_parachain_system::RelayNumberStrictlyIncreases;
+use pallet_supersig::{rpc::ProposalState, CallId, Role, SupersigId};
 use smallvec::smallvec;
-use pallet_supersig::{CallId, Role, SupersigId};
-use pallet_supersig::rpc::ProposalState;
 use sp_runtime::DispatchError;
-
-
 
 use sp_api::impl_runtime_apis;
 use sp_core::{
@@ -49,7 +46,7 @@ use frame_support::{
 };
 use frame_system::{
 	limits::{BlockLength, BlockWeights},
-	EnsureRoot, EnsureSigned
+	EnsureRoot, EnsureSigned,
 };
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{MultiAddress, Perbill, Percent, Permill};
@@ -194,12 +191,10 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 
 //ToDo: Put constants in its own file
 
-
-
 pub const MINICENTS: Balance = 10_000_000;
 pub const MILLICENTS: Balance = 10_000_000_000;
 pub const BILLICENTS: Balance = 1_000_000_000;
-pub const MICROCENTS: Balance = 100_000_000_000; 
+pub const MICROCENTS: Balance = 100_000_000_000;
 pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
 pub const DOLLARS: Balance = 100 * CENTS;
 pub const GRAND: Balance = CENTS * 100_000;
@@ -564,21 +559,15 @@ impl InstanceFilter<Call> for ProxyType {
 				Call::Proxy(..) |
 				Call::Treasury(..) |
 				Call::Identity(..) |
-				Call::Multisig(..) 
+				Call::Multisig(..)
 			),
-			ProxyType::Governance => matches!(
-				c, 
-				Call::Supersig(..) |
-				Call::Democracy(..) |
-				Call::Treasury(..) 
-			),
+			ProxyType::Governance =>
+				matches!(c, Call::Supersig(..) | Call::Democracy(..) | Call::Treasury(..)),
 			ProxyType::Staking => {
 				matches!(c, Call::Session(..))
 			},
-			ProxyType::IdentityJudgement => matches!(
-				c,
-				Call::Identity(pallet_identity::Call::provide_judgement { .. })
-			),
+			ProxyType::IdentityJudgement =>
+				matches!(c, Call::Identity(pallet_identity::Call::provide_judgement { .. })),
 			ProxyType::CancelProxy => {
 				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
 			},
@@ -820,7 +809,6 @@ impl pallet_identity::Config for Runtime {
 	type WeightInfo = weights::pallet_identity::WeightInfo<Runtime>;
 }
 
-
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -865,7 +853,7 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm::{Pallet, Event<T>, Origin} = 32,
 		DmpQueue: cumulus_pallet_dmp_queue::{Pallet, Call, Storage, Event<T>} = 33,
 
-		
+
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 40,
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 41,
 		//Council: pallet_collective::<Instance1>::{Pallet, Call, Storage, Origin<T>, Event<T>, Config<T>} = 43,
@@ -895,15 +883,14 @@ mod benches {
 		[pallet_treasury, Treasury]
 		[pallet_scheduler, Scheduler]
 		[pallet_proxy, Proxy]
-	
-
-		// [pallet_supersig, Supersig]
+		[pallet_mint_with_fee, MintWithFee]
+		[pallet_supersig, Supersig]
 
 		// Democracy
 		// Treasury
 		//Supersig
 		// MintWithFee
-		
+
 	);
 }
 
@@ -1015,19 +1002,19 @@ impl_runtime_apis! {
 	}
 
 	impl pallet_supersig_rpc_runtime_api::SuperSigApi<Block, AccountId> for Runtime {
-        fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
-            Supersig::get_user_supersigs(&user_account)
-        }
-        fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
-            Supersig::list_members(&supersig_id)
-        }
-        fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
-            Supersig::list_proposals(&supersig_id)
-        }
-        fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
-            Supersig::get_proposal_state(&supersig_id, &call_id)
-        }
-    }
+		fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
+			Supersig::get_user_supersigs(&user_account)
+		}
+		fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
+			Supersig::list_members(&supersig_id)
+		}
+		fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
+			Supersig::list_proposals(&supersig_id)
+		}
+		fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
+			Supersig::get_proposal_state(&supersig_id, &call_id)
+		}
+	}
 
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {
@@ -1059,7 +1046,7 @@ impl_runtime_apis! {
 			// list_benchmark!(list, extra, pallet_vesting, Vesting);
 			list_benchmark!(list, extra, pallet_balances, Balances);
 			list_benchmark!(list, extra, pallet_multisig, Multisig);
-		
+
 
 			let storage_info = AllPalletsWithSystem::storage_info();
 			return (list, storage_info)

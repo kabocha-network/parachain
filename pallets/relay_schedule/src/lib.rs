@@ -8,9 +8,6 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
-#[cfg(feature = "runtime-benchmarks")]
-mod benchmarking;
-
 use frame_support::weights::{GetDispatchInfo, PostDispatchInfo};
 
 use sp_runtime::sp_std::{boxed::Box, vec::Vec};

@@ -1,4 +1,6 @@
-use crate::{mock::*, Error};
+use core::convert::TryInto;
+
+use crate::mock::*;
 use frame_support::{assert_noop, assert_ok};
 use sp_runtime::traits::BadOrigin;
 
@@ -10,7 +12,7 @@ fn functional_mint_call() {
 			BOB,
 			None,
 			100_000,
-			vec!(1, 2, 3)
+			vec!(1, 2, 3).try_into().unwrap()
 		));
 
 		assert_eq!(Balances::free_balance(BOB), 200_000);
@@ -26,7 +28,7 @@ fn functional_mint_with_fee_call() {
 			BOB,
 			Some(CHARLIE),
 			100_000,
-			vec!(1, 2, 3)
+			vec!(1, 2, 3).try_into().unwrap()
 		));
 
 		assert_eq!(Balances::free_balance(BOB), 200_000);
@@ -42,7 +44,7 @@ fn mint_0_token() {
 			BOB,
 			Some(CHARLIE),
 			0,
-			vec!(1, 2, 3)
+			vec!(1, 2, 3).try_into().unwrap()
 		));
 
 		assert_eq!(Balances::free_balance(BOB), 100_000);
@@ -54,18 +56,14 @@ fn mint_0_token() {
 fn mint_bad_origin() {
 	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
 		assert_noop!(
-			MintWithFee::mint(Origin::signed(1), BOB, None, 30, vec!(0)),
+			MintWithFee::mint(
+				Origin::signed(1),
+				BOB,
+				None,
+				30,
+				vec!(0).try_into().unwrap()
+			),
 			BadOrigin
-		);
-	});
-}
-
-#[test]
-fn mint_too_long_metadata() {
-	ExtBuilder::default().balances(vec![]).build().execute_with(|| {
-		assert_noop!(
-			MintWithFee::mint(Origin::root(), BOB, None, 30, vec![0; 200]),
-			Error::<Test>::TooLongMetadata
 		);
 	});
 }

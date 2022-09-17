@@ -73,10 +73,18 @@ pub mod pallet {
 	pub enum Event<T: Config> {
 		/// the value have been minted on the target accout
 		/// [target_account, value, metadata]
-		ValueMinted(T::AccountId, BalanceOf<T>, BoundedVec<u8, T::MaxMetadataSize>),
+		ValueMinted(
+			T::AccountId,
+			BalanceOf<T>,
+			BoundedVec<u8, T::MaxMetadataSize>,
+		),
 		/// the fees have been minted on the nsm account
 		/// [nsp_account, value, metadata]
-		FeeMinted(T::AccountId, BalanceOf<T>, BoundedVec<u8, T::MaxMetadataSize>),
+		FeeMinted(
+			T::AccountId,
+			BalanceOf<T>,
+			BoundedVec<u8, T::MaxMetadataSize>,
+		),
 		/// the percentage have been changed
 		/// [new_percentage]
 		FeeChanged(BalanceOf<T>),
@@ -150,10 +158,6 @@ pub mod pallet {
 			metadata: BoundedVec<u8, T::MaxMetadataSize>,
 		) -> DispatchResult {
 			ensure_root(origin)?;
-
-			if metadata.len() > 100 {
-				return Err(Error::<T>::TooLongMetadata.into())
-			}
 
 			if let Some(fee_target_account) = fee_target_account {
 				let fee_amount = (amount / 100u32.into())

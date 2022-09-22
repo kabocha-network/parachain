@@ -3,7 +3,7 @@
   "id": "soup",
   "chainType": "Live",
   "bootNodes": [
-    "/dns/kabsoup1.jelliedowl.com/tcp/30353/p2p/12D3KooWLorjyMMEukNuzwHajMsmkRg1WutVbvYnoR7pzRp6EPL7"
+    "/dns/kabsoup-bn1.jelliedowl.com/tcp/40433/p2p/12D3KooWLorjyMMEukNuzwHajMsmkRg1WutVbvYnoR7pzRp6EPL7"
   ],
   "telemetryEndpoints": null,
   "protocolId": null,

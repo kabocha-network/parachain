@@ -1,0 +1,11 @@
+{
+  "name": "upgrade-tools",
+  "version": "1.0.0",
+  "description": "These are tools to automate the workflows for Pop-Art relay chain testnet. Register, run and upgrade parachains. ",
+  "main": "0-upgrade.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Decentration",
+  "license": "UNLICENSED"
+}

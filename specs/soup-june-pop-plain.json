@@ -9,7 +9,7 @@
   "protocolId": null,
   "properties": null,
   "relay_chain": "rococo-staging",
-  "para_id": 1000,
+  "para_id": 2014,
   "codeSubstitutes": {},
   "genesis": {
     "runtime": {
@@ -18,10 +18,10 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 1000
+        "parachainId": 2014
       },
       "sudo": {
-        "key": null
+        "key": "5H1D1iZb4SRvZzGcCGqecrreYJA1Jwmv1t9vpWJJwyewJH8B"
       },
       "balances": {
         "balances": [
@@ -70,7 +70,7 @@
             1152921504606846976
           ],
           [
-            "5CRmqmsiNFExV6VbdmPJViVxrWmkaXXvBrSX8oqBT8R9vmWk",
+            "5H1D1iZb4SRvZzGcCGqecrreYJA1Jwmv1t9vpWJJwyewJH8B",
             1152921504606846976
           ]
         ]

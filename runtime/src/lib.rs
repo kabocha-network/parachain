@@ -7,6 +7,7 @@
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 mod weights;
+mod constants;
 pub mod xcm_config;
 
 use cumulus_pallet_parachain_system::RelayNumberStrictlyIncreases;
@@ -51,6 +52,8 @@ use frame_system::{
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 pub use sp_runtime::{MultiAddress, Perbill, Percent, Permill};
 use xcm_config::{XcmConfig, XcmOriginToTransactDispatchOrigin};
+
+pub use parachain_staking::InflationInfo;
 
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
@@ -189,55 +192,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	state_version: 2,
 };
 
-//ToDo: Put constants in its own file
 
-pub const MINICENTS: Balance = 10_000_000;
-pub const MILLICENTS: Balance = 10_000_000_000;
-pub const BILLICENTS: Balance = 1_000_000_000;
-pub const MICROCENTS: Balance = 100_000_000_000;
-pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
-pub const DOLLARS: Balance = 100 * CENTS;
-pub const GRAND: Balance = CENTS * 100_000;
-
-pub const fn deposit(items: u32, bytes: u32) -> Balance {
-	items as Balance * 15 * CENTS + (bytes as Balance) * 6 * CENTS
-}
-
-/// This determines the average expected block time that we are targeting.
-/// Blocks will be produced at a minimum duration defined by `SLOT_DURATION`.
-/// `SLOT_DURATION` is picked up by `pallet_timestamp` which is in turn picked
-/// up by `pallet_aura` to implement `fn slot_duration()`.
-///
-/// Change this to adjust the block time.
-pub const MILLISECS_PER_BLOCK: u64 = 12000;
-
-// NOTE: Currently it is not possible to change the slot duration after the chain has started.
-//       Attempting to do so will brick block production.
-pub const SLOT_DURATION: u64 = MILLISECS_PER_BLOCK;
-
-// Time is measured by number of blocks.
-pub const MINUTES: BlockNumber = 60_000 / (MILLISECS_PER_BLOCK as BlockNumber);
-pub const HOURS: BlockNumber = MINUTES * 60;
-pub const DAYS: BlockNumber = HOURS * 24;
-
-// Unit = the base number of indivisible units for balances
-pub const UNIT: Balance = 1_000_000_000_000;
-pub const MILLIUNIT: Balance = 1_000_000_000;
-pub const MICROUNIT: Balance = 1_000_000;
-
-/// The existential deposit. Set to 1/10 of the Connected Relay Chain.
-pub const EXISTENTIAL_DEPOSIT: Balance = MILLIUNIT;
-
-/// We assume that ~5% of the block weight is consumed by `on_initialize` handlers. This is
-/// used to limit the maximal weight of a single extrinsic.
-const AVERAGE_ON_INITIALIZE_RATIO: Perbill = Perbill::from_percent(5);
-
-/// We allow `Normal` extrinsics to fill up the block up to 75%, the rest can be used by
-/// `Operational` extrinsics.
-const NORMAL_DISPATCH_RATIO: Perbill = Perbill::from_percent(75);
-
-/// We allow for 0.5 of a second of compute with a 12 second average block time.
-const MAXIMUM_BLOCK_WEIGHT: Weight = WEIGHT_PER_SECOND / 2;
 
 /// The version information used to identify this runtime when compiled natively.
 #[cfg(feature = "std")]
@@ -340,7 +295,7 @@ impl frame_system::Config for Runtime {
 }
 
 parameter_types! {
-	pub const MinimumPeriod: u64 = SLOT_DURATION / 2;
+	pub const MinimumPeriod: u64 = constants::SLOT_DURATION / 2;
 }
 
 impl pallet_timestamp::Config for Runtime {
@@ -359,7 +314,8 @@ impl pallet_authorship::Config for Runtime {
 	type FindAuthor = pallet_session::FindAccountFromAuthorIndex<Self, Aura>;
 	type UncleGenerations = UncleGenerations;
 	type FilterUncle = ();
-	type EventHandler = (CollatorSelection,);
+	// can we have collator selection AND parachain staking? No i think we would need to customise parachain_staking.
+	type EventHandler = (ParachainStaking,);
 }
 
 parameter_types! {
@@ -384,7 +340,7 @@ impl pallet_balances::Config for Runtime {
 
 parameter_types! {
 	// For KSM it is 10 * MILLICENTS
-	pub const TransactionByteFee: Balance =  5 * MINICENTS;
+	pub const TransactionByteFee: Balance =  5 * constants::MINICENTS;
 	pub const OperationalFeeMultiplier: u8 = 5;
 }
 
@@ -448,9 +404,9 @@ impl pallet_session::Config for Runtime {
 	type ValidatorId = <Self as frame_system::Config>::AccountId;
 	// we don't have stash and controller, thus we don't need the convert as well.
 	type ValidatorIdOf = pallet_collator_selection::IdentityCollator;
-	type ShouldEndSession = pallet_session::PeriodicSessions<Period, Offset>;
-	type NextSessionRotation = pallet_session::PeriodicSessions<Period, Offset>;
-	type SessionManager = CollatorSelection;
+	type ShouldEndSession = ParachainStaking;
+	type NextSessionRotation = ParachainStaking;
+	type SessionManager = ParachainStaking;
 	// Essentially just Aura, but lets be pedantic.
 	type SessionHandler = <SessionKeys as sp_runtime::traits::OpaqueKeys>::KeyTypeIdProviders;
 	type Keys = SessionKeys;
@@ -463,36 +419,64 @@ impl pallet_aura::Config for Runtime {
 	type MaxAuthorities = MaxAuthorities;
 }
 
-parameter_types! {
-	pub const PotId: PalletId = PalletId(*b"PotStake");
-	pub const MaxCandidates: u32 = 1000;
-	pub const MinCandidates: u32 = 5;
-	pub const SessionLength: BlockNumber = 6 * HOURS;
-	pub const MaxInvulnerables: u32 = 100;
-	pub const ExecutiveBody: BodyId = BodyId::Executive;
-}
+// parameter_types! {
+// 	pub const PotId: PalletId = PalletId(*b"PotStake");
+// 	pub const MaxCandidates: u32 = 1000;
+// 	pub const MinCandidates: u32 = 5;
+// 	pub const SessionLength: BlockNumber = 6 * HOURS;
+// 	pub const MaxInvulnerables: u32 = 100;
+// 	pub const ExecutiveBody: BodyId = BodyId::Executive;
+// }
 
-// We allow root only to execute privileged collator selection operations.
-pub type CollatorSelectionUpdateOrigin = EnsureRoot<AccountId>;
+// // We allow root only to execute privileged collator selection operations.
+// pub type CollatorSelectionUpdateOrigin = EnsureRoot<AccountId>;
 
-impl pallet_collator_selection::Config for Runtime {
+// impl pallet_collator_selection::Config for Runtime {
+// 	type Event = Event;
+// 	type Currency = Balances;
+// 	type UpdateOrigin = CollatorSelectionUpdateOrigin;
+// 	type PotId = PotId;
+// 	type MaxCandidates = MaxCandidates;
+// 	type MinCandidates = MinCandidates;
+// 	type MaxInvulnerables = MaxInvulnerables;
+// 	// should be a multiple of session or things will get inconsistent
+// 	type KickThreshold = Period;
+// 	type ValidatorId = <Self as frame_system::Config>::AccountId;
+// 	type ValidatorIdOf = pallet_collator_selection::IdentityCollator;
+// 	type ValidatorRegistration = Session;
+// 	type WeightInfo = weights::pallet_collator_selection::WeightInfo<Runtime>;
+// }
+
+
+// We are swapping out default collator selection above with parachain_staking with thanks from kabocha. 
+impl parachain_staking::Config for Runtime {
 	type Event = Event;
 	type Currency = Balances;
-	type UpdateOrigin = CollatorSelectionUpdateOrigin;
-	type PotId = PotId;
-	type MaxCandidates = MaxCandidates;
-	type MinCandidates = MinCandidates;
-	type MaxInvulnerables = MaxInvulnerables;
-	// should be a multiple of session or things will get inconsistent
-	type KickThreshold = Period;
-	type ValidatorId = <Self as frame_system::Config>::AccountId;
-	type ValidatorIdOf = pallet_collator_selection::IdentityCollator;
-	type ValidatorRegistration = Session;
-	type WeightInfo = weights::pallet_collator_selection::WeightInfo<Runtime>;
+	type CurrencyBalance = Balance;
+
+	type MinBlocksPerRound = constants::staking::MinBlocksPerRound;
+	type DefaultBlocksPerRound = constants::staking::DefaultBlocksPerRound;
+	type StakeDuration = constants::staking::StakeDuration;
+	type ExitQueueDelay = constants::staking::ExitQueueDelay;
+	type MinCollators = constants::staking::MinCollators;
+	type MinRequiredCollators = constants::staking::MinRequiredCollators;
+	type MaxDelegationsPerRound = constants::staking::MaxDelegationsPerRound;
+	type MaxDelegatorsPerCollator = constants::staking::MaxDelegatorsPerCollator;
+	type MinCollatorStake = constants::staking::MinCollatorStake;
+	type MinCollatorCandidateStake = constants::staking::MinCollatorStake;
+	type MaxTopCandidates = constants::staking::MaxCollatorCandidates;
+	type MinDelegatorStake = constants::staking::MinDelegatorStake;
+	type MaxUnstakeRequests = constants::staking::MaxUnstakeRequests;
+	type NetworkRewardRate = constants::staking::NetworkRewardRate;
+	type NetworkRewardStart = constants::staking::NetworkRewardStart;
+	type NetworkRewardBeneficiary = Treasury;
+	type WeightInfo = weights::parachain_staking::WeightInfo<Runtime>;
+
+	const BLOCKS_PER_YEAR: Self::BlockNumber = constants::BLOCKS_PER_YEAR;
 }
 
 parameter_types! {
-	pub const MaxBlockWeight: Weight = MAXIMUM_BLOCK_WEIGHT;
+	pub const MaxBlockWeight: Weight = constants::MAXIMUM_BLOCK_WEIGHT;
 }
 
 impl pallet_relay_schedule::Config for Runtime {
@@ -501,16 +485,7 @@ impl pallet_relay_schedule::Config for Runtime {
 	type MaxBlockWeight = MaxBlockWeight;
 }
 
-parameter_types! {
-	// One storage item; key size 32, value size 8; .
-	pub const ProxyDepositBase: Balance = deposit(1, 8);
-	// Additional storage item size of 33 bytes.
-	pub const ProxyDepositFactor: Balance = deposit(0, 33);
-	pub const MaxProxies: u16 = 32;
-	pub const AnnouncementDepositBase: Balance = deposit(1, 8);
-	pub const AnnouncementDepositFactor: Balance = deposit(0, 66);
-	pub const MaxPending: u16 = 32;
-}
+
 
 /// The type used to represent the kinds of proxying allowed.
 #[derive(
@@ -535,6 +510,9 @@ pub enum ProxyType {
 	CancelProxy,
 	Auction,
 	Society,
+	/// Allow for staking related calls.
+	ParachainStaking,
+	CancelProxy,
 }
 
 impl Default for ProxyType {
@@ -559,7 +537,8 @@ impl InstanceFilter<Call> for ProxyType {
 				Call::Proxy(..) |
 				Call::Treasury(..) |
 				Call::Identity(..) |
-				Call::Multisig(..)
+				Call::Multisig(..) |
+				Call::ParachainStaking(..)
 			),
 			ProxyType::Governance =>
 				matches!(c, Call::Supersig(..) | Call::Democracy(..) | Call::Treasury(..)),
@@ -571,9 +550,14 @@ impl InstanceFilter<Call> for ProxyType {
 			ProxyType::CancelProxy => {
 				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
 			},
+			ProxyType::ParachainStaking => {
+				matches!(c, Call::ParachainStaking(..) | Call::Session(..)) /// |  Call::Utility(..))
+			},
 			ProxyType::Auction => false,
 			ProxyType::Society => false,
+
 		}
+		
 	}
 	fn is_superset(&self, o: &Self) -> bool {
 		match (self, o) {
@@ -591,14 +575,15 @@ impl pallet_proxy::Config for Runtime {
 	type Call = Call;
 	type Currency = Balances;
 	type ProxyType = ProxyType;
-	type ProxyDepositBase = ProxyDepositBase;
-	type ProxyDepositFactor = ProxyDepositFactor;
-	type MaxProxies = MaxProxies;
-	type WeightInfo = pallet_proxy::weights::SubstrateWeight<Runtime>;
-	type MaxPending = MaxPending;
+	type ProxyDepositBase = constants::proxy::ProxyDepositBase;
+	type ProxyDepositFactor =constants::proxy:: ProxyDepositFactor;
+	type MaxProxies = constants::proxy::MaxProxies;
+
+	type MaxPending = constants::proxy::MaxPending;
 	type CallHasher = BlakeTwo256;
-	type AnnouncementDepositBase = AnnouncementDepositBase;
-	type AnnouncementDepositFactor = AnnouncementDepositFactor;
+	type AnnouncementDepositBase = constants::proxy::AnnouncementDepositBase;
+	type AnnouncementDepositFactor = constants::proxy::AnnouncementDepositFactor;
+	type WeightInfo = weights::pallet_proxy::WeightInfo<Runtime>;
 }
 
 parameter_types! {
@@ -686,7 +671,7 @@ impl pallet_supersig::Config for Runtime {
 	type Currency = Balances;
 	type PalletId = SupersigPalletId;
 	type Call = Call;
-	type WeightInfo = pallet_supersig::weights::SubstrateWeight<Runtime>;
+	type WeightInfo = weights::pallet_supersig::WeightInfo<Runtime>;
 	type DepositPerByte = SupersigDepositPerByte;
 	type MaxAccountsPerTransaction = SupersigMaxAccountsPerTransaction;
 }
@@ -698,87 +683,57 @@ parameter_types! {
 impl pallet_mint_with_fee::Config for Runtime {
 	type Event = Event;
 	type Currency = Balances;
-	type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Runtime>;
+	type WeightInfo = weights::pallet_mint_with_fee::WeightInfo<Runtime>;
 	type MaxMetadataSize = MaxMetadataSize;
 }
 
-parameter_types! {
-	pub LaunchPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_LAUNCH_PERIOD");
-	pub VotingPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_VOTING_PERIOD");
-	pub FastTrackVotingPeriod: BlockNumber = prod_or_fast!(2 * HOURS, 1 * MINUTES, "KAB_FAST_TRACK_VOTING_PERIOD");
-	pub const MinimumDeposit: Balance = 1 * CENTS;
-	pub EnactmentPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_ENACTMENT_PERIOD");
-	pub CooloffPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_COOLOFF_PERIOD");
-	pub const InstantAllowed: bool = true;
-	pub const MaxVotes: u32 = 100;
-	pub const MaxProposals: u32 = 100;
-	pub const PreimageByteDeposit: Balance = 1 * BILLICENTS;
-}
+
 
 impl pallet_democracy::Config for Runtime {
 	type Proposal = Call;
 	type Event = Event;
 	type Currency = Balances;
-	type EnactmentPeriod = EnactmentPeriod;
-	type VoteLockingPeriod = EnactmentPeriod;
-	type LaunchPeriod = LaunchPeriod;
-	type VotingPeriod = VotingPeriod;
-	type MinimumDeposit = MinimumDeposit;
+	type EnactmentPeriod = constants::governance::EnactmentPeriod;
+	type VoteLockingPeriod = constants::governance::EnactmentPeriod;
+	type LaunchPeriod = constants::governance::LaunchPeriod;
+	type VotingPeriod = constants::governance::VotingPeriod;
+	type MinimumDeposit = constants::governance::MinimumDeposit;
 	type ExternalOrigin = EnsureSigned<AccountId>;
 	type ExternalMajorityOrigin = EnsureSigned<AccountId>;
 	type ExternalDefaultOrigin = EnsureSigned<AccountId>;
 	type FastTrackOrigin = EnsureSigned<AccountId>;
 	type InstantOrigin = EnsureSigned<AccountId>;
 	type InstantAllowed = InstantAllowed;
-	type FastTrackVotingPeriod = FastTrackVotingPeriod;
+	type FastTrackVotingPeriod = constants::governance::FastTrackVotingPeriod;
 	type CancellationOrigin = EnsureRoot<AccountId>;
 	type BlacklistOrigin = EnsureRoot<AccountId>;
 	type CancelProposalOrigin = EnsureRoot<AccountId>;
 	type VetoOrigin = EnsureSigned<AccountId>;
-	type CooloffPeriod = CooloffPeriod;
-	type PreimageByteDeposit = PreimageByteDeposit;
+	type CooloffPeriod = constants::governance::CooloffPeriod;
+	type PreimageByteDeposit = constants::governance::PreimageByteDeposit;
 	type OperationalPreimageOrigin = EnsureSigned<AccountId>;
 	type Slash = Treasury;
 	type Scheduler = Scheduler;
 	type PalletsOrigin = OriginCaller;
-	type MaxVotes = MaxVotes;
-	type WeightInfo = pallet_democracy::weights::SubstrateWeight<Runtime>;
-	type MaxProposals = MaxProposals;
-}
-
-parameter_types! {
-	pub const ProposalBond: Permill = Permill::from_percent(5);
-	pub const ProposalBondMinimum: Balance = 20 * CENTS;
-	pub const ProposalBondMaximum: Balance = 1 * GRAND;
-	pub const SpendPeriod: BlockNumber = 6 * DAYS;
-	pub const Burn: Permill = Permill::from_perthousand(0);
-	pub const TreasuryPalletId: PalletId = PalletId(*b"py/trsry");
-
-	pub const TipCountdown: BlockNumber = 1 * DAYS;
-	pub const TipFindersFee: Percent = Percent::from_percent(20);
-	pub const TipReportDepositBase: Balance = 1 * CENTS;
-	pub const DataDepositPerByte: Balance = 10 * MILLICENTS;
-	pub const MaxApprovals: u32 = 100;
-	//pub const MaxAuthorities: u32 = 100_000;
-	pub const MaxKeys: u32 = 10_000;
-	pub const MaxPeerInHeartbeats: u32 = 10_000;
-	pub const MaxPeerDataEncodingSize: u32 = 1_000;
+	type MaxVotes = constants::governance::MaxVotes;
+	type WeightInfo = weights::pallet_democracy::WeightInfo<Runtime>;
+	type MaxProposals = constants::governance::MaxProposals;
 }
 
 impl pallet_treasury::Config for Runtime {
-	type PalletId = TreasuryPalletId;
+	type PalletId = constants::treasury::TreasuryPalletId;
 	type Currency = Balances;
 	type ApproveOrigin = EnsureSigned<AccountId>;
 	type RejectOrigin = EnsureSigned<AccountId>;
 	type Event = Event;
 	type OnSlash = Treasury;
-	type ProposalBond = ProposalBond;
-	type ProposalBondMinimum = ProposalBondMinimum;
-	type ProposalBondMaximum = ProposalBondMaximum;
-	type SpendPeriod = SpendPeriod;
-	type Burn = Burn;
+	type ProposalBond = constants::treasury::ProposalBond;
+	type ProposalBondMinimum = constants::treasury::ProposalBondMinimum;
+	type ProposalBondMaximum = constants::treasury::ProposalBondMaximum;
+	type SpendPeriod = constants::treasury::SpendPeriod;
+	type Burn = constants::treasury::Burn;
 	type BurnDestination = ();
-	type MaxApprovals = MaxApprovals;
+	type MaxApprovals = constants::treasury::MaxApprovals;
 	type WeightInfo = weights::pallet_treasury::WeightInfo<Runtime>;
 	type SpendFunds = ();
 	type SpendOrigin = frame_support::traits::NeverEnsureOrigin<Balance>;
@@ -786,9 +741,9 @@ impl pallet_treasury::Config for Runtime {
 
 parameter_types! {
 	// (Taken from Kusama) Minimum 100 bytes/KSM deposited (1 CENT/byte)
-	pub const BasicDeposit: Balance = 1 * CENTS;       // 258 bytes on-chain
-	pub const FieldDeposit: Balance = 250 * MILLICENTS;        // 66 bytes on-chain
-	pub const SubAccountDeposit: Balance = 200 * MILLICENTS;   // 53 bytes on-chain
+	pub const BasicDeposit: Balance = 1 * constants::CENTS;       // 258 bytes on-chain
+	pub const FieldDeposit: Balance = 250 * constants::MILLICENTS;        // 66 bytes on-chain
+	pub const SubAccountDeposit: Balance = 200 *constants::MILLICENTS;   // 53 bytes on-chain
 	pub const MaxSubAccounts: u32 = 100;
 	pub const MaxAdditionalFields: u32 = 100;
 	pub const MaxRegistrars: u32 = 20;
@@ -838,7 +793,8 @@ construct_runtime!(
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Call, Storage} = 20,
-		CollatorSelection: pallet_collator_selection::{Pallet, Call, Storage, Event<T>, Config<T>} = 21,
+		// CollatorSelection: pallet_collator_selection::{Pallet, Call, Storage, Event<T>, Config<T>} = 21,
+		ParachainStaking: parachain_staking = 21,
 		Session: pallet_session::{Pallet, Call, Storage, Event, Config<T>} = 22,
 		Aura: pallet_aura::{Pallet, Storage, Config<T>} = 23,
 		AuraExt: cumulus_pallet_aura_ext::{Pallet, Storage, Config} = 24,
@@ -877,6 +833,7 @@ mod benches {
 		[pallet_session, SessionBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
 		[pallet_collator_selection, CollatorSelection]
+		[pallet_parachain_staking, ParachainStaking]
 		[pallet_identity, Identity]
 		[pallet_multisig, Multisig]
 		[pallet_democracy, Democracy]
@@ -1016,6 +973,16 @@ impl_runtime_apis! {
 		}
 	}
 
+	impl kabocha_runtime_api_staking::ParachainStakingApi<Block, AccountId, Balance> for Runtime {
+		fn get_unclaimed_staking_rewards(account: &AccountId) -> Balance {
+			ParachainStaking::get_unclaimed_staking_rewards(account)
+		}
+
+		fn get_staking_rates() -> kabocha_runtime_api_staking::StakingRates {
+			ParachainStaking::get_staking_rates()
+		}
+	}
+
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {
 		fn on_runtime_upgrade() -> (Weight, Weight) {
@@ -1052,6 +1019,9 @@ impl_runtime_apis! {
 			list_benchmark!(list, extra, pallet_scheduler, Scheduler);
 			list_benchmark!(list, extra, pallet_proxy, Proxy);
 
+			list_benchmark!(list, extra, parachain_staking, ParachainStaking);
+			list_benchmark!(list, extra, pallet_supersig, Supersig);
+
 
 
 			let storage_info = AllPalletsWithSystem::storage_info();
@@ -1085,6 +1055,8 @@ impl_runtime_apis! {
 			let mut batches = Vec::<BenchmarkBatch>::new();
 			let params = (&config, &whitelist);
 			add_benchmarks!(params, batches);
+
+		// Add add_benchmarks to runtime
 
 			if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
 			Ok(batches)

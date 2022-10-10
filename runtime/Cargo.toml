@@ -89,10 +89,16 @@ pallet-identity = { git = "https://github.com/paritytech/substrate", default-fea
 
 # Supersig
 pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", branch = "polkadot-v0.9.28", default-features = false }
+
+# RPC
 pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pallet_supersig.git", branch = "polkadot-v0.9.28", default-features = false }
+kabocha-runtime-api-staking = {path = "../runtime-api/staking", default-features = false}
 
 # Mint
 pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.28" }
+
+# Parachain Staking
+parachain-staking = {path = "../pallets/parachain-staking", default-features = false}
 
 
 [features]
@@ -148,6 +154,7 @@ std = [
 	"pallet-multisig/std",
 	"pallet-supersig/std",
 	"pallet-mint-with-fee/std",
+	"parachain-staking/std",
 
 ]
 
@@ -176,15 +183,22 @@ runtime-benchmarks = [
 	# add benchmarks
 	"pallet-supersig/runtime-benchmarks",
 	"pallet-mint-with-fee/runtime-benchmarks",
+	"parachain-staking/runtime-benchmarks",
 ]
 
+
 try-runtime = [
+	"frame-try-runtime",
 	"frame-executive/try-runtime",
 	"pallet-balances/try-runtime",
 	"pallet-multisig/try-runtime",
 	"pallet-supersig/try-runtime",
 	"pallet-sudo/try-runtime",
 	"pallet-scheduler/try-runtime",
+	"parachain-staking/try-runtime",
 	"pallet-identity/try-runtime",
-	"frame-try-runtime",
+	"pallet-democracy/try-runtime",
+	"pallet-proxy/try-runtime",
+	"pallet-mint-with-fee/try-runtime",
+	
 ]

@@ -9,7 +9,7 @@
   "protocolId": null,
   "properties": null,
   "relay_chain": "rococo-staging",
-  "para_id": 2001,
+  "para_id": 2002,
   "codeSubstitutes": {},
   "genesis": {
     "runtime": {
@@ -18,7 +18,7 @@
       },
       "parachainSystem": null,
       "parachainInfo": {
-        "parachainId": 2001
+        "parachainId": 2002
       },
       "sudo": {
         "key": "5H1D1iZb4SRvZzGcCGqecrreYJA1Jwmv1t9vpWJJwyewJH8B"
@@ -70,7 +70,7 @@
             1152921504606846976
           ],
           [
-            "5CRmqmsiNFExV6VbdmPJViVxrWmkaXXvBrSX8oqBT8R9vmWk",
+            "5H1D1iZb4SRvZzGcCGqecrreYJA1Jwmv1t9vpWJJwyewJH8B",
             1152921504606846976
           ]
         ]

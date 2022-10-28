@@ -705,11 +705,11 @@ impl pallet_mint_with_fee::Config for Runtime {
 parameter_types! {
 	pub LaunchPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_LAUNCH_PERIOD");
 	pub VotingPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_VOTING_PERIOD");
-	pub FastTrackVotingPeriod: BlockNumber = prod_or_fast!(2 * HOURS, 1 * MINUTES, "KAB_FAST_TRACK_VOTING_PERIOD");
+	pub FastTrackVotingPeriod: BlockNumber = prod_or_fast!(3 * DAYS , 1 * MINUTES, "KAB_FAST_TRACK_VOTING_PERIOD");
 	pub const MinimumDeposit: Balance = 1 * CENTS;
-	pub EnactmentPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_ENACTMENT_PERIOD");
+	pub EnactmentPeriod: BlockNumber = prod_or_fast!(1 * DAYS, 1, "KAB_ENACTMENT_PERIOD");
 	pub CooloffPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_COOLOFF_PERIOD");
-	pub const InstantAllowed: bool = true;
+	pub const InstantAllowed: bool = false;
 	pub const MaxVotes: u32 = 100;
 	pub const MaxProposals: u32 = 100;
 	pub const PreimageByteDeposit: Balance = 1 * BILLICENTS;
@@ -885,11 +885,6 @@ mod benches {
 		[pallet_proxy, Proxy]
 		[pallet_mint_with_fee, MintWithFee]
 		[pallet_supersig, Supersig]
-
-		// Democracy
-		// Treasury
-		//Supersig
-		// MintWithFee
 
 	);
 }

@@ -37,7 +37,7 @@ pub use codec::{Decode, Encode, MaxEncodedLen};
 use cumulus_pallet_parachain_system::OnSystemEvent;
 use frame_support::{
 	construct_runtime, parameter_types,
-	traits::{Contains, InstanceFilter},
+	traits::{Contains, InstanceFilter, Everything},
 	weights::{
 		constants::WEIGHT_PER_SECOND, ConstantMultiplier, DispatchClass, Weight,
 		WeightToFeeCoefficient, WeightToFeeCoefficients, WeightToFeePolynomial,
@@ -182,7 +182,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 26,
+	spec_version: 27,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -245,15 +245,15 @@ pub fn native_version() -> NativeVersion {
 	NativeVersion { runtime_version: VERSION, can_author_with: Default::default() }
 }
 
-// Use this filter to block users from calling any functions in the Balances pallet.
-pub struct DontAllowBalances;
+// // Use this filter to block users from calling any functions in the Balances pallet.
+// pub struct DontAllowBalances;
 
-impl Contains<Call> for DontAllowBalances {
-	fn contains(c: &Call) -> bool {
-		// This will match against any call from the Balances pallet.
-		!matches!(c, Call::Balances(..))
-	}
-}
+// impl Contains<Call> for DontAllowBalances {
+// 	fn contains(c: &Call) -> bool {
+// 		// This will match against any call from the Balances pallet.
+// 		!matches!(c, Call::Balances(..))
+// 	}
+// }
 
 parameter_types! {
 	pub const Version: RuntimeVersion = VERSION;

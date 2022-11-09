@@ -210,7 +210,7 @@ fn testnet_genesis(
 				})
 				.collect(),
 		},
-		sudo: Default::default(),
+		// sudo: Default::default(),
 		// no need to pass anything to aura, in fact it will panic if we do. Session will take care
 		// of this.
 		aura: Default::default(),

@@ -325,7 +325,7 @@ impl frame_system::Config for Runtime {
 	type DbWeight = RocksDbWeight;
 	/// The basic call filter to use in dispatchable.  (Changed from Everything to DontAllowBalances)
 	/// type BaseCallFilter = Everything;
-	type BaseCallFilter = DontAllowBalances;
+	type BaseCallFilter = Everything;
 	/// Weight information for the extrinsics of this pallet.
 	type SystemWeightInfo = weights::frame_system::WeightInfo<Runtime>;
 	/// Block & extrinsics weights: base values and limits.
@@ -654,10 +654,11 @@ impl pallet_scheduler::Config for Runtime {
 	type NoPreimagePostponement = NoPreimagePostponement;
 }
 
-impl pallet_sudo::Config for Runtime {
-	type Event = Event;
-	type Call = Call;
-}
+// No longer required going into live phase. Switch back on if necessary. Make sure to filter balances. 
+// impl pallet_sudo::Config for Runtime {
+// 	type Event = Event;
+// 	type Call = Call;
+// }
 
 // parameter_types! {
 // 	pub const CouncilMotionDuration: BlockNumber = 5 * DAYS;
@@ -823,7 +824,7 @@ construct_runtime!(
 		ParachainInfo: parachain_info::{Pallet, Storage, Config} = 3,
 
 		// Sudo
-		Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
+		// Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
 
 		// Scheduler
 		Scheduler: pallet_scheduler::{Pallet, Call, Storage, Event<T>} = 5,

@@ -997,20 +997,20 @@ impl_runtime_apis! {
 		}
 	}
 
-	impl pallet_supersig_rpc_runtime_api::SuperSigApi<Block, AccountId> for Runtime {
-		fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
-			Supersig::get_user_supersigs(&user_account)
-		}
-		fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
-			Supersig::list_members(&supersig_id)
-		}
-		fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
-			Supersig::list_proposals(&supersig_id)
-		}
-		fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
-			Supersig::get_proposal_state(&supersig_id, &call_id)
-		}
-	}
+	// impl pallet_supersig_rpc_runtime_api::SuperSigApi<Block, AccountId> for Runtime {
+	// 	fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
+	// 		Supersig::get_user_supersigs(&user_account)
+	// 	}
+	// 	fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
+	// 		Supersig::list_members(&supersig_id)
+	// 	}
+	// 	fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
+	// 		Supersig::list_proposals(&supersig_id)
+	// 	}
+	// 	fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
+	// 		Supersig::get_proposal_state(&supersig_id, &call_id)
+	// 	}
+	// }
 
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {

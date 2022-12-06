@@ -182,7 +182,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 27,
+	spec_version: 28,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -559,15 +559,18 @@ impl InstanceFilter<Call> for ProxyType {
 				Call::Proxy(..) |
 				Call::Treasury(..) |
 				Call::Identity(..) |
+				Call::Utility(..) |
 				Call::Multisig(..)
 			),
 			ProxyType::Governance =>
-				matches!(c, Call::Supersig(..) | Call::Democracy(..) | Call::Treasury(..)),
+				matches!(c, Call::Supersig(..) | Call::Democracy(..) | Call::Identity(..) | Call::Treasury(..)),
 			ProxyType::Staking => {
 				matches!(c, Call::Session(..))
 			},
 			ProxyType::IdentityJudgement =>
-				matches!(c, Call::Identity(pallet_identity::Call::provide_judgement { .. })),
+				matches!(c, Call::Identity(pallet_identity::Call::provide_judgement { .. }) |
+				Call::Identity(..) 
+			),
 			ProxyType::CancelProxy => {
 				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
 			},
@@ -810,6 +813,14 @@ impl pallet_identity::Config for Runtime {
 	type WeightInfo = weights::pallet_identity::WeightInfo<Runtime>;
 }
 
+impl pallet_utility::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeCall = RuntimeCall;
+	type PalletsOrigin = OriginCaller;
+	type WeightInfo = weights::pallet_utility::WeightInfo<Runtime>;
+}
+
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -844,6 +855,8 @@ construct_runtime!(
 		Aura: pallet_aura::{Pallet, Storage, Config<T>} = 23,
 		AuraExt: cumulus_pallet_aura_ext::{Pallet, Storage, Config} = 24,
 		Identity: pallet_identity::{Pallet, Call, Storage, Event<T>} = 25,
+		Utility: pallet_utility::{Pallet, Call, Event} = 26,
+
 
 		// Vesting. Usable initially, but removed once all vesting is finished.
 		// Vesting: pallet_vesting::{Pallet, Call, Storage, Event<T>, Config<T>} = 28,
@@ -886,6 +899,8 @@ mod benches {
 		[pallet_proxy, Proxy]
 		[pallet_mint_with_fee, MintWithFee]
 		[pallet_supersig, Supersig]
+		[pallet_utility, Utility]
+
 
 	);
 }
@@ -997,20 +1012,20 @@ impl_runtime_apis! {
 		}
 	}
 
-	// impl pallet_supersig_rpc_runtime_api::SuperSigApi<Block, AccountId> for Runtime {
-	// 	fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
-	// 		Supersig::get_user_supersigs(&user_account)
-	// 	}
-	// 	fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
-	// 		Supersig::list_members(&supersig_id)
-	// 	}
-	// 	fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
-	// 		Supersig::list_proposals(&supersig_id)
-	// 	}
-	// 	fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
-	// 		Supersig::get_proposal_state(&supersig_id, &call_id)
-	// 	}
-	// }
+	impl pallet_supersig_rpc_runtime_api::SuperSigApi<Block, AccountId> for Runtime {
+        fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
+            Supersig::get_user_supersigs(&user_account)
+        }
+        fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
+            Supersig::list_members(&supersig_id)
+        }
+        fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
+            Supersig::list_proposals(&supersig_id)
+        }
+        fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
+            Supersig::get_proposal_state(&supersig_id, &call_id)
+        }
+    }
 
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {

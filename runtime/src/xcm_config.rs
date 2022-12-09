@@ -22,11 +22,12 @@ use xcm_builder::{
 use xcm_executor::{traits::ShouldExecute, XcmExecutor};
 
 parameter_types! {
-	// pub const RelayLocation: MultiLocation = MultiLocation::parent();
-	pub AnchoringSelfReserve: MultiLocation = MultiLocation::new(
-		0,
-		X1(PalletInstance(<Balances as PalletInfoAccess>::index() as u8))
-	);
+	pub const RelayLocation: MultiLocation = MultiLocation::parent();
+	// Next upgrade change to fees in native token
+	// pub AnchoringSelfReserve: MultiLocation = MultiLocation::new(
+	// 	0,
+	// 	X1(PalletInstance(<Balances as PalletInfoAccess>::index() as u8))
+	// );
 	pub const RelayNetwork: NetworkId = NetworkId::Any;
 	pub RelayChainOrigin: Origin = cumulus_pallet_xcm::Origin::Relay.into();
 	pub Ancestry: MultiLocation = Parachain(ParachainInfo::parachain_id().into()).into();
@@ -49,8 +50,8 @@ pub type LocalAssetTransactor = CurrencyAdapter<
 	// Use this currency:
 	Balances,
 	// Use this currency when it is a fungible asset matching the given location or name:
-	// IsConcrete<RelayLocation>, this was substrate parachain template
-	IsConcrete<AnchoringSelfReserve>,
+	IsConcrete<RelayLocation>, this was substrate parachain template
+	//IsConcrete<AnchoringSelfReserve>,
 	// Do a simple punn to convert an AccountId32 MultiLocation into a native chain account ID:
 	LocationToAccountId,
 	// Our chain's account ID type (we can't get away without mentioning it explicitly):
@@ -181,8 +182,8 @@ impl xcm_executor::Config for XcmConfig {
 	type Weigher = FixedWeightBounds<UnitWeightCost, Call, MaxInstructions>;
 	type Trader =
 		UsingComponents<WeightToFee, 
-		// RelayLocation, 
-		AnchoringSelfReserve,
+		RelayLocation, 
+		// AnchoringSelfReserve,
 		AccountId, Balances, ToAuthor<Runtime>>;
 	type ResponseHandler = PolkadotXcm;
 	type AssetTrap = PolkadotXcm;

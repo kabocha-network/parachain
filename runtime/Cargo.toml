@@ -88,9 +88,9 @@ pallet-democracy = { git = "https://github.com/paritytech/substrate", default-fe
 pallet-treasury = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.28" }
 pallet-identity = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.28" }
 
-# Supersig
-pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig", branch = "polkadot-v0.9.28", default-features = false }
-pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pallet_supersig", branch = "polkadot-v0.9.28", default-features = false }
+# Pallet Supersig
+pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig.git", default-features = false, branch = "polkadot-v0.9.28" }
+pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pallet_supersig.git", default-features = false, branch = "polkadot-v0.9.28" }
 
 # Mint
 pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.28" }

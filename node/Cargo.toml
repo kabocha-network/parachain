@@ -76,7 +76,7 @@ cumulus-primitives-parachain-inherent = { git = "https://github.com/paritytech/c
 cumulus-relay-chain-interface = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v0.9.37" }
 
 # Supersig
-pallet-supersig-rpc = { git = "https://github.com/kabocha-network/pallet_supersig.git", branch = "polkadot-v0.9.28", default-features = false}
+pallet-supersig-rpc = { git = "https://github.com/kabocha-network/pallet_supersig.git", branch = "polkadot-v0.9.37", default-features = false}
 
 [build-dependencies]
 substrate-build-script-utils = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.37" }

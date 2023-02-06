@@ -1,6 +1,6 @@
 [package]
 name = "kabocha-runtime"
-version = "0.1.0"
+version = "0.2.1"
 authors = ["Anonymous"]
 description = "A new Cumulus FRAME-based Substrate Runtime, ready for hacking together a parachain."
 license = "Unlicense"
@@ -83,6 +83,8 @@ pallet-proxy = { git = "https://github.com/paritytech/substrate", default-featur
 pallet-democracy = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 pallet-treasury = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 pallet-identity = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
+pallet-utility = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
+
 
 # Pallet Supersig
 pallet-supersig = { git = "https://github.com/kabocha-network/pallet_supersig.git", default-features = false, branch = "polkadot-v0.9.37" }

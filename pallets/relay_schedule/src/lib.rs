@@ -2,11 +2,15 @@
 
 // pub use pallet::*;
 
+
 #[cfg(test)]
 mod mock;
 
 #[cfg(test)]
 mod tests;
+
+pub mod mock_weights;
+pub use mock_weights::*;
 
 use frame_support::dispatch::{GetDispatchInfo, PostDispatchInfo, Weight};
 
@@ -102,6 +106,7 @@ pub mod pallet {
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
+		#[pallet::call_index(0)]
 		#[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
 		pub fn schedule(origin: OriginFor<T>, call: Box<<T as Config>::Call>) -> DispatchResult {
 			ensure_root(origin)?;
@@ -119,7 +124,7 @@ pub mod pallet {
 			Self::deposit_event(Event::<T>::AddedCall(*call));
 			Ok(())
 		}
-
+		#[pallet::call_index(1)]
 		#[pallet::weight(T::DbWeight::get().writes(1))]
 		pub fn set_at_block_number(origin: OriginFor<T>, block: u32) -> DispatchResult {
 			ensure_root(origin)?;

@@ -18,26 +18,17 @@ pub trait WeightInfo {
 /// Weight functions for `pallet_relay_schedule`.
 pub struct SubstrateWeight<T>(PhantomData<T>);
 impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
-	// Storage: RelaySchedule Calls (r:1 w:0)
-	fn schedule() -> Weight {
-		Weight::from_ref_time(25_050_000u64)
-            .saturating_add(T::DbWeight::get().writes(1u64))
-	}
-
-    /// Weight functions for `pallet_relay_schedule`.
-pub struct SubstrateWeight<T>(PhantomData<T>);
-impl<T: frame_system::Config> WeightInfo for SubstrateWeight<T> {
 	// Storage: MintWithfee FeePercent (r:0 w:1)
 	fn set_at_block_number() -> Weight {
 		Weight::from_ref_time(25_050_000u64)
             .saturating_add(T::DbWeight::get().writes(1u64))
 	}
 
-
-
-	// Storage: MintWithfee FeePercent (r:0 w:1)
-	fn change_fee_percent() -> Weight {
-		Weight::from_ref_time(25_050_000u64).saturating_add(T::DbWeight::get().writes(1u64))
+	// Storage: RelaySchedule Calls (r:1 w:0)
+	fn schedule() -> Weight {
+		Weight::from_ref_time(25_050_000u64)
+            .saturating_add(T::DbWeight::get().writes(1u64))
 	}
+
 }
 

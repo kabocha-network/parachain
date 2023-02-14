@@ -1,8 +1,5 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-// pub use pallet::*;
-
-
 #[cfg(test)]
 mod mock;
 
@@ -33,6 +30,7 @@ pub mod pallet {
 			+ GetDispatchInfo
 			+ From<frame_system::Call<Self>>;
 		type MaxBlockWeight: Get<Weight>;
+		type WeightInfo: WeightInfo;
 	}
 
 	#[pallet::pallet]
@@ -63,7 +61,8 @@ pub mod pallet {
 		fn on_initialize(_now: T::BlockNumber) -> Weight {
 			let at = AtBlockNumber::<T>::get();
 			let now = CurrentBlock::<T>::get();
-			let mut weight: Weight = 0;
+			let mut weight: Weight = Weight::zero();
+			let maximum_weight = T::MaxBlockWeight::get().checked_div(100).unwrap_or(Weight::zero());
 
 			if now >= at {
 				let calls = Calls::<T>::take();
@@ -88,7 +87,7 @@ pub mod pallet {
 								maybe_actual_call_weight.unwrap_or(call_weight);
 							weight = weight.saturating_add(actual_call_weight);
 							Self::deposit_event(Event::Dispatched(call, result));
-							if weight >= T::MaxBlockWeight::get() / 100 {
+							if weight.all_gt(maximum_weight) {
 								break
 							}
 						} else {
@@ -107,7 +106,7 @@ pub mod pallet {
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
-		#[pallet::weight(10_000 + T::DbWeight::get().writes(1))]
+		#[pallet::weight(T::WeightInfo::schedule())]
 		pub fn schedule(origin: OriginFor<T>, call: Box<<T as Config>::Call>) -> DispatchResult {
 			ensure_root(origin)?;
 
@@ -125,7 +124,7 @@ pub mod pallet {
 			Ok(())
 		}
 		#[pallet::call_index(1)]
-		#[pallet::weight(T::DbWeight::get().writes(1))]
+		#[pallet::weight(T::WeightInfo::set_at_block_number())]
 		pub fn set_at_block_number(origin: OriginFor<T>, block: u32) -> DispatchResult {
 			ensure_root(origin)?;
 

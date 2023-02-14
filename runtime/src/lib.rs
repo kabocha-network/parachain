@@ -498,6 +498,7 @@ impl pallet_relay_schedule::Config for Runtime {
 	type Event = Event;
 	type Call = Call;
 	type MaxBlockWeight = MaxBlockWeight;
+	type WeightInfo = weights::pallet_relay_schedule::WeightInfo<Runtime>;
 }
 
 parameter_types! {
@@ -568,7 +569,7 @@ impl InstanceFilter<Call> for ProxyType {
 			},
 			ProxyType::IdentityJudgement =>
 				matches!(c, Call::Identity(pallet_identity::Call::provide_judgement { .. }) |
-				Call::Identity(..) 
+				Call::Identity(..)
 			),
 			ProxyType::CancelProxy => {
 				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
@@ -656,7 +657,7 @@ impl pallet_scheduler::Config for Runtime {
 	type NoPreimagePostponement = NoPreimagePostponement;
 }
 
-// No longer required going into live phase. Switch back on if necessary. Make sure to filter balances. 
+// No longer required going into live phase. Switch back on if necessary. Make sure to filter balances.
 // impl pallet_sudo::Config for Runtime {
 // 	type Event = Event;
 // 	type Call = Call;

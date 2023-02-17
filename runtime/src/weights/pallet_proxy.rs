@@ -33,13 +33,15 @@ use sp_std::marker::PhantomData;
 /// Weight functions for `pallet_proxy`.
 pub struct WeightInfo<T>(PhantomData<T>);
 impl<T: frame_system::Config> pallet_proxy::WeightInfo for WeightInfo<T> {
+
 	// Storage: Proxy Proxies (r:1 w:0)
 	/// The range of component `p` is `[1, 31]`.
 	fn proxy(p: u32, ) -> Weight {
-		(99_671_000 as Weight)
-			// Standard Error: 46_000
-			.saturating_add((584_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(1 as Weight))
+		// Minimum execution time: 24_285 nanoseconds.
+		Weight::from_ref_time(25_355_667 as u64)
+			// Standard Error: 1_468
+			.saturating_add(Weight::from_ref_time(38_185 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(1 as u64))
 	}
 	// Storage: Proxy Proxies (r:1 w:0)
 	// Storage: Proxy Announcements (r:1 w:1)
@@ -47,37 +49,42 @@ impl<T: frame_system::Config> pallet_proxy::WeightInfo for WeightInfo<T> {
 	/// The range of component `a` is `[0, 31]`.
 	/// The range of component `p` is `[1, 31]`.
 	fn proxy_announced(a: u32, p: u32, ) -> Weight {
-		(155_774_000 as Weight)
-			// Standard Error: 62_000
-			.saturating_add((452_000 as Weight).saturating_mul(a as Weight))
-			// Standard Error: 64_000
-			.saturating_add((481_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes(2 as Weight))
+		// Minimum execution time: 44_948 nanoseconds.
+		Weight::from_ref_time(44_762_064 as u64)
+			// Standard Error: 1_778
+			.saturating_add(Weight::from_ref_time(118_940 as u64).saturating_mul(a as u64))
+			// Standard Error: 1_837
+			.saturating_add(Weight::from_ref_time(51_232 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().writes(2 as u64))
 	}
 	// Storage: Proxy Announcements (r:1 w:1)
 	// Storage: System Account (r:1 w:1)
 	/// The range of component `a` is `[0, 31]`.
 	/// The range of component `p` is `[1, 31]`.
-	fn remove_announcement(a: u32, _p: u32, ) -> Weight {
-		(125_350_000 as Weight)
-			// Standard Error: 49_000
-			.saturating_add((576_000 as Weight).saturating_mul(a as Weight))
-			.saturating_add(T::DbWeight::get().reads(2 as Weight))
-			.saturating_add(T::DbWeight::get().writes(2 as Weight))
+	fn remove_announcement(a: u32, p: u32, ) -> Weight {
+		// Minimum execution time: 31_274 nanoseconds.
+		Weight::from_ref_time(32_219_165 as u64)
+			// Standard Error: 1_832
+			.saturating_add(Weight::from_ref_time(132_454 as u64).saturating_mul(a as u64))
+			// Standard Error: 1_893
+			.saturating_add(Weight::from_ref_time(9_077 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(2 as u64))
+			.saturating_add(T::DbWeight::get().writes(2 as u64))
 	}
 	// Storage: Proxy Announcements (r:1 w:1)
 	// Storage: System Account (r:1 w:1)
 	/// The range of component `a` is `[0, 31]`.
 	/// The range of component `p` is `[1, 31]`.
 	fn reject_announcement(a: u32, p: u32, ) -> Weight {
-		(125_570_000 as Weight)
-			// Standard Error: 59_000
-			.saturating_add((456_000 as Weight).saturating_mul(a as Weight))
-			// Standard Error: 61_000
-			.saturating_add((102_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(2 as Weight))
-			.saturating_add(T::DbWeight::get().writes(2 as Weight))
+		// Minimum execution time: 31_219 nanoseconds.
+		Weight::from_ref_time(32_439_563 as u64)
+			// Standard Error: 1_829
+			.saturating_add(Weight::from_ref_time(120_251 as u64).saturating_mul(a as u64))
+			// Standard Error: 1_890
+			.saturating_add(Weight::from_ref_time(8_689 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(2 as u64))
+			.saturating_add(T::DbWeight::get().writes(2 as u64))
 	}
 	// Storage: Proxy Proxies (r:1 w:0)
 	// Storage: Proxy Announcements (r:1 w:1)
@@ -85,56 +92,64 @@ impl<T: frame_system::Config> pallet_proxy::WeightInfo for WeightInfo<T> {
 	/// The range of component `a` is `[0, 31]`.
 	/// The range of component `p` is `[1, 31]`.
 	fn announce(a: u32, p: u32, ) -> Weight {
-		(159_451_000 as Weight)
-			// Standard Error: 52_000
-			.saturating_add((496_000 as Weight).saturating_mul(a as Weight))
-			// Standard Error: 54_000
-			.saturating_add((111_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes(2 as Weight))
+		// Minimum execution time: 40_388 nanoseconds.
+		Weight::from_ref_time(40_718_245 as u64)
+			// Standard Error: 1_821
+			.saturating_add(Weight::from_ref_time(129_674 as u64).saturating_mul(a as u64))
+			// Standard Error: 1_882
+			.saturating_add(Weight::from_ref_time(56_001 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().writes(2 as u64))
 	}
 	// Storage: Proxy Proxies (r:1 w:1)
 	/// The range of component `p` is `[1, 31]`.
 	fn add_proxy(p: u32, ) -> Weight {
-		(132_428_000 as Weight)
-			// Standard Error: 43_000
-			.saturating_add((215_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(1 as Weight))
-			.saturating_add(T::DbWeight::get().writes(1 as Weight))
+		// Minimum execution time: 33_997 nanoseconds.
+		Weight::from_ref_time(34_840_036 as u64)
+			// Standard Error: 1_659
+			.saturating_add(Weight::from_ref_time(71_349 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(1 as u64))
+			.saturating_add(T::DbWeight::get().writes(1 as u64))
 	}
 	// Storage: Proxy Proxies (r:1 w:1)
 	/// The range of component `p` is `[1, 31]`.
 	fn remove_proxy(p: u32, ) -> Weight {
-		(135_234_000 as Weight)
-			// Standard Error: 53_000
-			.saturating_add((187_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(1 as Weight))
-			.saturating_add(T::DbWeight::get().writes(1 as Weight))
+		// Minimum execution time: 33_900 nanoseconds.
+		Weight::from_ref_time(35_069_110 as u64)
+			// Standard Error: 1_848
+			.saturating_add(Weight::from_ref_time(82_380 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(1 as u64))
+			.saturating_add(T::DbWeight::get().writes(1 as u64))
 	}
 	// Storage: Proxy Proxies (r:1 w:1)
 	/// The range of component `p` is `[1, 31]`.
 	fn remove_proxies(p: u32, ) -> Weight {
-		(123_125_000 as Weight)
-			// Standard Error: 55_000
-			.saturating_add((309_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(1 as Weight))
-			.saturating_add(T::DbWeight::get().writes(1 as Weight))
+		// Minimum execution time: 29_627 nanoseconds.
+		Weight::from_ref_time(30_641_642 as u64)
+			// Standard Error: 1_495
+			.saturating_add(Weight::from_ref_time(51_919 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(1 as u64))
+			.saturating_add(T::DbWeight::get().writes(1 as u64))
 	}
 	// Storage: unknown [0x3a65787472696e7369635f696e646578] (r:1 w:0)
 	// Storage: Proxy Proxies (r:1 w:1)
 	/// The range of component `p` is `[1, 31]`.
-	fn anonymous(p: u32, ) -> Weight {
-		(141_748_000 as Weight)
-			// Standard Error: 79_000
-			.saturating_add((476_000 as Weight).saturating_mul(p as Weight))
-			.saturating_add(T::DbWeight::get().reads(2 as Weight))
-			.saturating_add(T::DbWeight::get().writes(1 as Weight))
+	fn create_pure(p: u32, ) -> Weight {
+		// Minimum execution time: 37_761 nanoseconds.
+		Weight::from_ref_time(38_748_697 as u64)
+			// Standard Error: 1_594
+			.saturating_add(Weight::from_ref_time(19_022 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(2 as u64))
+			.saturating_add(T::DbWeight::get().writes(1 as u64))
 	}
 	// Storage: Proxy Proxies (r:1 w:1)
 	/// The range of component `p` is `[0, 30]`.
-	fn kill_anonymous(_p: u32, ) -> Weight {
-		(136_712_000 as Weight)
-			.saturating_add(T::DbWeight::get().reads(1 as Weight))
-			.saturating_add(T::DbWeight::get().writes(1 as Weight))
+	fn kill_pure(p: u32, ) -> Weight {
+		// Minimum execution time: 31_145 nanoseconds.
+		Weight::from_ref_time(31_933_568 as u64)
+			// Standard Error: 1_492
+			.saturating_add(Weight::from_ref_time(50_250 as u64).saturating_mul(p as u64))
+			.saturating_add(T::DbWeight::get().reads(1 as u64))
+			.saturating_add(T::DbWeight::get().writes(1 as u64))
 	}
 }

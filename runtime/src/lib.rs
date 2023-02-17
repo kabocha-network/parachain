@@ -1,4 +1,5 @@
-#![cfg_attr(not(feature = "std"), no_std)]
+// #![cfg_attr(not(feature = "std"), no_std)]
+#![no_std]
 // `construct_runtime!` does a lot of recursion and requires us to increase the limit to 256.
 #![recursion_limit = "256"]
 
@@ -349,7 +350,7 @@ impl pallet_timestamp::Config for Runtime {
 	/// A timestamp: milliseconds since the unix epoch.
 	type Moment = u64;
 	type OnTimestampSet = ();
-	type MinimumPeriod = MinimumPeriod;
+	type MinimumPeriod = Self::MinimumPeriod;
 	type WeightInfo = weights::pallet_timestamp::WeightInfo<Runtime>;
 	// 0.9.37 update offered these changes
 	// type OnTimestampSet = Aura;
@@ -475,7 +476,7 @@ pub type CollatorSelectionUpdateOrigin = EnsureRoot<AccountId>;
 
 impl pallet_collator_selection::Config for Runtime {
 	// type RuntimeEvent = RuntimeEvent;
-	type Event = Event;
+	type RuntimeEvent = RuntimeEvent;
 	type Currency = Balances;
 	type UpdateOrigin = CollatorSelectionUpdateOrigin;
 	type PotId = PotId;
@@ -495,8 +496,8 @@ parameter_types! {
 }
 
 impl pallet_relay_schedule::Config for Runtime {
-	type Event = Event;
-	type Call = Call;
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeCall = RuntimeCall;
 	type MaxBlockWeight = MaxBlockWeight;
 	type WeightInfo = weights::pallet_relay_schedule::WeightInfo<Runtime>;
 }
@@ -543,36 +544,36 @@ impl Default for ProxyType {
 	}
 }
 
-impl InstanceFilter<Call> for ProxyType {
-	fn filter(&self, c: &Call) -> bool {
+impl InstanceFilter<RuntimeCall> for ProxyType {
+	fn filter(&self, c: &RuntimeCall) -> bool {
 		match self {
 			ProxyType::Any => true,
 			ProxyType::NonTransfer => matches!(
 				c,
-				Call::System(..) |
-				Call::Timestamp(..) |
+				RuntimeCall::System(..) |
+				RuntimeCall::Timestamp(..) |
 				// Specifically omitting the entire Balances pallet
-				Call::Authorship(..) |
-				Call::Session(..) |
-				Call::Scheduler(..) |
-				Call::RelaySchedule(..) |
-				Call::Proxy(..) |
-				Call::Treasury(..) |
-				Call::Identity(..) |
-				Call::Utility(..) |
-				Call::Multisig(..)
+				RuntimeCall::Authorship(..) |
+				RuntimeCall::Session(..) |
+				RuntimeCall::Scheduler(..) |
+				RuntimeCall::RelaySchedule(..) |
+				RuntimeCall::Proxy(..) |
+				RuntimeCall::Treasury(..) |
+				RuntimeCall::Identity(..) |
+				RuntimeCall::Utility(..) |
+				RuntimeCall::Multisig(..)
 			),
 			ProxyType::Governance =>
-				matches!(c, Call::Supersig(..) | Call::Democracy(..) | Call::Identity(..) | Call::Treasury(..)),
+				matches!(c, RuntimeCall::Supersig(..) | RuntimeCall::Democracy(..) | RuntimeCall::Identity(..) | RuntimeCall::Treasury(..)),
 			ProxyType::Staking => {
-				matches!(c, Call::Session(..))
+				matches!(c, RuntimeCall::Session(..))
 			},
 			ProxyType::IdentityJudgement =>
-				matches!(c, Call::Identity(pallet_identity::Call::provide_judgement { .. }) |
-				Call::Identity(..)
+				matches!(c, RuntimeCall::Identity(pallet_identity::Call::provide_judgement { .. }) |
+				RuntimeCall::Identity(..)
 			),
 			ProxyType::CancelProxy => {
-				matches!(c, Call::Proxy(pallet_proxy::Call::reject_announcement { .. }))
+				matches!(c, RuntimeCall::Proxy(pallet_proxy::Call::reject_announcement { .. }))
 			},
 			ProxyType::Auction => false,
 			ProxyType::Society => false,
@@ -590,8 +591,8 @@ impl InstanceFilter<Call> for ProxyType {
 }
 
 impl pallet_proxy::Config for Runtime {
-	type Event = Event;
-	type Call = Call;
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeCall = RuntimeCall;
 	type Currency = Balances;
 	type ProxyType = ProxyType;
 	type ProxyDepositBase = ProxyDepositBase;
@@ -613,8 +614,8 @@ parameter_types! {
 }
 
 impl pallet_multisig::Config for Runtime {
-	type Event = Event;
-	type Call = Call;
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeCall = RuntimeCall;
 	type Currency = Balances;
 	type DepositBase = DepositBase;
 	type DepositFactor = DepositFactor;
@@ -643,18 +644,18 @@ parameter_types! {
 }
 
 impl pallet_scheduler::Config for Runtime {
-	type Event = Event;
-	type Origin = Origin;
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeOrigin = RuntimeOrigin;
 	type PalletsOrigin = OriginCaller;
-	type Call = Call;
+	type RuntimeCall = RuntimeCall;
 	type MaximumWeight = ();
 	type ScheduleOrigin = EnsureRoot<AccountId>;
 	type MaxScheduledPerBlock = MaximumScheduledPerBlock;
 	// type WeightInfo = weights::pallet_scheduler::WeightInfo<Runtime>;
 	type WeightInfo = ();
 	type OriginPrivilegeCmp = frame_support::traits::EqualPrivilegeOnly;
-	type PreimageProvider = ();
-	type NoPreimagePostponement = NoPreimagePostponement;
+	// type PreimageProvider = ();
+	// type NoPreimagePostponement = NoPreimagePostponement;
 }
 
 // No longer required going into live phase. Switch back on if necessary. Make sure to filter balances.
@@ -686,10 +687,10 @@ parameter_types! {
 }
 
 impl pallet_supersig::Config for Runtime {
-	type Event = Event;
+	type RuntimeEvent = RuntimeEvent;
 	type Currency = Balances;
 	type PalletId = SupersigPalletId;
-	type Call = Call;
+	type Call = RuntimeCall;
 	type WeightInfo = pallet_supersig::weights::SubstrateWeight<Runtime>;
 	type DepositPerByte = SupersigDepositPerByte;
 	type MaxAccountsPerTransaction = SupersigMaxAccountsPerTransaction;
@@ -700,7 +701,7 @@ parameter_types! {
 }
 
 impl pallet_mint_with_fee::Config for Runtime {
-	type Event = Event;
+	type RuntimeEvent = RuntimeEvent;
 	type Currency = Balances;
 	type WeightInfo = pallet_mint_with_fee::weights::SubstrateWeight<Runtime>;
 	type MaxMetadataSize = MaxMetadataSize;
@@ -720,8 +721,8 @@ parameter_types! {
 }
 
 impl pallet_democracy::Config for Runtime {
-	type Proposal = Call;
-	type Event = Event;
+	// type Proposal = RuntimeCall;
+	type RuntimeEvent = RuntimeEvent;
 	type Currency = Balances;
 	type EnactmentPeriod = EnactmentPeriod;
 	type VoteLockingPeriod = EnactmentPeriod;
@@ -740,8 +741,8 @@ impl pallet_democracy::Config for Runtime {
 	type CancelProposalOrigin = EnsureRoot<AccountId>;
 	type VetoOrigin = EnsureSigned<AccountId>;
 	type CooloffPeriod = CooloffPeriod;
-	type PreimageByteDeposit = PreimageByteDeposit;
-	type OperationalPreimageOrigin = EnsureSigned<AccountId>;
+	// type PreimageByteDeposit = PreimageByteDeposit;
+	// type OperationalPreimageOrigin = EnsureSigned<AccountId>;
 	type Slash = Treasury;
 	type Scheduler = Scheduler;
 	type PalletsOrigin = OriginCaller;
@@ -774,7 +775,7 @@ impl pallet_treasury::Config for Runtime {
 	type Currency = Balances;
 	type ApproveOrigin = EnsureSigned<AccountId>;
 	type RejectOrigin = EnsureSigned<AccountId>;
-	type Event = Event;
+	type RuntimeEvent = RuntimeEvent;
 	type OnSlash = Treasury;
 	type ProposalBond = ProposalBond;
 	type ProposalBondMinimum = ProposalBondMinimum;
@@ -799,7 +800,7 @@ parameter_types! {
 }
 
 impl pallet_identity::Config for Runtime {
-	type Event = Event;
+	type RuntimeEvent = RuntimeEvent;
 	type Currency = Balances;
 	type BasicDeposit = BasicDeposit;
 	type FieldDeposit = FieldDeposit;

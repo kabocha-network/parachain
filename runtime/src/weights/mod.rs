@@ -51,7 +51,8 @@ pub mod pallet_scheduler;
 pub mod pallet_session;
 pub mod pallet_timestamp;
 pub mod pallet_treasury;
+pub mod pallet_relay_schedule;
 // pub mod pallet_supersig;
-// pub mod pallet_utility;
+pub mod pallet_utility;
 // pub mode pallet_mint_with_fee;
 

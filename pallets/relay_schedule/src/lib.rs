@@ -25,7 +25,7 @@ pub mod pallet {
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
-		type Call: Parameter
+		type RuntimeCall: Parameter
 			+ Dispatchable<RuntimeOrigin = Self::RuntimeOrigin, PostInfo = PostDispatchInfo>
 			+ GetDispatchInfo
 			+ From<frame_system::Call<Self>>;
@@ -45,14 +45,14 @@ pub mod pallet {
 
 	#[pallet::storage]
 	#[pallet::unbounded]
-	pub type Calls<T: Config> = StorageValue<_, Vec<<T as Config>::Call>>;
+	pub type Calls<T: Config> = StorageValue<_, Vec<<T as Config>::RuntimeCall>>;
 
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		AddedCall(<T as Config>::Call),
+		AddedCall(<T as Config>::RuntimeCall),
 		AtBlockNumberUpdated(u32),
-		Dispatched(<T as Config>::Call, DispatchResult),
+		Dispatched(<T as Config>::RuntimeCall, DispatchResult),
 	}
 
 	#[pallet::hooks]
@@ -107,10 +107,10 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
 		#[pallet::weight(T::WeightInfo::schedule())]
-		pub fn schedule(origin: OriginFor<T>, call: Box<<T as Config>::Call>) -> DispatchResult {
+		pub fn schedule(origin: OriginFor<T>, call: Box<<T as Config>::RuntimeCall>) -> DispatchResult {
 			ensure_root(origin)?;
 
-			let mut new_calls: Vec<<T as Config>::Call> = Vec::new();
+			let mut new_calls: Vec<<T as Config>::RuntimeCall> = Vec::new();
 			let calls = Calls::<T>::take();
 
 			if let Some(calls) = calls {

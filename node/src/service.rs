@@ -5,7 +5,7 @@ use std::{sync::Arc, time::Duration};
 
 use cumulus_client_cli::CollatorOptions;
 // Local Runtime Types
-use kabocha_runtime::{opaque::Block, AccountId, Balance, Hash, Index as Nonce, RuntimeApi};
+use kabocha_runtime::{opaque::Block, Hash, RuntimeApi};
 // use parachain_template_runtime::{opaque::Block, Hash, RuntimeApi};
 
 // Cumulus Imports

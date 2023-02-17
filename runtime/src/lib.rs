@@ -564,14 +564,20 @@ impl InstanceFilter<RuntimeCall> for ProxyType {
 				RuntimeCall::Utility(..) |
 				RuntimeCall::Multisig(..)
 			),
-			ProxyType::Governance =>
-				matches!(c, RuntimeCall::Supersig(..) | RuntimeCall::Democracy(..) | RuntimeCall::Identity(..) | RuntimeCall::Treasury(..)),
+			ProxyType::Governance => matches!(
+				c,
+				RuntimeCall::Supersig(..) |
+					RuntimeCall::Democracy(..) |
+					RuntimeCall::Identity(..) |
+					RuntimeCall::Treasury(..)
+			),
 			ProxyType::Staking => {
 				matches!(c, RuntimeCall::Session(..))
 			},
-			ProxyType::IdentityJudgement =>
-				matches!(c, RuntimeCall::Identity(pallet_identity::Call::provide_judgement { .. }) |
-				RuntimeCall::Identity(..)
+			ProxyType::IdentityJudgement => matches!(
+				c,
+				RuntimeCall::Identity(pallet_identity::Call::provide_judgement { .. }) |
+					RuntimeCall::Identity(..)
 			),
 			ProxyType::CancelProxy => {
 				matches!(c, RuntimeCall::Proxy(pallet_proxy::Call::reject_announcement { .. }))
@@ -840,7 +846,6 @@ impl pallet_utility::Config for Runtime {
 	type WeightInfo = weights::pallet_utility::WeightInfo<Runtime>;
 }
 
-
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -1051,19 +1056,19 @@ impl_runtime_apis! {
 	}
 
 	impl pallet_supersig_rpc_runtime_api::SuperSigApi<Block, AccountId> for Runtime {
-        fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
-            Supersig::get_user_supersigs(&user_account)
-        }
-        fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
-            Supersig::list_members(&supersig_id)
-        }
-        fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
-            Supersig::list_proposals(&supersig_id)
-        }
-        fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
-            Supersig::get_proposal_state(&supersig_id, &call_id)
-        }
-    }
+		fn get_user_supersigs(user_account: AccountId) -> Vec<SupersigId> {
+			Supersig::get_user_supersigs(&user_account)
+		}
+		fn list_members(supersig_id: AccountId) -> Result<Vec<(AccountId, Role)>, DispatchError> {
+			Supersig::list_members(&supersig_id)
+		}
+		fn list_proposals(supersig_id: AccountId) -> Result<(Vec<ProposalState<AccountId>>, u32), DispatchError> {
+			Supersig::list_proposals(&supersig_id)
+		}
+		fn get_proposal_state(supersig_id: AccountId, call_id: CallId) -> Result<(ProposalState<AccountId>, u32), DispatchError> {
+			Supersig::get_proposal_state(&supersig_id, &call_id)
+		}
+	}
 
 	#[cfg(feature = "try-runtime")]
 	impl frame_try_runtime::TryRuntime<Block> for Runtime {

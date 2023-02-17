@@ -69,7 +69,8 @@ pub mod pallet {
 			let at = AtBlockNumber::<T>::get();
 			let now = CurrentBlock::<T>::get();
 			let mut weight: Weight = Weight::zero();
-			let maximum_weight = T::MaxBlockWeight::get().checked_div(100).unwrap_or(Weight::zero());
+			let maximum_weight =
+				T::MaxBlockWeight::get().checked_div(100).unwrap_or(Weight::zero());
 
 			if now >= at {
 				let calls = Calls::<T>::take();
@@ -114,7 +115,10 @@ pub mod pallet {
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
 		#[pallet::weight(T::WeightInfo::schedule())]
-		pub fn schedule(origin: OriginFor<T>, call: Box<<T as Config>::RuntimeCall>) -> DispatchResult {
+		pub fn schedule(
+			origin: OriginFor<T>,
+			call: Box<<T as Config>::RuntimeCall>,
+		) -> DispatchResult {
 			ensure_root(origin)?;
 
 			let mut new_calls: Vec<<T as Config>::RuntimeCall> = Vec::new();

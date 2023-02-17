@@ -41,13 +41,13 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	/// The range of component `z` is `[0, 9]`.
 	/// The range of component `z` is `[0, 9]`.
 	fn create_supersig(z: u32, ) -> Weight {
-		(222_276_000 as Weight)
+		Weight::from_ref_time(222_276_000 as u64)
 			// Standard Error: 194_000
-			.saturating_add((16_591_000 as Weight).saturating_mul(z as Weight))
-			.saturating_add(T::DbWeight::get().reads(6 as Weight))
-			.saturating_add(T::DbWeight::get().reads((1 as Weight).saturating_mul(z as Weight)))
-			.saturating_add(T::DbWeight::get().writes(6 as Weight))
-			.saturating_add(T::DbWeight::get().writes((1 as Weight).saturating_mul(z as Weight)))
+			.saturating_add((16_591_000 as u64).saturating_mul(z as u64))
+			.saturating_add(T::DbWeight::get().reads(6 as u64))
+			.saturating_add(T::DbWeight::get().reads((1 as u64).saturating_mul(z as u64)))
+			.saturating_add(T::DbWeight::get().writes(6 as u64))
+			.saturating_add(T::DbWeight::get().writes((1 as u64).saturating_mul(z as u64)))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:0)
 	// Storage: System Account (r:1 w:1)
@@ -56,11 +56,11 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	/// The range of component `z` is `[0, 100000]`.
 	/// The range of component `z` is `[0, 100000]`.
 	fn submit_call(z: u32, ) -> Weight {
-		(152_646_000 as Weight)
+		Weight::from_ref_time(152_646_000 as u64)
 			// Standard Error: 0
-			.saturating_add((1_000 as Weight).saturating_mul(z as Weight))
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes(3 as Weight))
+			.saturating_add((1_000 as u64).saturating_mul(z as u64))
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().writes(3 as u64))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:0)
 	// Storage: Supersig Calls (r:1 w:0)
@@ -68,9 +68,9 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	// Storage: Supersig Members (r:1 w:0)
 	// Storage: Supersig Votes (r:1 w:1)
 	fn approve_call() -> Weight {
-		(171_355_000 as Weight)
-			.saturating_add(T::DbWeight::get().reads(5 as Weight))
-			.saturating_add(T::DbWeight::get().writes(2 as Weight))
+		Weight::from_ref_time(171_355_000 as u64)
+			.saturating_add(T::DbWeight::get().reads(5 as u64))
+			.saturating_add(T::DbWeight::get().writes(2 as u64))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:0)
 	// Storage: Supersig Calls (r:1 w:1)
@@ -78,9 +78,9 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	// Storage: Supersig MembersVotes (r:0 w:1)
 	// Storage: Supersig Votes (r:0 w:1)
 	fn remove_call() -> Weight {
-		(174_681_000 as Weight)
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes(4 as Weight))
+		Weight::from_ref_time(174_681_000 as u64)
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:1)
 	// Storage: Supersig TotalDeposit (r:1 w:1)
@@ -89,13 +89,13 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	/// The range of component `z` is `[0, 10]`.
 	/// The range of component `z` is `[0, 10]`.
 	fn add_members(z: u32, ) -> Weight {
-		(142_859_000 as Weight)
+		Weight::from_ref_time(142_859_000 as u64)
 			// Standard Error: 293_000
-			.saturating_add((22_459_000 as Weight).saturating_mul(z as Weight))
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().reads((1 as Weight).saturating_mul(z as Weight)))
-			.saturating_add(T::DbWeight::get().writes(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes((1 as Weight).saturating_mul(z as Weight)))
+			.saturating_add((22_459_000 as u64).saturating_mul(z as u64))
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().reads((1 as u64).saturating_mul(z as u64)))
+			.saturating_add(T::DbWeight::get().writes(3 as u64))
+			.saturating_add(T::DbWeight::get().writes((1 as u64).saturating_mul(z as u64)))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:1)
 	// Storage: Supersig TotalDeposit (r:1 w:1)
@@ -104,13 +104,13 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	/// The range of component `z` is `[0, 10]`.
 	/// The range of component `z` is `[0, 10]`.
 	fn remove_members(z: u32, ) -> Weight {
-		(142_372_000 as Weight)
+		Weight::from_ref_time(142_372_000 as u64)
 			// Standard Error: 323_000
-			.saturating_add((29_382_000 as Weight).saturating_mul(z as Weight))
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().reads((1 as Weight).saturating_mul(z as Weight)))
-			.saturating_add(T::DbWeight::get().writes(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes((1 as Weight).saturating_mul(z as Weight)))
+			.saturating_add((29_382_000 as u64).saturating_mul(z as u64))
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().reads((1 as u64).saturating_mul(z as u64)))
+			.saturating_add(T::DbWeight::get().writes(3 as u64))
+			.saturating_add(T::DbWeight::get().writes((1 as u64).saturating_mul(z as u64)))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:1)
 	// Storage: Supersig TotalDeposit (r:1 w:1)
@@ -119,17 +119,17 @@ impl<T: frame_system::Config> pallet_supersig::WeightInfo for WeightInfo<T> {
 	// Storage: Supersig Members (r:0 w:3)
 	// Storage: Supersig NonceCall (r:0 w:1)
 	fn delete_supersig() -> Weight {
-		(330_578_000 as Weight)
-			.saturating_add(T::DbWeight::get().reads(5 as Weight))
-			.saturating_add(T::DbWeight::get().writes(8 as Weight))
+		Weight::from_ref_time(330_578_000 as u64)
+			.saturating_add(T::DbWeight::get().reads(5 as u64))
+			.saturating_add(T::DbWeight::get().writes(8 as u64))
 	}
 	// Storage: Supersig TotalMembers (r:1 w:1)
 	// Storage: Supersig Members (r:1 w:1)
 	// Storage: Supersig TotalDeposit (r:1 w:1)
 	// Storage: System Account (r:1 w:1)
 	fn leave_supersig() -> Weight {
-		(174_853_000 as Weight)
-			.saturating_add(T::DbWeight::get().reads(4 as Weight))
-			.saturating_add(T::DbWeight::get().writes(4 as Weight))
+		Weight::from_ref_time(174_853_000 as u64)
+			.saturating_add(T::DbWeight::get().reads(4 as u64))
+			.saturating_add(T::DbWeight::get().writes(4 as u64))
 	}
 }

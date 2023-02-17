@@ -1,3 +1,9 @@
+//
+// this is some complex documentation
+//
+// yeah
+//
+
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(test)]
@@ -6,6 +12,7 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
+pub use pallet::*;
 pub mod mock_weights;
 pub use mock_weights::*;
 

@@ -15,17 +15,14 @@ targets = ["x86_64-unknown-linux-gnu"]
 substrate-wasm-builder = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.37" }
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = [
+codec = { package = "parity-scale-codec", version = "3.4.0", default-features = false, features = [
 	"derive",
 ] }
 hex-literal = { version = "0.3.4", optional = true }
 log = { version = "0.4.17", default-features = false }
-# serde = { version = "1.0.152", optional = true, features = ["derive"] }
-scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+serde = { version = "1.0.152", optional = true, features = ["derive"] }
+scale-info = { version = "2.3.1", default-features = false, features = ["derive"] }
 smallvec = "1.10.0"
-
-# Local
-pallet-relay_schedule = { path = "../pallets/relay_schedule", default-features = false }
 
 # Substrate
 frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true, branch = "polkadot-v0.9.37" }
@@ -84,6 +81,7 @@ pallet-democracy = { git = "https://github.com/paritytech/substrate", default-fe
 pallet-treasury = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 pallet-identity = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 pallet-utility = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
+pallet-preimage = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v0.9.37" }
 
 
 # Pallet Supersig
@@ -92,6 +90,9 @@ pallet-supersig-rpc-runtime-api = { git = "https://github.com/kabocha-network/pa
 
 # Mint
 pallet-mint-with-fee = { git = "https://github.com/kabocha-network/pallet_mint_with_fee", default-features = false, branch = "polkadot-v0.9.37" }
+
+# pallet-relay_schedule = { git = "https://github.com/kabocha-network/pallet-relay-schedule.git", default-features = false, branch = "polkadot-v0.9.37" }
+pallet-relay_schedule= { path = "../pallets/relay_schedule", default-features = false }
 
 
 [features]
@@ -174,7 +175,6 @@ runtime-benchmarks = [
 	"pallet-democracy/runtime-benchmarks",
 	"pallet-proxy/runtime-benchmarks",
 	"pallet-treasury/runtime-benchmarks",
-
 
 	# add benchmarks
 	"pallet-supersig/runtime-benchmarks",

@@ -36,13 +36,13 @@ impl<T: frame_system::Config> pallet_mint_with_fee::WeightInfo for WeightInfo<T>
 	// Storage: MintWithFee FeePercent (r:1 w:0)
 	// Storage: System Account (r:2 w:2)
 	fn mint() -> Weight {
-		(199_815_000 as Weight)
-			.saturating_add(T::DbWeight::get().reads(3 as Weight))
-			.saturating_add(T::DbWeight::get().writes(2 as Weight))
+		Weight::from_ref_time(199_815_000 as u64)
+			.saturating_add(T::DbWeight::get().reads(3 as u64))
+			.saturating_add(T::DbWeight::get().writes(2 as u64))
 	}
 	// Storage: MintWithFee FeePercent (r:0 w:1)
 	fn change_fee_percent() -> Weight {
-		(73_808_000 as Weight)
-			.saturating_add(T::DbWeight::get().writes(1 as Weight))
+		Weight::from_ref_time(73_808_000 as u64)
+			.saturating_add(T::DbWeight::get().writes(1 as u64))
 	}
 }

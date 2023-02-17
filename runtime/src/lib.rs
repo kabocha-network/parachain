@@ -67,8 +67,6 @@ use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
 use xcm::latest::prelude::BodyId;
 use xcm_executor::XcmExecutor;
 
-pub use pallet_relay_schedule;
-
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
 
@@ -148,7 +146,7 @@ impl WeightToFeePolynomial for WeightToFee {
 		// in Rococo, extrinsic base weight (smallest non-zero weight) is mapped to 1 MILLIUNIT:
 		// in our template, we map to 1/10 of that, or 1/10 MILLIUNIT
 		let p = MICROUNIT * 500000;
-		let q = 100 * Balance::from(ExtrinsicBaseWeight::get());
+		let q = 100 * Balance::from(ExtrinsicBaseWeight::get().ref_time());
 		smallvec![WeightToFeeCoefficient {
 			degree: 1,
 			negative: false,
@@ -346,11 +344,15 @@ impl frame_system::Config for Runtime {
 	type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
+parameter_types! {
+	pub const MinimumPeriod: u64 = SLOT_DURATION / 2;
+}
+
 impl pallet_timestamp::Config for Runtime {
 	/// A timestamp: milliseconds since the unix epoch.
 	type Moment = u64;
 	type OnTimestampSet = ();
-	type MinimumPeriod = Self::MinimumPeriod;
+	type MinimumPeriod = MinimumPeriod;
 	type WeightInfo = weights::pallet_timestamp::WeightInfo<Runtime>;
 	// 0.9.37 update offered these changes
 	// type OnTimestampSet = Aura;
@@ -654,6 +656,7 @@ impl pallet_scheduler::Config for Runtime {
 	// type WeightInfo = weights::pallet_scheduler::WeightInfo<Runtime>;
 	type WeightInfo = ();
 	type OriginPrivilegeCmp = frame_support::traits::EqualPrivilegeOnly;
+	type Preimages = ();
 	// type PreimageProvider = ();
 	// type NoPreimagePostponement = NoPreimagePostponement;
 }
@@ -749,6 +752,23 @@ impl pallet_democracy::Config for Runtime {
 	type MaxVotes = MaxVotes;
 	type WeightInfo = pallet_democracy::weights::SubstrateWeight<Runtime>;
 	type MaxProposals = MaxProposals;
+	type Preimages = Preimage;
+	type MaxDeposits = ConstU32<100>;
+	type MaxBlacklisted = ConstU32<100>;
+}
+
+parameter_types! {
+	pub const BaseDeposit: u64 = 10;
+	pub const ByteDeposit: u64 = 10;
+}
+
+impl pallet_preimage::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = ();
+	type Currency = Balances;
+	type ManagerOrigin = EnsureRoot<AccountId>;
+	type BaseDeposit = BaseDeposit;
+	type ByteDeposit = ByteDeposit;
 }
 
 parameter_types! {
@@ -848,6 +868,7 @@ construct_runtime!(
 
 		Democracy: pallet_democracy::{Pallet, Call, Storage, Event<T>, Config<T> } = 13,
 		Treasury: pallet_treasury::{Pallet, Call, Storage, Config, Event<T>} = 18,
+		Preimage: pallet_preimage::{Pallet, Event<T>, Call} = 19,
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Call, Storage} = 20,

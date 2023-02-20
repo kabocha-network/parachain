@@ -20,9 +20,9 @@ export CHAIN_TYPE=parachain
 export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=soupcan
-export SPEC_NAME="kabocha-soupcan-dev-plain-new.json"
-export PARA_ID=2007
-export RAWSPEC_NAME='kabocha-'"$PARA_ID"'.json'
+export SPEC_NAME="soup-'"$PARA_ID"'-plain.json"
+export PARA_ID=2000
+export RAWSPEC_NAME='soup-'"$PARA_ID"'-raw.json'
 export PORT=30333
 export WS_PORT=9944
 export RPC_PORT=9933
@@ -35,7 +35,7 @@ export BASE_PATH="/home/$USERNAME/$CHAIN_TYPE"
 
 
 #STEP 4
-../target/release/$CHAIN_NAME --collator --force-authoring --chain ../specs/$RAWSPEC_NAME --base-path $BASE_PATH  --port $PORT --ws-port $WS_PORT --rpc-port $RPC_PORT --rpc-methods=Unsafe -- --execution wasm --chain ../specs/$RELAY_CHAIN_SPEC --port $RELAY_PORT --ws-port $RELAY_WS_PORT
+../target/release/$CHAIN_NAME --collator --force-authoring --chain ../specs/$RAWSPEC_NAME  --port $PORT --ws-port $WS_PORT --rpc-port $RPC_PORT --rpc-methods=Unsafe -- --execution wasm --chain ../specs/$RELAY_CHAIN_SPEC --port $RELAY_PORT --ws-port $RELAY_WS_PORT
 
 echo "collator launched"
 # Submit aura key (curl RPC call) check AURA in an ENV file

@@ -16,7 +16,7 @@
 #PSEUDOCODE (IN DEVELOPMENT)
 
 #VARIABLES
-export CHAIN_TYPE=parachain
+export CHAIN_TYPE= "parachain"
 export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=soupcan
@@ -31,11 +31,11 @@ export RELAY_WS_PORT=8844
 export USERNAME=decentration
 export GENESIS_HEAD='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-genesis'
 export GENESIS_WASM='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-wasm'
-export BASE_PATH="/home/$USERNAME/$CHAIN_TYPE"
+export BASE_PATH="/Users/ramsey/collator-storage/soup-2000"
 
 
 #STEP 4
-../target/release/$CHAIN_NAME --collator --force-authoring --chain ../specs/$RAWSPEC_NAME  --port $PORT --ws-port $WS_PORT --rpc-port $RPC_PORT --rpc-methods=Unsafe -- --execution wasm --chain ../specs/$RELAY_CHAIN_SPEC --port $RELAY_PORT --ws-port $RELAY_WS_PORT
+../target/release/$CHAIN_NAME --collator --force-authoring --chain ../specs/$RAWSPEC_NAME --base-path $BASE_PATH  --port $PORT --ws-port $WS_PORT --rpc-port $RPC_PORT --rpc-methods=Unsafe -- --execution wasm --chain ../specs/$RELAY_CHAIN_SPEC --port $RELAY_PORT --ws-port $RELAY_WS_PORT
 
 echo "collator launched"
 # Submit aura key (curl RPC call) check AURA in an ENV file

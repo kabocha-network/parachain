@@ -6,10 +6,10 @@ export CHAIN_TYPE=parachain
 export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=kabocha
-export SPEC_NAME="soup-2000-plain.json"
-export RAWSPEC_NAME="soup-2000-raw.json"
+export SPEC_NAME="soup-2001-plain.json"
+export RAWSPEC_NAME="soup-2001-raw.json"
 
-export PARA_ID=2000
+export PARA_ID=2001
 
 export GENESIS_HEAD='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-genesis'
 export GENESIS_WASM='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-wasm'

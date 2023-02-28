@@ -3,7 +3,7 @@
 
 #VARIABLES
 export CHAIN_TYPE=parachain
-export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
+export RELAY_CHAIN_SPEC="../specs/pop-art-2023-raw.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=kabocha
 export SPEC_NAME="soup-2001-plain.json"

@@ -17,25 +17,25 @@
 
 #VARIABLES
 export CHAIN_TYPE= "parachain"
-export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
+export RELAY_CHAIN_SPEC="../specs/pop-art-2023-raw.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=soupcan
 export SPEC_NAME="soup-'"$PARA_ID"'-plain.json"
-export PARA_ID=2001
+export PARA_ID=2000
 export RAWSPEC_NAME='soup-'"$PARA_ID"'-raw.json'
 export PORT=30333
-export WS_PORT=9944
-export RPC_PORT=9933
-export RELAY_PORT=40333
+export WS_PORT=9947
+export RPC_PORT=9936
+export RELAY_PORT=40336
 export RELAY_WS_PORT=8844
 export USERNAME=decentration
 export GENESIS_HEAD='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-genesis'
 export GENESIS_WASM='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-wasm'
-export BASE_PATH="/Users/ramsey/collator-storage/soup-2001-alice"
+export BASE_PATH="/Users/ramsey/collator-storage/soup-2000-alice"
 
 
 #STEP 4
-../target/release/$CHAIN_NAME --collator --alice --force-authoring --chain ../specs/$RAWSPEC_NAME --base-path $BASE_PATH  --port $PORT --ws-port $WS_PORT --rpc-port $RPC_PORT --rpc-methods=Unsafe -- --execution wasm --chain ../specs/$RELAY_CHAIN_SPEC --port $RELAY_PORT --ws-port $RELAY_WS_PORT
+../target/release/$CHAIN_NAME --collator --bob --force-authoring --chain ../specs/$RAWSPEC_NAME --base-path $BASE_PATH  --port $PORT --ws-port $WS_PORT --rpc-port $RPC_PORT --rpc-methods=Unsafe -- --execution wasm --chain ../specs/$RELAY_CHAIN_SPEC --port $RELAY_PORT --ws-port $RELAY_WS_PORT
 
 echo "collator launched"
 # Submit aura key (curl RPC call) check AURA in an ENV file

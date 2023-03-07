@@ -17,11 +17,11 @@
 
 #VARIABLES
 export CHAIN_TYPE= "parachain"
-export RELAY_CHAIN_SPEC="../specs/pop-art-3-val.json"
+export RELAY_CHAIN_SPEC="../specs/pop-art-2023-raw.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=soupcan
 export SPEC_NAME="soup-'"$PARA_ID"'-plain.json"
-export PARA_ID=2001
+export PARA_ID=2002
 export RAWSPEC_NAME='soup-'"$PARA_ID"'-raw.json'
 export PORT=30333
 export WS_PORT=9944
@@ -31,7 +31,7 @@ export RELAY_WS_PORT=8844
 export USERNAME=decentration
 export GENESIS_HEAD='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-genesis'
 export GENESIS_WASM='../genesiswasm/'"$PROTOCOL_ID"'-'"$PARA_ID"'-wasm'
-export BASE_PATH="/Users/ramsey/collator-storage/soup-2001-alice"
+export BASE_PATH="/Users/ramsey/collator-storage/soup-2002-alice"
 
 
 #STEP 4

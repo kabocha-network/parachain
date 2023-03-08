@@ -6,7 +6,7 @@ export CHAIN_TYPE=parachain
 export RELAY_CHAIN_SPEC="../specs/pop-art-2023-raw.json"
 export CHAIN_NAME="parachain-collator"
 export PROTOCOL_ID=kabocha
-export SPEC_NAME="soup-2002-plain.json"
+export SPEC_NAME="soup-2002-plain-for-uprade.json"
 export RAWSPEC_NAME="soup-2002-raw.json"
 
 export PARA_ID=2002

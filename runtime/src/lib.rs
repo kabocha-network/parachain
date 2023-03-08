@@ -664,7 +664,7 @@ impl pallet_scheduler::Config for Runtime {
 	// type WeightInfo = weights::pallet_scheduler::WeightInfo<Runtime>;
 	type WeightInfo = ();
 	type OriginPrivilegeCmp = frame_support::traits::EqualPrivilegeOnly;
-	type Preimages = ();
+	type Preimages = Preimage;
 	// type PreimageProvider = ();
 	// type NoPreimagePostponement = NoPreimagePostponement;
 }
@@ -752,8 +752,6 @@ impl pallet_democracy::Config for Runtime {
 	type CancelProposalOrigin = EnsureRoot<AccountId>;
 	type VetoOrigin = EnsureSigned<AccountId>;
 	type CooloffPeriod = CooloffPeriod;
-	// type PreimageByteDeposit = PreimageByteDeposit;
-	// type OperationalPreimageOrigin = EnsureSigned<AccountId>;
 	type Slash = Treasury;
 	type Scheduler = Scheduler;
 	type PalletsOrigin = OriginCaller;

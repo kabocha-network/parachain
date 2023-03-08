@@ -183,7 +183,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 28,
+	spec_version: 30,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -719,6 +719,20 @@ impl pallet_mint_with_fee::Config for Runtime {
 }
 
 parameter_types! {
+	pub const PreimageBaseDeposit: u64 = 10;
+	pub const PreimageByteDeposit: u64 = 10;
+}
+
+impl pallet_preimage::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = ();
+	type Currency = Balances;
+	type ManagerOrigin = EnsureRoot<AccountId>;
+	type BaseDeposit = PreimageBaseDeposit;
+	type ByteDeposit = PreimageByteDeposit;
+}
+
+parameter_types! {
 	pub LaunchPeriod: BlockNumber = prod_or_fast!(2 * DAYS, 1, "KAB_LAUNCH_PERIOD");
 	pub VotingPeriod: BlockNumber = prod_or_fast!(7 * DAYS, 1 * MINUTES, "KAB_VOTING_PERIOD");
 	pub FastTrackVotingPeriod: BlockNumber = prod_or_fast!(3 * DAYS , 1 * MINUTES, "KAB_FAST_TRACK_VOTING_PERIOD");
@@ -728,7 +742,7 @@ parameter_types! {
 	pub const InstantAllowed: bool = false;
 	pub const MaxVotes: u32 = 100;
 	pub const MaxProposals: u32 = 100;
-	pub const PreimageByteDeposit: Balance = 1 * BILLICENTS;
+	// pub const PreimageByteDeposit: Balance = 1 * BILLICENTS;
 }
 
 impl pallet_democracy::Config for Runtime {
@@ -752,6 +766,7 @@ impl pallet_democracy::Config for Runtime {
 	type CancelProposalOrigin = EnsureRoot<AccountId>;
 	type VetoOrigin = EnsureSigned<AccountId>;
 	type CooloffPeriod = CooloffPeriod;
+	
 	type Slash = Treasury;
 	type Scheduler = Scheduler;
 	type PalletsOrigin = OriginCaller;
@@ -763,19 +778,7 @@ impl pallet_democracy::Config for Runtime {
 	type MaxBlacklisted = ConstU32<100>;
 }
 
-parameter_types! {
-	pub const BaseDeposit: u64 = 10;
-	pub const ByteDeposit: u64 = 10;
-}
 
-impl pallet_preimage::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = ();
-	type Currency = Balances;
-	type ManagerOrigin = EnsureRoot<AccountId>;
-	type BaseDeposit = BaseDeposit;
-	type ByteDeposit = ByteDeposit;
-}
 
 parameter_types! {
 	pub const ProposalBond: Permill = Permill::from_percent(5);

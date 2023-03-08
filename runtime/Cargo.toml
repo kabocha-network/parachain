@@ -152,6 +152,7 @@ std = [
 	"pallet-democracy/std",
 	"pallet-treasury/std",
 	"pallet-relay_schedule/std",
+	"pallet-preimage/std",
 ]
 
 runtime-benchmarks = [
@@ -179,6 +180,7 @@ runtime-benchmarks = [
 	"pallet-supersig/runtime-benchmarks",
 	"pallet-mint-with-fee/runtime-benchmarks",
 	"pallet-utility/runtime-benchmarks",
+	"pallet-preimage/runtime-benchmarks",
 ]
 
 try-runtime = [
@@ -207,5 +209,6 @@ try-runtime = [
 	"pallet-timestamp/try-runtime",
 	"pallet-transaction-payment/try-runtime",
 	"pallet-xcm/try-runtime",
+	"pallet-preimage/try-runtime",
 	"parachain-info/try-runtime",
 ]

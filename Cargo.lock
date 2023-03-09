@@ -3764,7 +3764,6 @@ dependencies = [
  "pallet-relay_schedule",
  "pallet-scheduler",
  "pallet-session",
- "pallet-sudo",
  "pallet-supersig",
  "pallet-supersig-rpc-runtime-api",
  "pallet-timestamp",

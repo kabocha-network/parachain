@@ -670,10 +670,10 @@ impl pallet_scheduler::Config for Runtime {
 }
 
 // No longer required going into live phase. Switch back on if necessary. Make sure to filter balances.
-impl pallet_sudo::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type RuntimeCall = RuntimeCall;
-}
+// impl pallet_sudo::Config for Runtime {
+// 	type RuntimeEvent = RuntimeEvent;
+// 	type RuntimeCall = RuntimeCall;
+// }
 
 // parameter_types! {
 // 	pub const CouncilMotionDuration: BlockNumber = 5 * DAYS;
@@ -864,7 +864,7 @@ construct_runtime!(
 		ParachainInfo: parachain_info::{Pallet, Storage, Config} = 3,
 
 		// Sudo
-		Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
+		// Sudo: pallet_sudo::{Pallet, Call, Storage, Event<T>, Config<T>} = 4,
 
 		// Scheduler
 		Scheduler: pallet_scheduler::{Pallet, Call, Storage, Event<T>} = 5,

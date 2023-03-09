@@ -183,7 +183,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	spec_name: create_runtime_str!("kabocha-parachain"),
 	impl_name: create_runtime_str!("kabocha-parachain"),
 	authoring_version: 3,
-	spec_version: 30,
+	spec_version: 31,
 	impl_version: 4,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -876,7 +876,7 @@ construct_runtime!(
 
 		Democracy: pallet_democracy::{Pallet, Call, Storage, Event<T>, Config<T> } = 13,
 		Treasury: pallet_treasury::{Pallet, Call, Storage, Config, Event<T>} = 18,
-		Preimage: pallet_preimage::{Pallet, Event<T>, Call} = 19,
+		Preimage: pallet_preimage::{Pallet, Event<T>, Call, Storage } = 19,
 
 		// Collator support. The order of these 4 are important and shall not change.
 		Authorship: pallet_authorship::{Pallet, Call, Storage} = 20,

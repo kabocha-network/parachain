@@ -81,7 +81,7 @@
       "treasury": null,
       "collatorSelection": {
         "invulnerables": [
-          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+          "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
         ],
         "candidacyBond": 16000000000,
         "desiredCandidates": 0
